@@ -1,0 +1,333 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/user_head::userHead"></head>
+<body>
+<div th:replace="layout/header::header"></div>
+
+<style>
+    body {
+        background-color: #F7EFDC;
+    }
+
+    .star {
+        position: relative;
+        font-size: 3rem;
+        color: #ddd;
+    }
+
+    .star input {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .star span {
+        width: 0;
+        position: absolute;
+        left: 0;
+        color: #754F44;
+        overflow: hidden;
+        pointer-events: none;
+    }
+
+    textarea {
+        resize: none; /* 사용자 임의 변경 불가 */
+    }
+
+    .address-btn {
+        background-color: #754F44;
+        color: #F7EFDC;
+        font-weight: bold;
+    }
+
+    .uploadResult {
+        width: 100%;
+        background-color: gray;
+        margin-top: 10px;
+    }
+
+    .uploadResult ul {
+        display: flex;
+        flex-flow: row;
+        justify-content: center;
+        align-items: center;
+        vertical-align: top;
+        overflow: auto;
+    }
+
+    .uploadResult ul li {
+        list-style: none;
+        padding: 10px;
+        margin-left: 2em;
+    }
+
+    .uploadResult ul li img {
+        width: 100px;
+    }
+</style>
+
+<body class="d-flex flex-column min-vh-100">
+<div class="container d-flex justify-content-center">
+    <div style="width:700px; margin-top: 30px;">
+        <form class="form-horizontal" th:action="@{/editor/breadRegister}" method="post">
+            <div class="form-group">
+                <label for="breadName" class="col-sm-2 control-label">빵집 이름</label>
+                <input type="text" class="form-control" name="breadName" id="breadName"
+                       placeholder="빵집 이름" required>
+            </div>
+            <div class="form-group">
+                <label for="address" class="col-sm-2 control-label">주소</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" name="address" id="address" placeholder="주소" required readonly><br>
+                    <span class="input-group-btn">
+                        <button class="address-btn btn btn-default" onclick="execDaumPostcode()"
+                                type="button">주소 찾기</button>
+                    </span>
+                </div>
+                <input type="text" class="form-control mt-3" name="detailAddress" id="detailAddress" placeholder="상세주소"
+                       required>
+            </div>
+            <div id="wrap"
+                 style="display:none;border:1px solid;width:700px;height:300px;margin:5px 0;position:relative">
+                <img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnFoldWrap"
+                     style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" onclick="foldDaumPostcode()"
+                     alt="접기 버튼">
+            </div>
+            <div class="form-group">
+                <label for="scope" class="col-sm-2 control-label">에디터 별점</label>
+                <span class="star">
+                    ★★★★★
+                    <span>★★★★★</span>
+                    <input type="range" name="scope" id="scope" oninput="drawStar(this)" value="1" step="0.5" min="0"
+                           max="5">
+                  </span>
+            </div>
+            <div class="form-group">
+                <label for="editorEval" class="col-sm-2 control-label">에디터 평</label>
+                <textarea class="form-control" placeholder="에디터 평" name="editorEval" id="editorEval"
+                          style="height: 100px"
+                          required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="phone" class="col-sm-2 control-label">전화번호</label>
+                <input type="tel" class="form-control input-large" name="phone" id="phone" placeholder="전화번호"
+                       required>
+            </div>
+            <div class="form-group">
+                <label for="priceRange" class="col-sm-2 control-label">가격대</label>
+                <input type="text" class="form-control input-large" name="priceRange" id="priceRange"
+                       placeholder="가격대" required>
+            </div>
+            <div class="form-group">
+                <label for="openingHours" class="col-sm-2 control-label">영업시간</label>
+                <input type="text" class="form-control input-large" name="openingHours" id="openingHours"
+                       placeholder="영업시간" required>
+            </div>
+            <div class="form-group">
+                <label for="breakTime" class="col-sm-2 control-label">쉬는시간</label>
+                <input type="text" class="form-control input-large" name="breakTime" id="breakTime"
+                       placeholder="쉬는시간" required>
+            </div>
+            <div class="form-group">
+                <label for="lastOrder" class="col-sm-2 control-label">마지막주문</label>
+                <input type="text" class="form-control input-large" name="lastOrder" id="lastOrder"
+                       placeholder="마지막주문" required>
+            </div>
+            <div class="form-group">
+                <input type="hidden" class="form-control input-large" name="lat" id="lat">
+                <input type="hidden" class="form-control input-large" name="lng" id="lng">
+            </div>
+            <div class="form-group fileForm">
+                <label for="fileInput" class="col-sm-2 control-label">메뉴 이미지</label>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input files" id="fileInput" multiple>
+                    <label class="custom-file-label" data-browse="Browse"></label>
+                </div>
+            </div>
+            <div class="uploadResult">
+                <ul>
+
+                </ul>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-1 col-sm-10 mt-3">
+                    <button class="btn btn-dark btn-lg">돌아가기</button>
+                    <button type="Submit" class="btn btn-dark btn-lg">등록하기</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0d7651756108879925f2e5555e0f1a7a&libraries=services"></script>
+<script>
+    // 우편번호 찾기 찾기 화면을 넣을 element
+    var element_wrap = document.getElementById('wrap');
+
+    function foldDaumPostcode() {
+        // iframe을 넣은 element를 안보이게 한다.
+        element_wrap.style.display = 'none';
+    }
+
+    function execDaumPostcode() {
+        // 현재 scroll 위치를 저장해놓는다.
+        var currentScroll = Math.max(document.body.scrollTop, document.documentElement.scrollTop);
+
+        new daum.Postcode({
+            oncomplete: function (data) {
+                // 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+                // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                var addr = ''; // 주소 변수
+
+                //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                    addr = data.roadAddress;
+                } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                    addr = data.jibunAddress;
+                }
+
+                // 주소 정보를 해당 필드에 넣는다.
+                document.getElementById("address").value = addr;
+                // 커서를 상세주소 필드로 이동한다.
+                document.getElementById("detailAddress").focus();
+
+                // iframe을 넣은 element를 안보이게 한다.
+                // (autoClose:false 기능을 이용한다면, 아래 코드를 제거해야 화면에서 사라지지 않는다.)
+                element_wrap.style.display = 'none';
+
+                // 우편번호 찾기 화면이 보이기 이전으로 scroll 위치를 되돌린다.
+                document.body.scrollTop = currentScroll;
+
+                //주소-좌표 변환 객체를 생성
+                var geocoder = new daum.maps.services.Geocoder();
+
+                geocoder.addressSearch(addr, function(results, status) {
+
+                    // 정상적으로 검색이 완료됐으면
+                    if (status === daum.maps.services.Status.OK) {
+
+                        var result = results[0]; //첫번째 결과의 값을 활용
+
+                        document.getElementById("lat").value = result.y;
+                        document.getElementById("lng").value = result.x;
+                    }
+                });
+            },
+            // 우편번호 찾기 화면 크기가 조정되었을때 실행할 코드를 작성하는 부분. iframe을 넣은 element의 높이값을 조정한다.
+            onresize: function (size) {
+                element_wrap.style.height = size.height + 'px';
+            },
+            width: '100%',
+            height: '100%'
+        }).embed(element_wrap);
+
+        // iframe을 넣은 element를 보이게 한다.
+        element_wrap.style.display = 'block';
+    }
+
+    //별점 드래그
+    const drawStar = (target) => {
+        document.querySelector(`.star span`).style.width = `${target.value * 20}%`;
+    }
+
+    //이미지 업로드
+    $(document).ready(function (e) {
+        var regex = new RegExp("(.*?)\.(exe|sh|zip|alz|tiff)$");
+        var maxSize = 10485760; //10MB
+
+        function checkExtension(fileName, fileSize){
+
+            if(fileSize >= maxSize){
+                alert("파일 사이즈 초과!");
+                return false;
+            }
+
+            if(regex.test(fileName)){
+                alert("지원하지 않는 파일 형식입니다!");
+                return false;
+            }
+            return true;
+        }
+
+        //파일 선택시 이벤트
+        $(".custom-file-input").on("change", function() {
+
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+
+            var formData = new FormData();
+
+            var inputFile = $(this);
+
+            var files = inputFile[0].files;
+
+            var appended = false;
+
+            for (var i = 0; i < files.length; i++) {
+
+                if(!checkExtension(files[i].name, files[i].size) ){
+                    return false;
+                }
+
+                console.log(files[i]);
+                formData.append("uploadFiles", files[i]);
+                appended = true;
+            }
+
+            //upload를 하지 않는다.
+            if (!appended) {return;}
+
+            for (var value of formData.values()) {
+                console.log(value);
+            }
+
+            //실제 업로드 부분
+            //upload ajax
+            $.ajax({
+                url: '/menuImgUpload',
+                processData: false,
+                contentType: false,
+                data: formData,
+                type: 'POST',
+                dataType:'json',
+                success: function(result){
+                    console.log(result);
+                    showResult(result);
+                },
+                error: function(jqXHR, textStatus, errorThrown){
+                    console.log(textStatus);
+                }
+            }); //$.ajax
+        }); //end change event
+    });
+
+    function showResult(uploadResultArr){
+
+        var uploadUL = $(".uploadResult ul");
+
+        var str ="";
+
+        $(uploadResultArr).each(function(i, obj) {
+
+            str += "<li data-name='" + obj.fileName + "' data-path='"+obj.folderPath+"' data-uuid='"+obj.uuid+"'>";
+            str + " <div>";
+            str += "<button type='button' data-file=\'" + obj.imageURL + "\' "
+            str += "class='btn-warning btn-sm'>X</button><br>";
+            str += "<img src='/display?fileName=" + obj.thumbnailURL + "'>";
+            str += "</div>";
+            str + "</li>";
+        });
+
+        uploadUL.append(str);
+    }
+</script>
+
+<div th:replace="layout/footer::footer"></div>
+</body>
+</html>

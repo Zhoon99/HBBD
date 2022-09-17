@@ -1,0 +1,35 @@
+.navbar {
+    background-color: #754F44;
+}
+
+#navbarSupportedContent {
+    font-weight: bold;
+}
+
+.nav-link {
+    color: #F7EFDC;
+    width: 5.0rem;
+}
+
+.nav-link:hover {
+    color: #CFBB92;
+}
+
+.copy-right {
+    color: #F7EFDC;
+    font-size: 0.95rem;
+}
+
+#logo {
+    margin-top: -6px;
+    margin-bottom: -14px;
+}
+
+.bi {
+    vertical-align: -.125em;
+    fill: #F7EFDC;
+}
+
+.footer-wrap {
+    background-color: #754F44;
+}

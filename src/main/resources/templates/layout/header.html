@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<div th:fragment="header">
+    <nav class="navbar navbar-expand-lg justify-content-center">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <h4 class="fw-bold ms-2 text-md-start">
+                    <img src="/images/common/logo.png" alt="" width="65" height="60" id="logo">
+                </h4>
+            </a>
+        </div>
+        <div class="me-3" id="navbarSupportedContent">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" sec:authorize="hasAuthority('ROLE_ADMIN')" href="#">관리자</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" sec:authorize="hasAuthority('ROLE_EDITOR')" href="#">에디터</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">빵지도</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">레시피</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">스크랩</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/login}" href="#">로그인</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" sec:authorize="isAuthenticated()" href="#">로그아웃</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+</html>
