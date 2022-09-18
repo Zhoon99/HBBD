@@ -4,7 +4,7 @@ import deep.capstone.hbbd.dto.AccountDto;
 import deep.capstone.hbbd.entity.Account;
 import deep.capstone.hbbd.entity.Role;
 import deep.capstone.hbbd.repository.RoleRepository;
-import deep.capstone.hbbd.repository.UserRepository;
+import deep.capstone.hbbd.repository.AccountRepository;
 import deep.capstone.hbbd.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
+    private final AccountRepository accountRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
         roles.add(role);
         account.setUserRoles(roles);
 
-        userRepository.save(account);
+        accountRepository.save(account);
     }
 
     @Transactional
@@ -59,14 +59,14 @@ public class UserServiceImpl implements UserService {
             account.setUserRoles(roles);
         }
         account.setPassword(passwordEncoder.encode(accountDto.getPassword()));
-        userRepository.save(account);
+        accountRepository.save(account);
 
     }
 
     @Transactional
     public AccountDto getUser(Long id) {
 
-        Account account = userRepository.findById(id).orElse(new Account());
+        Account account = accountRepository.findById(id).orElse(new Account());
         ModelMapper modelMapper = new ModelMapper();
         AccountDto accountDto = modelMapper.map(account, AccountDto.class);
 
@@ -81,11 +81,11 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     public List<Account> getUsers() {
-        return userRepository.findAll();
+        return accountRepository.findAll();
     }
 
     @Override
     public void deleteUser(Long id) {
-        userRepository.deleteById(id);
+        accountRepository.deleteById(id);
     }
 }

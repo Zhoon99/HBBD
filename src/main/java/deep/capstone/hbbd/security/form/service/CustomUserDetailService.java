@@ -1,7 +1,7 @@
 package deep.capstone.hbbd.security.form.service;
 
 import deep.capstone.hbbd.entity.Account;
-import deep.capstone.hbbd.repository.UserRepository;
+import deep.capstone.hbbd.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,14 +18,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CustomUserDetailService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final AccountRepository accountRepository;
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Account account = userRepository.findByUsername(username);
+        Account account = accountRepository.findByUsername(username);
         if (account == null) {
-            if (userRepository.countByUsername(username) == 0) {
+            if (accountRepository.countByUsername(username) == 0) {
                 throw new UsernameNotFoundException("No user found with email: " + username);
             }
         }

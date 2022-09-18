@@ -3,7 +3,7 @@ package deep.capstone.hbbd.security.oauth.service;
 import deep.capstone.hbbd.entity.Account;
 import deep.capstone.hbbd.entity.Role;
 import deep.capstone.hbbd.repository.RoleRepository;
-import deep.capstone.hbbd.repository.UserRepository;
+import deep.capstone.hbbd.repository.AccountRepository;
 import deep.capstone.hbbd.security.form.service.UserPrincipal;
 import deep.capstone.hbbd.security.oauth.user.GoogleUserInfo;
 import deep.capstone.hbbd.security.oauth.user.NaverUserInfo;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
-	private final UserRepository userRepository;
+	private final AccountRepository accountRepository;
 	private final RoleRepository roleRepository;
 
 	@Override
@@ -50,13 +50,13 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 		}
 
 		Optional<Account> userOptional =
-				userRepository.findByProviderAndProviderId(oAuth2UserInfo.getProvider(), oAuth2UserInfo.getProviderId());
+				accountRepository.findByProviderAndProviderId(oAuth2UserInfo.getProvider(), oAuth2UserInfo.getProviderId());
 
 		Account account;
 		if (userOptional.isPresent()) {
 			account = userOptional.get();
 			account.setEmail(oAuth2UserInfo.getEmail());
-			userRepository.save(account);
+			accountRepository.save(account);
 		} else {
 			account = createOAuth2User(oAuth2UserInfo);
 		}
@@ -72,7 +72,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
 	private Account createOAuth2User(OAuth2UserInfo oAuth2UserInfo) {
 
-		Account account = userRepository.save(Account.builder()
+		Account account = accountRepository.save(Account.builder()
 				.username(oAuth2UserInfo.getProvider() + "_" + oAuth2UserInfo.getProviderId())
 				.email(oAuth2UserInfo.getEmail())
 				.provider(oAuth2UserInfo.getProvider())
