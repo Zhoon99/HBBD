@@ -1,6 +1,5 @@
 package deep.capstone.hbbd.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -12,7 +11,7 @@ import java.util.Set;
 
 @Entity
 @Data
-@ToString(exclude = {"userRoles"})
+@ToString(exclude = {"userRoles", "categoryAccounts"})
 @Builder
 @EqualsAndHashCode(of = "id")
 @NoArgsConstructor
@@ -26,7 +25,7 @@ public class Account extends BaseEntity implements Serializable {
     @Column(length = 20, unique = true, nullable = false)
     private String username;
 
-    @Column(length = 20, nullable = false)
+    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
@@ -45,10 +44,6 @@ public class Account extends BaseEntity implements Serializable {
 
     @OneToOne(mappedBy = "account")
     private Profile profile;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "account")
-    private List<Category> interests = new ArrayList<>();
 }
 
 

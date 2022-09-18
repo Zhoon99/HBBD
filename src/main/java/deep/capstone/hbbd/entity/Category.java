@@ -3,10 +3,12 @@ package deep.capstone.hbbd.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
-@ToString(exclude = {""})
+@ToString(exclude = {"categoryAccounts"})
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,7 +23,6 @@ public class Category {
     @Column(nullable = false)
     private String categoryName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id", insertable = false, updatable = false)
-    private Account account;
+    @OneToMany(mappedBy = "category")
+    private List<CategoryProfile> categoryProfiles = new ArrayList<>();
 }

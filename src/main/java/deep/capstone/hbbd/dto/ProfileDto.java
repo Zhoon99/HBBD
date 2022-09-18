@@ -35,4 +35,6 @@ public class ProfileDto {
     private String address;
 
     private String addressDetail;
+
+    private List<String> interest;
 }

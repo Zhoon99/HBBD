@@ -31,7 +31,6 @@ public class AccountDto {
     private String providerId;
 
     private List<String> roles;
-    private List<String> interest;
 
     private LocalDateTime regDate, modDate;
 }
