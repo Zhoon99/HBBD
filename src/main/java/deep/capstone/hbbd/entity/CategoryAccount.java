@@ -5,21 +5,20 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Data
-@ToString
+@Getter
 @Builder
-@EqualsAndHashCode(of = "id")
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryProfile {
+public class CategoryAccount {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categoryProfileId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "profile_id")
-    private Profile profile;
+    @JoinColumn(name = "account_id")
+    private Account account;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")

@@ -7,12 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Data
-@ToString(exclude = {"categoryAccounts"})
+@Getter
 @Builder
+@ToString(exclude = {"categoryAccounts"})
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "id")
 public class Category {
 
     @Id
@@ -24,5 +23,5 @@ public class Category {
     private String categoryName;
 
     @OneToMany(mappedBy = "category")
-    private List<CategoryProfile> categoryProfiles = new ArrayList<>();
+    private List<CategoryAccount> categoryAccounts = new ArrayList<>();
 }

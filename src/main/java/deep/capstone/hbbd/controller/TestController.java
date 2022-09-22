@@ -1,7 +1,7 @@
 package deep.capstone.hbbd.controller;
 
 import deep.capstone.hbbd.dto.AccountDto;
-import deep.capstone.hbbd.dto.ProfileDto;
+import deep.capstone.hbbd.dto.CategoryAccountDto;
 import deep.capstone.hbbd.entity.*;
 import deep.capstone.hbbd.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -10,10 +10,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -32,7 +32,6 @@ public class TestController {
     private final AccountRepository accountRepository;
     private final RoleRepository roleRepository;
     private final CategoryRepository categoryRepository;
-    private final ProfileRepository profileRepository;
     private final CategoryProfileRepository categoryProfileRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -40,14 +39,14 @@ public class TestController {
     private final String rootPath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\images\\upload";
 
     @RequestMapping(value = "/url", method = RequestMethod.POST)
+    @ResponseBody
     @Transactional
-    public String getData(@RequestPart(value = "account") AccountDto accountDto,
-                          @RequestPart(value = "profile") ProfileDto profileDto,
-                          @RequestPart(value = "image") MultipartFile file, Model model) {
+    public void getData(@RequestPart(value = "account") AccountDto accountDto,
+                          @RequestPart(value = "image", required = false) MultipartFile file) {
 
         String imagePath = null;
 
-        if (!file.isEmpty()) {
+        if (file != null) {
 
             //실제 파일 이름 IE나 Edge 는 전체 경로가 들어오므로
             String originalName = file.getOriginalFilename();
@@ -86,43 +85,35 @@ public class TestController {
             imagePath = "images\\common\\noimage.jpg";
         }
 
-
-        ModelMapper modelMapper = new ModelMapper();
-        Account account = modelMapper.map(accountDto, Account.class);
-        Profile profile = modelMapper.map(profileDto, Profile.class);
-
         //비밀번호 인코딩
-        account.setPassword(passwordEncoder.encode(accountDto.getPassword()));
+        if(accountDto.getPassword() != null) {
+            accountDto.setPassword(passwordEncoder.encode(accountDto.getPassword()));
+        }
 
         //유저 권한 저장
         Role role = roleRepository.findByRoleName("ROLE_USER");
         Set<Role> roles = new HashSet<>();
         roles.add(role);
-        account.setUserRoles(roles);
-
-        Account newAccount = accountRepository.save(account);
+        accountDto.setRoles(roles);
 
         //프로필 이미지 저장
-        profile.setProfileImg(imagePath);
-        profile.setAccount(newAccount);
-        Profile newProfile = profileRepository.save(profile);
+        accountDto.setProfileImg(imagePath);
+
+        Account newAccount = accountRepository.save(accountDto.toEntity());
 
         //관심도 저장 (카테고리_프로필)
-        List<CategoryProfile> categoryProfileList = new ArrayList<>();
+        List<CategoryAccount> categoryAccountList = new ArrayList<>();
 
-        if (profileDto.getInterest() != null) {
-            profileDto.getInterest().forEach(interest -> {
+        if (accountDto.getInterest() != null) {
+            accountDto.getInterest().forEach(interest -> {
                 Category category = categoryRepository.findByCategoryName(interest);
-                CategoryProfile categoryProfile = CategoryProfile.builder()
-                        .profile(newProfile)
+                CategoryAccountDto categoryAccountDto = CategoryAccountDto.builder()
+                        .account(newAccount)
                         .category(category)
                         .build();
-                categoryProfileList.add(categoryProfile);
+                categoryAccountList.add(categoryAccountDto.toEntity());
             });
-            categoryProfileRepository.saveAll(categoryProfileList);
+            categoryProfileRepository.saveAll(categoryAccountList);
         }
-
-        model.addAttribute("log", "사진 전송완료!");
-        return "login/sign_up :: #resultDiv";
     }
 }

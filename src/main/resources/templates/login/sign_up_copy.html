@@ -1,4 +1,4 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head th:replace="layout/user_head::userHead"></head>
 <body>
 <div th:replace="layout/header::header"></div>
@@ -8,11 +8,11 @@
         background-color: #F7EFDC;
     }
 
-    .test_obj input[type="radio"] {
+    .check_gender input[type="radio"] {
         display: none;
     }
 
-    .test_obj input[type="radio"] + span {
+    .check_gender input[type="radio"] + span {
         display: inline-block;
         padding: 15px 10px;
         border: 1px solid #dfdfdf;
@@ -21,7 +21,7 @@
         cursor: pointer;
     }
 
-    .test_obj input[type="radio"]:checked + span {
+    .check_gender input[type="radio"]:checked + span {
         background-color: #113a6b;
         color: #ffffff;
     }
@@ -31,12 +31,30 @@
         color: #F7EFDC;
         font-weight: bold;
     }
+
+    .check_interest input[type="checkbox"] {
+        display: none;
+    }
+
+    .check_interest input[type="checkbox"] + span {
+        display: inline-block;
+        padding: 15px 10px;
+        border: 1px solid #dfdfdf;
+        background-color: #ffffff;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .check_interest input[type="checkbox"]:checked + span {
+        background-color: #113a6b;
+        color: #ffffff;
+    }
 </style>
 
 <body class="d-flex flex-column min-vh-100">
 <div class="container d-flex justify-content-center">
     <div style="width:700px; margin-top: 30px;">
-        <form class="form-horizontal" th:action="@{/signUp}" method="post" id="regAccount">
+        <form id="regAccount" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="username" class="col-sm-2 control-label">아이디</label>
                 <input type="text" class="form-control" name="username" id="username"
@@ -53,107 +71,95 @@
                        required>
             </div>
         </form>
-        <form id="regImg">
-            <div style="display:inline;">
-                <label for="img_upload">
-                    <img src="/img/photo_add.png" style="width:100px; height:100px; cursor: pointer;">
-                </label>
-                <input type="file" name="img_upload" id="img_upload"
-                       onchange="previewImage(this,'View_area')"
-                       style="display: none;" multiple>
+        <label class="control-label">프로필 이미지</label><br>
+        <div style="display:inline;">
+            <label for="ex_file">
+                <img src="/images/common/add_img.png" style="width:100px; height:100px; cursor: pointer;">
+            </label>
+            <input type="file" id="ex_file" onchange="previewImage(this, 'user_upload_img');"
+                   style="display: none;">
 
-                <span id='View_area'
-                      style='position:relative; color: black; border: 0px solid black;'>
-                </span>
-            </div>
-
-            <div style="align-content: center; width: 100%; text-align: center;">
-                <input type="button" class="btn" style="background: #FF6491; color: #FFF2F6;"
-                       onclick="dataSubmit();"
-                       value="전송하기">
-            </div>
-
-            <div id="resultDiv">
-                <p th:text="${log}"></p>
-            </div>
-        </form>
+            <span id='user_upload_img'></span>
+        </div>
         <script>
-            var fileArr;
             var fileInfoArr = [];
 
             //썸네일 클릭시 삭제.
-            function fileRemove(index) {
-                console.log("index: " + index);
-                fileInfoArr.splice(index, 1);
-
-                var imgId = "#img_id_" + index;
-                $(imgId).remove();
+            function fileRemove() {
+                $("#profile_img").remove();
                 console.log(fileInfoArr);
             }
 
             //썸네일 미리보기.
-            function previewImage(targetObj, View_area) {
-                var files = targetObj.files;
-                fileArr = Array.prototype.slice.call(files); //컬렉션을 배열로
+            function previewImage(targetObj, previewId) {
 
-                var preview = document.getElementById(View_area); //div id
+                var ext = $(targetObj).val().split('.').pop().toLowerCase();
+
+                if ($.inArray(ext, ['gif', 'png', 'jpg', 'jpeg']) == -1) {
+                    alert('gif, png, jpg, jpeg 형식만 업로드할 수 있습니다.');
+                    return false;
+                }
+
+                var preview = document.getElementById(previewId); // 미리보기 div id
                 var ua = window.navigator.userAgent;
 
-                //ie일때(IE8 이하에서만 작동)
-                if (ua.indexOf("MSIE") > -1) {
+                if (ua.indexOf("MSIE") > -1) { //ie일때
+
                     targetObj.select();
                     try {
-                        var src = document.selection.createRange().text; // get file full path(IE9, IE10에서 사용 불가)
-                        var ie_preview_error = document.getElementById("ie_preview_error_" + View_area);
-
+                        var src = document.selection.createRange().text; // get file full path
+                        var ie_preview_error = document.getElementById("ie_preview_error_" + previewId);
 
                         if (ie_preview_error) {
                             preview.removeChild(ie_preview_error); //error가 있으면 delete
                         }
 
-                        var img = document.getElementById(View_area); //이미지가 뿌려질 곳
+                        var img = document.getElementById(previewId); //이미지가 뿌려질 곳
 
-                        //이미지 로딩, sizingMethod는 div에 맞춰서 사이즈를 자동조절 하는 역할
-                        img.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + src + "', sizingMethod='scale')";
+                        img.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + src + "', sizingMethod='scale')"; //이미지 로딩, sizingMethod는 div에 맞춰서 사이즈를 자동조절 하는 역할
                     } catch (e) {
-                        if (!document.getElementById("ie_preview_error_" + View_area)) {
+                        if (!document.getElementById("ie_preview_error_" + previewId)) {
+
                             var info = document.createElement("<p>");
-                            info.id = "ie_preview_error_" + View_area;
-                            info.innerHTML = e.name;
+                            info.id = "ie_preview_error_" + previewId;
+                            info.innerHTML = "a";
                             preview.insertBefore(info, null);
                         }
                     }
-                    //ie가 아닐때(크롬, 사파리, FF)
-                } else {
+                } else { //ie가 아닐때
+
                     var files = targetObj.files;
 
                     for (var i = 0; i < files.length; i++) {
-                        var file = files[i];
-                        fileInfoArr.push(file);
 
-                        var imageType = /image.*/; //이미지 파일일경우만 뿌려준다.
+                        var file = files[i];
+                        var imageType = /image.*/; //이미지 파일일 경우만 뿌려줌.
                         if (!file.type.match(imageType))
                             continue;
-                        // var prevImg = document.getElementById("prev_" + View_area); //이전에 미리보기가 있다면 삭제
-                        // if (prevImg) {
-                        // preview.removeChild(prevImg);
-                        // }
+
+                        var prevImg = document.getElementById("profile_img"); // 이전에 미리보기가 있다면 삭제
+                        if (prevImg) {
+                            preview.removeChild(prevImg);
+                        }
 
                         var span = document.createElement('span');
-                        span.id = "img_id_" + i;
+                        span.id = "profile_img";
                         span.style.width = '100px';
                         span.style.height = '100px';
+                        span.style.display = 'inline-block';
+                        span.style.backgroundColor = '#cccccc';
+                        span.style.textAlign = 'center';
                         preview.appendChild(span);
 
-                        var img = document.createElement("img");
+                        var img = document.createElement("img"); // 크롬은 div에 이미지가 뿌려지지 않기때문에 자식 Element를 만듬.
+                        img.id = "prev_" + previewId;
                         img.className = "addImg";
                         img.classList.add("obj");
                         img.file = file;
-                        img.style.width = 'inherit';
+                        img.style.width = 'auto';
                         img.style.height = 'inherit';
                         img.style.cursor = 'pointer';
-                        const idx = i;
-                        img.onclick = () => fileRemove(idx); //이미지를 클릭했을 때.
+                        img.onclick = () => fileRemove(); //이미지를 클릭했을 때.
                         span.appendChild(img);
 
                         if (window.FileReader) { // FireFox, Chrome, Opera 확인.
@@ -165,11 +171,9 @@
                             })(img);
                             reader.readAsDataURL(file);
                         } else { // safari is not supported FileReader
-                            //alert('not supported FileReader');
-                            if (!document.getElementById("sfr_preview_error_"
-                                + View_area)) {
+                            if (!document.getElementById("sfr_preview_error_" + previewId)) {
                                 var info = document.createElement("p");
-                                info.id = "sfr_preview_error_" + View_area;
+                                info.id = "sfr_preview_error_" + previewId;
                                 info.innerHTML = "not supported FileReader";
                                 preview.insertBefore(info, null);
                             }
@@ -177,30 +181,8 @@
                     }
                 }
             }
-
-            //form데이터 전송
-            function dataSubmit() {
-                //var token = $("meta[name='_csrf']").attr("content");
-                //var header = $("meta[name='_csrf_header']").attr("content");
-
-                var data = new FormData($("#storeRegImg")[0]);
-
-                $.ajax({
-                    //beforeSend: function (xhr) {
-                    //    xhr.setRequestHeader(header, token);
-                    //},
-                    url: "url",
-                    data: data,
-                    processData: false,
-                    contentType: false,
-                    enctype: 'multipart/form-data',
-                    type: "POST",
-                }).done(function (fragment) {
-                    $("#resultDiv").replaceWith(fragment);
-                });
-            }
         </script>
-        <form id="profile">
+        <form id="regProfile">
             <div class="form-group">
                 <label for="nickname" class="col-sm-2 control-label">닉네임</label>
                 <input type="text" class="form-control" name="nickname" id="nickname" placeholder="닉네임"
@@ -219,11 +201,11 @@
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label">성별</label> <br>
-                <label class="test_obj">
+                <label class="check_gender">
                     <input type="radio" name="gender" value="남성">
                     <span>남성</span>
                 </label>
-                <label class="test_obj">
+                <label class="check_gender">
                     <input type="radio" name="gender" value="여성">
                     <span>여성</span>
                 </label>
@@ -247,12 +229,84 @@
                      style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" onclick="foldDaumPostcode()"
                      alt="접기 버튼">
             </div>
+            <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+            <script>
+                // 우편번호 찾기 찾기 화면을 넣을 element
+                var element_wrap = document.getElementById('wrap');
+
+                function foldDaumPostcode() {
+                    // iframe을 넣은 element를 안보이게 한다.
+                    element_wrap.style.display = 'none';
+                }
+
+                function execDaumPostcode() {
+                    // 현재 scroll 위치를 저장해놓는다.
+                    var currentScroll = Math.max(document.body.scrollTop, document.documentElement.scrollTop);
+
+                    new daum.Postcode({
+                        oncomplete: function (data) {
+                            // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+                            // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                            var addr = ''; // 주소 변수
+
+                            //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                            if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                                addr = data.roadAddress;
+                            } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                                addr = data.jibunAddress;
+                            }
+
+                            // 주소 정보를 해당 필드에 넣는다.
+                            document.getElementById("address").value = addr;
+                            // 커서를 상세주소 필드로 이동한다.
+                            document.getElementById("addressDetail").focus();
+
+                            // iframe을 넣은 element를 안보이게 한다.
+                            // (autoClose:false 기능을 이용한다면, 아래 코드를 제거해야 화면에서 사라지지 않는다.)
+                            element_wrap.style.display = 'none';
+
+                            // 우편번호 찾기 화면이 보이기 이전으로 scroll 위치를 되돌린다.
+                            document.body.scrollTop = currentScroll;
+                        },
+                        // 우편번호 찾기 화면 크기가 조정되었을때 실행할 코드를 작성하는 부분. iframe을 넣은 element의 높이값을 조정한다.
+                        onresize: function (size) {
+                            element_wrap.style.height = size.height + 'px';
+                        },
+                        width: '100%',
+                        height: '100%'
+                    }).embed(element_wrap);
+
+                    // iframe을 넣은 element를 보이게 한다.
+                    element_wrap.style.display = 'block';
+                }
+            </script>
             <div class="form-group">
-                <div class="col-sm-offset-1 col-sm-10">
-                    <button type="Submit" class="btn btn-dark btn-lg">가입하기</button>
+                <label class="control-label">관심도 (최대 5개까지 선택해주세요!)</label> <br>
+                <div class="row row-cols-5">
+                    <div class="col" th:each="category : ${categoryList}">
+                        <label class="check_interest">
+                            <input type="checkbox" name="interest" th:value="${category.categoryName}">
+                            <span th:text="${category.categoryName}">err</span>
+                        </label>
+                    </div>
                 </div>
             </div>
+            <script>
+                $(document).ready(function () {
+                    $("input[type='checkbox']").on("click", function () {
+                        var count = $("input[name='interest']:checked").length;
+                        if(count > 5) {
+                            $(this).prop("checked", false);
+                            alert("5개까지만 선택해주세요");
+                        }
+                    })
+                })
+            </script>
         </form>
+        <div class="d-flex justify-content-center mb-5 my-3">
+            <button type="button" class="btn btn-dark btn-lg px-5" onclick="history.back()">돌아가기</button>
+            <button type="button" class="btn btn-dark btn-lg px-5 ml-5" onclick="dataSubmit()">가입하기</button>
+        </div>
     </div>
 </div>
 </body>
@@ -260,57 +314,48 @@
 <div th:replace="layout/footer::footer"></div>
 </body>
 
-<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script>
-    // 우편번호 찾기 찾기 화면을 넣을 element
-    var element_wrap = document.getElementById('wrap');
+    //form데이터 전송
+    function dataSubmit() {
+        var regImg = $("#ex_file")[0].files[0];
 
-    function foldDaumPostcode() {
-        // iframe을 넣은 element를 안보이게 한다.
-        element_wrap.style.display = 'none';
-    }
+        var interestList = [];
+        $('input[name="interest"]:checked').each(function(i){
+            interestList.push($(this).val());
+        });
 
-    function execDaumPostcode() {
-        // 현재 scroll 위치를 저장해놓는다.
-        var currentScroll = Math.max(document.body.scrollTop, document.documentElement.scrollTop);
+        var account = {
+            username: $('#username').val(),
+            password: $('#password').val(),
+            email: $('#email').val(),
+        };
 
-        new daum.Postcode({
-            oncomplete: function (data) {
-                // 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+        var profile = {
+            nickname: $('#nickname').val(),
+            phone: $('#phone').val(),
+            birth: $('#birth').val(),
+            gender: $('input[name="gender"]:checked').val(),
+            address: $('#address').val(),
+            addressDetail: $('#addressDetail').val(),
+            interest: interestList
+        };
 
-                // 각 주소의 노출 규칙에 따라 주소를 조합한다.
-                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
-                var addr = ''; // 주소 변수
+        var formData = new FormData();
 
-                //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
-                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
-                    addr = data.roadAddress;
-                } else { // 사용자가 지번 주소를 선택했을 경우(J)
-                    addr = data.jibunAddress;
-                }
+        formData.append("image", regImg);
+        formData.append("account", new Blob([JSON.stringify(account)], {type: "application/json"}));
+        formData.append("profile", new Blob([JSON.stringify(profile)], {type: "application/json"}));
 
-                // 주소 정보를 해당 필드에 넣는다.
-                document.getElementById("address").value = addr;
-                // 커서를 상세주소 필드로 이동한다.
-                document.getElementById("addressDetail").focus();
+        $.ajax({
+            url: "url",
+            data: formData,
+            processData: false,
+            contentType: false,
+            enctype: 'multipart/form-data',
+            type: "POST",
+        }).done(function (fragment) {
 
-                // iframe을 넣은 element를 안보이게 한다.
-                // (autoClose:false 기능을 이용한다면, 아래 코드를 제거해야 화면에서 사라지지 않는다.)
-                element_wrap.style.display = 'none';
-
-                // 우편번호 찾기 화면이 보이기 이전으로 scroll 위치를 되돌린다.
-                document.body.scrollTop = currentScroll;
-            },
-            // 우편번호 찾기 화면 크기가 조정되었을때 실행할 코드를 작성하는 부분. iframe을 넣은 element의 높이값을 조정한다.
-            onresize: function (size) {
-                element_wrap.style.height = size.height + 'px';
-            },
-            width: '100%',
-            height: '100%'
-        }).embed(element_wrap);
-
-        // iframe을 넣은 element를 보이게 한다.
-        element_wrap.style.display = 'block';
+        });
     }
 </script>
 

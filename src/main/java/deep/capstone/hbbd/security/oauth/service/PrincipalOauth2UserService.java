@@ -1,5 +1,6 @@
 package deep.capstone.hbbd.security.oauth.service;
 
+import deep.capstone.hbbd.dto.AccountDto;
 import deep.capstone.hbbd.entity.Account;
 import deep.capstone.hbbd.entity.Role;
 import deep.capstone.hbbd.repository.RoleRepository;
@@ -9,6 +10,7 @@ import deep.capstone.hbbd.security.oauth.user.GoogleUserInfo;
 import deep.capstone.hbbd.security.oauth.user.NaverUserInfo;
 import deep.capstone.hbbd.security.oauth.user.OAuth2UserInfo;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -55,8 +57,6 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 		Account account;
 		if (userOptional.isPresent()) {
 			account = userOptional.get();
-			account.setEmail(oAuth2UserInfo.getEmail());
-			accountRepository.save(account);
 		} else {
 			account = createOAuth2User(oAuth2UserInfo);
 		}
@@ -72,19 +72,24 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
 	private Account createOAuth2User(OAuth2UserInfo oAuth2UserInfo) {
 
-		Account account = accountRepository.save(Account.builder()
+		AccountDto accountDto = AccountDto.builder()
 				.username(oAuth2UserInfo.getProvider() + "_" + oAuth2UserInfo.getProviderId())
 				.email(oAuth2UserInfo.getEmail())
 				.provider(oAuth2UserInfo.getProvider())
 				.providerId(oAuth2UserInfo.getProviderId())
-				.build());
+				.nickname("")
+				.introduce("")
+				.profileImg("")
+				.build();
 
 		Role role = roleRepository.findByRoleName("ROLE_USER");
 		Set<Role> roles = new HashSet<>();
 		roles.add(role);
 
-		account.setUserRoles(roles);
+		accountDto.setRoles(roles);
 
-		return account;
+		Account newAccount = accountRepository.save(accountDto.toEntity());
+
+		return newAccount;
 	}
 }

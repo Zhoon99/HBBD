@@ -1,6 +1,6 @@
 package deep.capstone.hbbd.security.config;
 
-import lombok.RequiredArgsConstructor;
+import deep.capstone.hbbd.security.oauth.handler.Oauth2LoginSuccessHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @EnableWebSecurity
 @Slf4j
-@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
@@ -40,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable(); //CSRF off
         http
                 .authorizeRequests()
-                .antMatchers("/", "/users", "user/login/**", "/login*", "/class/register", "/signUp", "/url").permitAll()
+                .antMatchers("/", "/users", "user/login/**", "/login*", "/class/register", "/signUp", "/url", "/socialSignUp", "/url2").permitAll()
                 .antMatchers("/mypage").hasRole("USER") //hasRole : ROLE_권한명(prefix 로 ROLE_이 붙음)
                 .antMatchers("/messages").hasRole("MANAGER")
                 .antMatchers("/config").hasRole("ADMIN")
@@ -55,6 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .oauth2Login()
                 .loginPage("/login")
+                .successHandler(oauth2LoginSuccessHandler())
                 .permitAll()
 
                 .and()
@@ -65,6 +65,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
+
+    @Bean
+    public Oauth2LoginSuccessHandler oauth2LoginSuccessHandler() {
+        return new Oauth2LoginSuccessHandler();
     }
 
 }

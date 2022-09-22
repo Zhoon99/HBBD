@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Data
-@ToString(exclude = {"userRoles", "categoryAccounts"})
+@Getter
+@Setter
 @Builder
-@EqualsAndHashCode(of = "id")
+@ToString(exclude = {"userRoles", "categoryAccounts"})
 @NoArgsConstructor
 @AllArgsConstructor
 public class Account extends BaseEntity implements Serializable {
@@ -22,10 +22,10 @@ public class Account extends BaseEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 20, unique = true, nullable = false)
+    @Column(unique = true, nullable = false)
     private String username;
 
-    @Column(nullable = false)
+    @Column
     private String password;
 
     @Column(nullable = false)
@@ -42,8 +42,19 @@ public class Account extends BaseEntity implements Serializable {
             @JoinColumn(name = "role_id") })
     private Set<Role> userRoles = new HashSet<>();
 
-    @OneToOne(mappedBy = "account")
-    private Profile profile;
+    //프로필
+    @Column(length = 10, nullable = false)
+    private String nickname;
+
+    private String profileImg;
+
+    @Column(length = 150, nullable = false)
+    private String introduce;
+
+    @OneToMany(mappedBy = "account")
+    private List<CategoryAccount> categoryAccounts = new ArrayList<>();
+
+
 }
 
 

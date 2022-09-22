@@ -1,8 +1,7 @@
 package deep.capstone.hbbd.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import deep.capstone.hbbd.entity.Account;
 import deep.capstone.hbbd.entity.Category;
-import deep.capstone.hbbd.entity.Profile;
 import deep.capstone.hbbd.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +10,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -30,9 +28,31 @@ public class AccountDto {
     private String provider;
     private String providerId;
 
-    private List<String> roles;
+    private Set<Role> roles;
+
+    private String introduce;
+    private String profileImg;
+    private String nickname;
+
+    private List<String> interest;
 
     private LocalDateTime regDate, modDate;
+
+    public Account toEntity() {
+        Account account = Account.builder()
+                .id(id)
+                .username(username)
+                .password(password)
+                .email(email)
+                .provider(provider)
+                .providerId(providerId)
+                .userRoles(roles)
+                .nickname(nickname)
+                .profileImg(profileImg)
+                .introduce(introduce)
+                .build();
+        return account;
+    }
 }
 
 

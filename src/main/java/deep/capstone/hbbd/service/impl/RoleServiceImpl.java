@@ -2,7 +2,6 @@ package deep.capstone.hbbd.service.impl;
 
 import deep.capstone.hbbd.entity.Role;
 import deep.capstone.hbbd.repository.RoleRepository;
-import deep.capstone.hbbd.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,7 +12,7 @@ import java.util.List;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class RoleServiceImpl implements RoleService {
+public class RoleServiceImpl {
     private final RoleRepository roleRepository;
 
     @Transactional
