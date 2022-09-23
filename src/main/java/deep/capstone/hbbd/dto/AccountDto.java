@@ -50,6 +50,21 @@ public class AccountDto {
                 .build();
         return account;
     }
+
+    public AccountDto entityToDto(Account account) {
+        AccountDto accountDto = AccountDto.builder()
+                .id(account.getId())
+                .email(account.getEmail())
+                .password(account.getPassword())
+                .provider(account.getProvider())
+                .providerId(account.getProviderId())
+                .roles(account.getUserRoles())
+                .nickname(account.getNickname())
+                .profileImg(account.getProfileImg())
+                .introduce(account.getIntroduce())
+                .build();
+        return accountDto;
+    }
 }
 
 

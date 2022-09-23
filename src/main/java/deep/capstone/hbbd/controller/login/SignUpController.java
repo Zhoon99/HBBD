@@ -2,8 +2,11 @@ package deep.capstone.hbbd.controller.login;
 
 import deep.capstone.hbbd.dto.AccountDto;
 import deep.capstone.hbbd.repository.CategoryRepository;
+import deep.capstone.hbbd.security.form.service.UserPrincipal;
 import deep.capstone.hbbd.service.AccountService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +26,11 @@ public class SignUpController {
     }
 
     @GetMapping(value="/socialSignUp")
-    public String socialSignUp(Model model) throws Exception {
+    public String socialSignUp(Model model, Authentication authentication) throws Exception {
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+
         model.addAttribute("categoryList", categoryRepository.findAll());
+        model.addAttribute("accountId", userPrincipal.getAccount().getId());
         return "login/social_sign_up";
     }
 

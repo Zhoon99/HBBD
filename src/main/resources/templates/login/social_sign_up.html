@@ -43,6 +43,9 @@
 <!-- form group -->
 <div class="container d-flex justify-content-center">
     <div style="width:700px; margin-top: 30px;">
+        <div class="form-group">
+            <input type="hidden" class="form-control" name="accountId" id="accountId" th:value="${accountId}">
+        </div>
         <label class="control-label">프로필 이미지</label><br>
         <div style="display:inline;">
             <label for="ex_file">
@@ -232,6 +235,7 @@
         });
 
         var account = {
+            id: $('#accountId').val(),
             nickname: $('#nickname').val(),
             introduce: $('#introduce').val(),
             interest: interestList
@@ -249,12 +253,11 @@
             contentType: false,
             enctype: 'multipart/form-data',
             type: "POST",
-            success : function()
-            {
+            success: function () {
                 window.location = "/";
                 alert("회원가입에 성공했습니다.");
             },
-            error : function() {
+            error: function () {
                 window.location = "/login";
                 alert("회원가입에 실패했습니다.");
             }

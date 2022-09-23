@@ -84,10 +84,15 @@ public class AccountServiceImpl implements AccountService {
             imagePath = "images\\common\\noimage.jpg";
         }
 
-        if(accountDto.getPassword() != null) { //폼 회원가입
+        Account newAccount;
+
+        if(accountDto.getId() == null) { //폼 회원가입
 
             //비밀번호 인코딩
             accountDto.setPassword(passwordEncoder.encode(accountDto.getPassword()));
+
+            //프로필 이미지 저장
+            accountDto.setProfileImg(imagePath);
 
             //유저 권한 저장
             Role role = roleRepository.findByRoleName("ROLE_USER");
@@ -95,15 +100,17 @@ public class AccountServiceImpl implements AccountService {
             roles.add(role);
             accountDto.setRoles(roles);
 
+            newAccount = accountRepository.save(accountDto.toEntity());
+
         } else { //oauth2 회원가입
 
+            Account oauth2Account = accountRepository.findById(accountDto.getId()).get();
 
+            //프로필 추가
+            oauth2Account.setSocialProfile(accountDto.getIntroduce(), accountDto.getNickname(), imagePath);
+
+            newAccount = accountRepository.save(oauth2Account);
         }
-
-        //프로필 이미지 저장
-        accountDto.setProfileImg(imagePath);
-
-        Account newAccount = accountRepository.save(accountDto.toEntity());
 
         //관심도 저장 (카테고리_프로필)
         List<CategoryAccount> categoryAccountList = new ArrayList<>();
