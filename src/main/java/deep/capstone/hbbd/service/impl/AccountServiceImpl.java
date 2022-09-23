@@ -1,19 +1,21 @@
-package deep.capstone.hbbd.controller;
+package deep.capstone.hbbd.service.impl;
 
 import deep.capstone.hbbd.dto.AccountDto;
 import deep.capstone.hbbd.dto.CategoryAccountDto;
-import deep.capstone.hbbd.entity.*;
-import deep.capstone.hbbd.repository.*;
+import deep.capstone.hbbd.entity.Account;
+import deep.capstone.hbbd.entity.Category;
+import deep.capstone.hbbd.entity.CategoryAccount;
+import deep.capstone.hbbd.entity.Role;
+import deep.capstone.hbbd.repository.AccountRepository;
+import deep.capstone.hbbd.repository.CategoryProfileRepository;
+import deep.capstone.hbbd.repository.CategoryRepository;
+import deep.capstone.hbbd.repository.RoleRepository;
+import deep.capstone.hbbd.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -24,10 +26,10 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-@Controller
+@Service
 @Slf4j
 @RequiredArgsConstructor
-public class TestController {
+public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
     private final RoleRepository roleRepository;
@@ -38,17 +40,15 @@ public class TestController {
     // 이미지 저장 위치
     private final String rootPath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\images\\upload";
 
-    @RequestMapping(value = "/url", method = RequestMethod.POST)
-    @ResponseBody
+    @Override
     @Transactional
-    public void getData(@RequestPart(value = "account") AccountDto accountDto,
-                          @RequestPart(value = "image", required = false) MultipartFile file) {
+    public void createUser(AccountDto accountDto, MultipartFile file) {
 
         String imagePath = null;
 
         if (file != null) {
 
-            //실제 파일 이름 IE나 Edge 는 전체 경로가 들어오므로
+            //실제 파일 이름 IE나 Edge 는 전체 경로가 들어오므로 마지막 단어를 가져옴
             String originalName = file.getOriginalFilename();
             String fileName = originalName.substring(originalName.lastIndexOf("\\") + 1);
 
@@ -80,21 +80,25 @@ public class TestController {
                 e.printStackTrace();
             }
 
-        } else {
-            //기본 이미지 저장
+        } else { //기본 이미지 저장
             imagePath = "images\\common\\noimage.jpg";
         }
 
-        //비밀번호 인코딩
-        if(accountDto.getPassword() != null) {
-            accountDto.setPassword(passwordEncoder.encode(accountDto.getPassword()));
-        }
+        if(accountDto.getPassword() != null) { //폼 회원가입
 
-        //유저 권한 저장
-        Role role = roleRepository.findByRoleName("ROLE_USER");
-        Set<Role> roles = new HashSet<>();
-        roles.add(role);
-        accountDto.setRoles(roles);
+            //비밀번호 인코딩
+            accountDto.setPassword(passwordEncoder.encode(accountDto.getPassword()));
+
+            //유저 권한 저장
+            Role role = roleRepository.findByRoleName("ROLE_USER");
+            Set<Role> roles = new HashSet<>();
+            roles.add(role);
+            accountDto.setRoles(roles);
+
+        } else { //oauth2 회원가입
+
+
+        }
 
         //프로필 이미지 저장
         accountDto.setProfileImg(imagePath);

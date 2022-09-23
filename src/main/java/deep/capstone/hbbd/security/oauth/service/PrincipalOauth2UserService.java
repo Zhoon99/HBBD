@@ -73,7 +73,6 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 	private Account createOAuth2User(OAuth2UserInfo oAuth2UserInfo) {
 
 		AccountDto accountDto = AccountDto.builder()
-				.username(oAuth2UserInfo.getProvider() + "_" + oAuth2UserInfo.getProviderId())
 				.email(oAuth2UserInfo.getEmail())
 				.provider(oAuth2UserInfo.getProvider())
 				.providerId(oAuth2UserInfo.getProviderId())

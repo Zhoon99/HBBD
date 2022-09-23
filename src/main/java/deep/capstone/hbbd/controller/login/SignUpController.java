@@ -1,26 +1,38 @@
 package deep.capstone.hbbd.controller.login;
 
+import deep.capstone.hbbd.dto.AccountDto;
 import deep.capstone.hbbd.repository.CategoryRepository;
+import deep.capstone.hbbd.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequiredArgsConstructor
 public class SignUpController {
 
     private final CategoryRepository categoryRepository;
+    private final AccountService accountService;
 
     @GetMapping(value="/signUp")
-    public String createUser(Model model) throws Exception {
+    public String signUp(Model model) throws Exception {
         model.addAttribute("categoryList", categoryRepository.findAll());
         return "/login/sign_up";
     }
 
     @GetMapping(value="/socialSignUp")
-    public String createSocialUser(Model model) throws Exception {
+    public String socialSignUp(Model model) throws Exception {
         model.addAttribute("categoryList", categoryRepository.findAll());
         return "login/social_sign_up";
+    }
+
+    @RequestMapping(value = "/createUser", method = RequestMethod.POST)
+    @ResponseBody
+    public void createUser(@RequestPart(value = "account") AccountDto accountDto,
+                        @RequestPart(value = "image", required = false) MultipartFile file) {
+
+        accountService.createUser(accountDto, file);
     }
 }

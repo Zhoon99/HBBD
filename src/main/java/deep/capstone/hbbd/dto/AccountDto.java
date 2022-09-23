@@ -21,10 +21,8 @@ import java.util.Set;
 public class AccountDto {
 
     private Long id;
-    private String username;
-    private String password;
     private String email;
-
+    private String password;
     private String provider;
     private String providerId;
 
@@ -41,9 +39,8 @@ public class AccountDto {
     public Account toEntity() {
         Account account = Account.builder()
                 .id(id)
-                .username(username)
-                .password(password)
                 .email(email)
+                .password(password)
                 .provider(provider)
                 .providerId(providerId)
                 .userRoles(roles)

@@ -52,7 +52,7 @@ public class LoginController {
 //			account = (Account) ((AjaxAuthenticationToken) principal).getPrincipal();
 //		}
 
-		model.addAttribute("username", account.getUsername());
+		model.addAttribute("email", account.getEmail());
 		model.addAttribute("exception", exception);
 
 		return "user/login/denied";

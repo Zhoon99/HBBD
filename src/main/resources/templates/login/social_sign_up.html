@@ -1,5 +1,6 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head th:replace="layout/user_head::userHead"></head>
+
 <style>
     body {
         background-color: #F7EFDC;
@@ -216,7 +217,6 @@
         </div>
     </div>
 </div>
-</body>
 
 <div th:replace="layout/footer::footer"></div>
 </body>
@@ -243,7 +243,7 @@
         formData.append("account", new Blob([JSON.stringify(account)], {type: "application/json"}));
 
         $.ajax({
-            url: "url",
+            url: "createUser",
             data: formData,
             processData: false,
             contentType: false,
