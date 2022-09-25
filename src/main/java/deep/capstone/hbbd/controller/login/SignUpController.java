@@ -1,6 +1,8 @@
 package deep.capstone.hbbd.controller.login;
 
 import deep.capstone.hbbd.dto.AccountDto;
+import deep.capstone.hbbd.dto.ProfileDto;
+import deep.capstone.hbbd.entity.Account;
 import deep.capstone.hbbd.repository.CategoryRepository;
 import deep.capstone.hbbd.security.form.service.UserPrincipal;
 import deep.capstone.hbbd.service.AccountService;
@@ -34,11 +36,18 @@ public class SignUpController {
         return "login/social_sign_up";
     }
 
-    @RequestMapping(value = "/createUser", method = RequestMethod.POST)
+    @PostMapping(value = "/createUser")
     @ResponseBody
     public void createUser(@RequestPart(value = "account") AccountDto accountDto,
                         @RequestPart(value = "image", required = false) MultipartFile file) {
 
         accountService.createUser(accountDto, file);
     }
+
+    @PostMapping(value = "loadHeader")
+    @ResponseBody
+    public ProfileDto loadHeader(Authentication authentication) {
+        return accountService.loadHeader(authentication);
+    }
+
 }

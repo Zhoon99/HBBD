@@ -2,6 +2,7 @@ package deep.capstone.hbbd.service.impl;
 
 import deep.capstone.hbbd.dto.AccountDto;
 import deep.capstone.hbbd.dto.CategoryAccountDto;
+import deep.capstone.hbbd.dto.ProfileDto;
 import deep.capstone.hbbd.entity.Account;
 import deep.capstone.hbbd.entity.Category;
 import deep.capstone.hbbd.entity.CategoryAccount;
@@ -10,9 +11,11 @@ import deep.capstone.hbbd.repository.AccountRepository;
 import deep.capstone.hbbd.repository.CategoryProfileRepository;
 import deep.capstone.hbbd.repository.CategoryRepository;
 import deep.capstone.hbbd.repository.RoleRepository;
+import deep.capstone.hbbd.security.form.service.UserPrincipal;
 import deep.capstone.hbbd.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -126,5 +129,18 @@ public class AccountServiceImpl implements AccountService {
             });
             categoryProfileRepository.saveAll(categoryAccountList);
         }
+    }
+
+    @Override
+    @Transactional
+    public ProfileDto loadHeader(Authentication authentication) {
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        Account loginAccount = accountRepository.findById(userPrincipal.getAccount().getId()).get();
+
+        ProfileDto profileDto = ProfileDto.builder()
+                .nickname(loginAccount.getNickname())
+                .profileImg(loginAccount.getProfileImg())
+                .build();
+        return profileDto;
     }
 }
