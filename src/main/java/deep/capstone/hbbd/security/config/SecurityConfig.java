@@ -22,7 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception { //webIgnore - 필터를 거치지 않음(permitAll 차이점)
         web
                 .ignoring()
-                .antMatchers("/assets/**", "/favicon.ico", "/resources/**", "/error");
+                .antMatchers("/vendor/**", "/favicon.ico", "/resources/**", "/error");
         web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations()); //js,css,img 파일 같이 필터를 적용할 필요가 없는 리소스 적용
     }
 

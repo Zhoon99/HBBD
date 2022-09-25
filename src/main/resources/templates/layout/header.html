@@ -1,130 +1,102 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-<div th:fragment="header">
-    <nav class="navbar navbar-expand-lg justify-content-center">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/">
-                <h4 class="ms-2 text-md-start">
-                    <img src="/images/common/logo.png" alt="" width="65" height="60" id="logo">
-                </h4>
-            </a>
-            <div class="d-flex">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" sec:authorize="hasAuthority('ROLE_ADMIN')" href="#">관리자</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" sec:authorize="hasAuthority('ROLE_EDITOR')" href="#">에디터</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">빵지도</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">레시피</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">스크랩</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/login}" href="#">로그인</a>
-                    </li>
 
-                    <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
-                        <div class="row justify-content-start">
-                            <div class="img_box col-8">
-                                <img class="profile_img">
-                            </div>
-                            <div class="col-4">
-                                <a class="nav-link dropdown-toggle" id="signed_user" role="button"
-                                   data-bs-toggle="dropdown" aria-expanded="false">err</a>
-                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" href="#">Action</a></li>
-                                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                                    <li>
-                                        <hr class="dropdown-divider">
-                                    </li>
-                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                                </ul>
-                            </div>
-                        </div>
+<header id="header" class="header fixed-top d-flex align-items-center" th:fragment="header">
 
-                        <script>
-                            $.ajax({
-                                url: "loadHeader",
-                                type: "POST",
-                                dataType: "json",
-                                success: function (data) {
-                                    $('img[class=profile_img]').attr('src', data.profileImg);
-                                    $('a[id=signed_user]').text(data.nickname);
-                                },
-                                error: function () {
-                                    window.location = "/login";
-                                    alert("프로필을 불러오는데 오류가 생겼습니다.");
-                                }
-                            });
-                        </script>
+    <div class="d-flex align-items-center justify-content-between">
+        <a href="/" class="logo d-flex align-items-center">
+            <img src="" alt="">
+            <span class="d-none d-lg-block">HobbyBuddy</span>
+        </a>
+        <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div><!-- End Logo -->
 
-                        <style>
-                            .img_box {
-                                width: 40px;
-                                height: 40px;
-                                border-radius: 70%;
-                                overflow: hidden;
-                            }
+    <nav class="header-nav ms-auto">
+        <ul class="d-flex align-items-center">
 
-                            .profile_img {
-                                width: 100%;
-                                height: 100%;
-                                object-fit: cover;
-                            }
-                        </style>
+            <li class="nav-item nav-profile pe-5">
+                <a class="nav-link" href="#">
+                    <i class="bi-person-video3 me-1"></i>
+                    <span>클래스</span>
+                </a>
+            </li>
+
+            <li class="nav-item nav-profile pe-5">
+                <a class="nav-link" href="#">
+                    <i class="bi-controller me-1"></i>
+                    <span>클럽</span>
+                </a>
+            </li>
+
+            <li class="nav-item nav-profile pe-5">
+                <a class="nav-link" href="#">
+                    <i class="bi-chat-dots me-1"></i>
+                    <span>메시지</span>
+                </a>
+            </li>
+
+            <li class="nav-item nav-profile pe-5" sec:authorize="isAnonymous()">
+                <a class="nav-link" href="#" th:href="@{/login}">
+                    <i class="bi-heart me-1"></i>
+                    <span>로그인</span>
+                </a>
+            </li>
+
+            <li class="nav-item dropdown pe-4" sec:authorize="isAuthenticated()">
+
+                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+                    <div>
+                        <img src="images/common/noimage.jpg" alt="Profile" id="profile_img">
+                    </div>
+                    <span class="d-none d-md-block dropdown-toggle ps-2" id="signed_user">err</span>
+                </a><!-- End Profile Iamge Icon -->
+
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                            <i class="bi bi-person"></i>
+                            <span>프로필</span>
+                        </a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
                     </li>
 
-                    <!--                    <li class="nav-item" sec:authorize="isAuthenticated()">-->
-                    <!--                        <div class="row justify-content-start">-->
-                    <!--                            <div class="img_box col-8">-->
-                    <!--                                <img class="profile_img">-->
-                    <!--                            </div>-->
-                    <!--                            <div class="col-4">-->
-                    <!--                                <a class="nav-link" th:href="@{/logout}"><u id="signed_user" >err</u></a>-->
-                    <!--                            </div>-->
-                    <!--                        </div>-->
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
 
-                    <!--                        <script>-->
-                    <!--                            $.ajax({-->
-                    <!--                                url: "loadHeader",-->
-                    <!--                                type: "POST",-->
-                    <!--                                dataType: "json",-->
-                    <!--                                success: function (data) {-->
-                    <!--                                    $('img[class=profile_img]').attr('src',data.profileImg);-->
-                    <!--                                    $('u[id=signed_user]').text(data.nickname);-->
-                    <!--                                },-->
-                    <!--                                error: function () {-->
-                    <!--                                    window.location = "/login";-->
-                    <!--                                    alert("프로필을 불러오는데 오류가 생겼습니다.");-->
-                    <!--                                }-->
-                    <!--                            });-->
-                    <!--                        </script>-->
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="#" th:href="@{/logout}">
+                            <i class="bi bi-box-arrow-right"></i>
+                            <span>로그아웃</span>
+                        </a>
+                    </li>
 
-                    <!--                        <style>-->
-                    <!--                            .img_box {-->
-                    <!--                                width: 40px;-->
-                    <!--                                height: 40px;-->
-                    <!--                                border-radius: 70%;-->
-                    <!--                                overflow: hidden;-->
-                    <!--                            }-->
-                    <!--                            .profile_img {-->
-                    <!--                                width: 100%;-->
-                    <!--                                height: 100%;-->
-                    <!--                                object-fit: cover;-->
-                    <!--                            }-->
-                    <!--                        </style>-->
-                    <!--                    </li>-->
-                </ul>
-            </div>
-        </div>
-    </nav>
-</div>
+                </ul><!-- End Profile Dropdown Items -->
+                <script>
+                    $.ajax({
+                        url: "loadHeader",
+                        type: "POST",
+                        dataType: "json",
+                        success: function (data) {
+                            $('img[id=profile_img]').attr('src', data.profileImg);
+                            $('span[id=signed_user]').text(data.nickname);
+                        },
+                        error: function () {
+                            window.location = "/login";
+                            alert("프로필을 불러오는데 오류가 생겼습니다.");
+                        }
+                    });
+                </script>
+
+            </li><!-- End Profile Nav -->
+
+        </ul>
+    </nav><!-- End Icons Navigation -->
+
+</header>
 
 </html>
