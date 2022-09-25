@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout/user_head::userHead"></head>
+
+<body>
+
+<main>
+    <div class="container">
+
+        <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+
+                        <div class="d-flex justify-content-center py-4">
+                            <a href="/" class="logo d-flex align-items-center w-auto">
+                                <span class="d-none d-lg-block">HobbyBuddy</span>
+                            </a>
+                        </div><!-- End Logo -->
+
+                        <div class="card mb-3">
+
+                            <div class="card-body">
+
+                                <div class="pt-2 pb-1">
+                                    <h5 class="card-title text-center pb-0 fs-5 fw-bold">로그인</h5>
+                                </div>
+
+                                <div th:if="${param.error}" class="form-group">
+                                    <span th:text="${exception}" class="alert alert-danger">잘못된 아이디나 암호입니다</span>
+                                </div>
+
+                                <hr>
+
+                                <form th:action="@{/login_proc}" method="post" class="row g-3 needs-validation" novalidate>
+
+                                    <div class="col-12">
+                                        <label for="email" class="form-label">이메일</label>
+                                        <div class="input-group has-validation">
+                                            <input type="email" class="form-control" name="email" id="email" placeholder="이메일" required="required" autofocus="autofocus">
+                                            <div class="invalid-feedback">Please enter your username.</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="password" class="form-label">비밀번호</label>
+                                        <input type="password" class="form-control" name="password" id="password" placeholder="비밀번호" required="required">
+                                        <div class="invalid-feedback">Please enter your password!</div>
+                                    </div>
+
+                                    <div class="col-12 pt-3">
+                                        <button class="btn btn-primary w-100 py-2" type="submit">Login</button>
+                                    </div>
+
+                                    <div class="col-12 d-flex justify-content-center">
+                                        <p class="small mb-0">계정이 없으신가요? <a th:href="@{/signUp}" class="fw-bold">회원가입 하기</a></p>
+                                    </div>
+                                </form>
+
+                                <a href="/oauth2/authorization/google"> <p class="login mt-5">GOOGLE LOGIN</p></a>
+                                <a href="/oauth2/authorization/naver"> <p class="login mt-3">NAVER LOGIN</p></a>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </div>
+</main><!-- End #main -->
+
+</body>
+
+</html>
