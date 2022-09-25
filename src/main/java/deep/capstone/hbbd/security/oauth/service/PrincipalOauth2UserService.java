@@ -10,6 +10,7 @@ import deep.capstone.hbbd.security.oauth.user.GoogleUserInfo;
 import deep.capstone.hbbd.security.oauth.user.NaverUserInfo;
 import deep.capstone.hbbd.security.oauth.user.OAuth2UserInfo;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,6 +25,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
@@ -42,13 +44,13 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
 		OAuth2UserInfo oAuth2UserInfo = null;
 		if (userRequest.getClientRegistration().getRegistrationId().equals("google")) {
-			System.out.println("구글 로그인 요청~~");
+			log.info("-------------------구글 로그인 요청-------------------");
 			oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
 		} else if (userRequest.getClientRegistration().getRegistrationId().equals("naver")){
-			System.out.println("네이버 로그인 요청~~");
+			log.info("-------------------네이버 로그인 요청-------------------");
 			oAuth2UserInfo = new NaverUserInfo((Map)oAuth2User.getAttributes().get("response"));
 		} else {
-			System.out.println("우리는 구글과 페이스북만 지원해요 ㅎㅎ");
+			log.error("--------------구글, 네이버 외 공급자--------------");
 		}
 
 		Optional<Account> userOptional =
