@@ -24,7 +24,7 @@ public class SignUpController {
     @GetMapping(value="/signUp")
     public String signUp(Model model) throws Exception {
         model.addAttribute("categoryList", categoryRepository.findAll());
-        return "/login/sign_up";
+        return "/login/sign_up_form";
     }
 
     @GetMapping(value="/socialSignUp")

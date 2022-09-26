@@ -11,4 +11,9 @@ public class TestController {
         return "login";
     }
 
+    @GetMapping(value="/signuptest")
+    public String signuptest() throws Exception {
+        return "login/sign_up_form";
+    }
+
 }
