@@ -8,12 +8,12 @@ public class TestController {
 
     @GetMapping(value="/login2")
     public String index() throws Exception {
-        return "login";
+        return "login/login";
     }
 
-    @GetMapping(value="/signuptest")
+    @GetMapping(value="/test")
     public String signuptest() throws Exception {
-        return "login/sign_up_form";
+        return "social_sign_up";
     }
 
 }
