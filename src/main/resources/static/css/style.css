@@ -389,16 +389,19 @@ h6 {
 .logo span {
   font-size: 26px;
   font-weight: 700;
-  color: #012970;
+  /*color: #012970;*/
+  color: #fff;
   font-family: "Nunito", sans-serif;
 }
 
 .header {
   transition: all 0.5s;
   z-index: 997;
-  height: 60px;
-  box-shadow: 0px 2px 20px rgba(1, 41, 112, 0.1);
-  background-color: #fff;
+  height: 68px;
+  /*box-shadow: 0px 2px 20px rgba(1, 41, 112, 0.1);*/
+  /*background-color: #fff;*/
+  box-shadow: 0px 2px 5px rgba(1, 41, 112, 0.1);
+  background-color: #9BBFD7;
   padding-left: 20px;
   /* Toggle Sidebar Button */
   /* Search Bar */
@@ -408,7 +411,8 @@ h6 {
   font-size: 32px;
   padding-left: 10px;
   cursor: pointer;
-  color: #012970;
+  /*color: #012970;*/
+  color: #fff;
 }
 
 /*--------------------------------------------------------------
@@ -431,14 +435,15 @@ h6 {
 }
 
 .header-nav .nav-profile {
-  color: #012970;
+  /*color: #012970;*/
+  color: #fff;
 }
 
 .header-nav .nav-profile div {
   width: 40px;
   height: 40px;
   border-radius: 70%;
-  border: 2px solid #012970;
+  /*border: 2px solid #012970;*/
   overflow: hidden;
 }
 
@@ -644,7 +649,7 @@ h6 {
 }
 
 .sidebar-nav .nav-heading {
-  font-size: 16px;
+  font-size: 18px;
   text-transform: uppercase;
   color: #012970;
   font-weight: 600;

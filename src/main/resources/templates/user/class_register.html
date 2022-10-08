@@ -1,39 +1,29 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
 <head th:replace="layout/user_head::userHead"></head>
-<body>
-<div th:replace="layout/header::header"></div>
 
 <style>
-    body {
-        background-color: #F7EFDC;
+    .radio_classification input[type="radio"] {
+        display: none;
     }
 
-    .star {
-        position: relative;
-        font-size: 3rem;
-        color: #ddd;
-    }
-
-    .star input {
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        left: 0;
-        opacity: 0;
+    .radio_classification input[type="radio"] + span {
+        display: inline-block;
+        padding: 15px 10px;
+        border: 1px solid #dfdfdf;
+        background-color: #ffffff;
+        text-align: center;
         cursor: pointer;
     }
 
-    .star span {
-        width: 0;
-        position: absolute;
-        left: 0;
-        color: #754F44;
-        overflow: hidden;
-        pointer-events: none;
+    .radio_classification input[type="radio"]:checked + span {
+        background-color: #113a6b;
+        color: #ffffff;
     }
 
-    textarea {
-        resize: none; /* 사용자 임의 변경 불가 */
+    .ck-editor__editable:not(.ck-editor__nested-editable) {
+        min-height: 300px;
     }
 
     .address-btn {
@@ -41,293 +31,397 @@
         color: #F7EFDC;
         font-weight: bold;
     }
-
-    .uploadResult {
-        width: 100%;
-        background-color: gray;
-        margin-top: 10px;
-    }
-
-    .uploadResult ul {
-        display: flex;
-        flex-flow: row;
-        justify-content: center;
-        align-items: center;
-        vertical-align: top;
-        overflow: auto;
-    }
-
-    .uploadResult ul li {
-        list-style: none;
-        padding: 10px;
-        margin-left: 2em;
-    }
-
-    .uploadResult ul li img {
-        width: 100px;
-    }
 </style>
 
-<body class="d-flex flex-column min-vh-100">
-<div class="container d-flex justify-content-center">
-    <div style="width:700px; margin-top: 30px;">
-        <form class="form-horizontal" th:action="@{/editor/breadRegister}" method="post">
-            <div class="form-group">
-                <label for="breadName" class="col-sm-2 control-label">빵집 이름</label>
-                <input type="text" class="form-control" name="breadName" id="breadName"
-                       placeholder="빵집 이름" required>
-            </div>
-            <div class="form-group">
-                <label for="address" class="col-sm-2 control-label">주소</label>
-                <div class="input-group">
-                    <input type="text" class="form-control" name="address" id="address" placeholder="주소" required readonly><br>
-                    <span class="input-group-btn">
-                        <button class="address-btn btn btn-default" onclick="execDaumPostcode()"
-                                type="button">주소 찾기</button>
-                    </span>
-                </div>
-                <input type="text" class="form-control mt-3" name="detailAddress" id="detailAddress" placeholder="상세주소"
-                       required>
-            </div>
-            <div id="wrap"
-                 style="display:none;border:1px solid;width:700px;height:300px;margin:5px 0;position:relative">
-                <img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnFoldWrap"
-                     style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" onclick="foldDaumPostcode()"
-                     alt="접기 버튼">
-            </div>
-            <div class="form-group">
-                <label for="scope" class="col-sm-2 control-label">에디터 별점</label>
-                <span class="star">
-                    ★★★★★
-                    <span>★★★★★</span>
-                    <input type="range" name="scope" id="scope" oninput="drawStar(this)" value="1" step="0.5" min="0"
-                           max="5">
-                  </span>
-            </div>
-            <div class="form-group">
-                <label for="editorEval" class="col-sm-2 control-label">에디터 평</label>
-                <textarea class="form-control" placeholder="에디터 평" name="editorEval" id="editorEval"
-                          style="height: 100px"
-                          required></textarea>
-            </div>
-            <div class="form-group">
-                <label for="phone" class="col-sm-2 control-label">전화번호</label>
-                <input type="tel" class="form-control input-large" name="phone" id="phone" placeholder="전화번호"
-                       required>
-            </div>
-            <div class="form-group">
-                <label for="priceRange" class="col-sm-2 control-label">가격대</label>
-                <input type="text" class="form-control input-large" name="priceRange" id="priceRange"
-                       placeholder="가격대" required>
-            </div>
-            <div class="form-group">
-                <label for="openingHours" class="col-sm-2 control-label">영업시간</label>
-                <input type="text" class="form-control input-large" name="openingHours" id="openingHours"
-                       placeholder="영업시간" required>
-            </div>
-            <div class="form-group">
-                <label for="breakTime" class="col-sm-2 control-label">쉬는시간</label>
-                <input type="text" class="form-control input-large" name="breakTime" id="breakTime"
-                       placeholder="쉬는시간" required>
-            </div>
-            <div class="form-group">
-                <label for="lastOrder" class="col-sm-2 control-label">마지막주문</label>
-                <input type="text" class="form-control input-large" name="lastOrder" id="lastOrder"
-                       placeholder="마지막주문" required>
-            </div>
-            <div class="form-group">
-                <input type="hidden" class="form-control input-large" name="lat" id="lat">
-                <input type="hidden" class="form-control input-large" name="lng" id="lng">
-            </div>
-            <div class="form-group fileForm">
-                <label for="fileInput" class="col-sm-2 control-label">메뉴 이미지</label>
-                <div class="custom-file">
-                    <input type="file" class="custom-file-input files" id="fileInput" multiple>
-                    <label class="custom-file-label" data-browse="Browse"></label>
-                </div>
-            </div>
-            <div class="uploadResult">
-                <ul>
+<body>
 
-                </ul>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-offset-1 col-sm-10 mt-3">
-                    <button class="btn btn-dark btn-lg">돌아가기</button>
-                    <button type="Submit" class="btn btn-dark btn-lg">등록하기</button>
+<!-- ======= Header ======= -->
+<header th:replace="layout/header::header"></header>
+
+<!-- ======= Sidebar ======= -->
+<aside th:replace="layout/sidebar::sidebar"></aside>
+
+<main id="main" class="main">
+    <div class="pagetitle"><h1>클래스 등록</h1></div>
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Datatables</h5>
+
+                        <div class="row mb-3">
+                            <label for="className" class="col-sm-2 col-form-label">클래스 명</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="className" id="className"
+                                       placeholder="클래스 명" required>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label class="col-sm-2 col-form-label d-flex align-items-center">대표 이미지</label>
+                            <div class="col-sm-10">
+                                <div style="display:inline;">
+                                    <label for="ex_file">
+                                        <img src="/images/common/add_img.png"
+                                             style="width:100px; height:100px; cursor: pointer;">
+                                    </label>
+                                    <input type="file" id="ex_file"
+                                           onchange="previewImage(this, 'user_upload_img');"
+                                           style="display: none;">
+
+                                    <span id='user_upload_img'></span>
+                                </div>
+                            </div>
+                        </div>
+                        <script>
+                            var fileInfoArr = [];
+
+                            //썸네일 클릭시 삭제.
+                            function fileRemove() {
+                                $("#profile_img").remove();
+                                console.log(fileInfoArr);
+                            }
+
+                            //썸네일 미리보기.
+                            function previewImage(targetObj, previewId) {
+
+                                var ext = $(targetObj).val().split('.').pop().toLowerCase();
+
+                                if ($.inArray(ext, ['gif', 'png', 'jpg', 'jpeg']) == -1) {
+                                    alert('gif, png, jpg, jpeg 형식만 업로드할 수 있습니다.');
+                                    return false;
+                                }
+
+                                var preview = document.getElementById(previewId); // 미리보기 div id
+                                var ua = window.navigator.userAgent;
+
+                                if (ua.indexOf("MSIE") > -1) { //ie일때
+
+                                    targetObj.select();
+                                    try {
+                                        var src = document.selection.createRange().text; // get file full path
+                                        var ie_preview_error = document.getElementById("ie_preview_error_" + previewId);
+
+                                        if (ie_preview_error) {
+                                            preview.removeChild(ie_preview_error); //error가 있으면 delete
+                                        }
+
+                                        var img = document.getElementById(previewId); //이미지가 뿌려질 곳
+
+                                        img.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + src + "', sizingMethod='scale')"; //이미지 로딩, sizingMethod는 div에 맞춰서 사이즈를 자동조절 하는 역할
+                                    } catch (e) {
+                                        if (!document.getElementById("ie_preview_error_" + previewId)) {
+
+                                            var info = document.createElement("<p>");
+                                            info.id = "ie_preview_error_" + previewId;
+                                            info.innerHTML = "a";
+                                            preview.insertBefore(info, null);
+                                        }
+                                    }
+                                } else { //ie가 아닐때
+
+                                    var files = targetObj.files;
+
+                                    for (var i = 0; i < files.length; i++) {
+
+                                        var file = files[i];
+                                        var imageType = /image.*/; //이미지 파일일 경우만 뿌려줌.
+                                        if (!file.type.match(imageType))
+                                            continue;
+
+                                        var prevImg = document.getElementById("profile_img"); // 이전에 미리보기가 있다면 삭제
+                                        if (prevImg) {
+                                            preview.removeChild(prevImg);
+                                        }
+
+                                        var span = document.createElement('span');
+                                        span.id = "profile_img";
+                                        span.style.width = '100px';
+                                        span.style.height = '100px';
+                                        span.style.display = 'inline-block';
+                                        span.style.backgroundColor = '#cccccc';
+                                        span.style.textAlign = 'center';
+                                        preview.appendChild(span);
+
+                                        var img = document.createElement("img"); // 크롬은 div에 이미지가 뿌려지지 않기때문에 자식 Element를 만듬.
+                                        img.id = "prev_" + previewId;
+                                        img.className = "addImg";
+                                        img.classList.add("obj");
+                                        img.file = file;
+                                        img.style.width = 'auto';
+                                        img.style.height = 'inherit';
+                                        img.style.cursor = 'pointer';
+                                        img.onclick = () => fileRemove(); //이미지를 클릭했을 때.
+                                        span.appendChild(img);
+
+                                        if (window.FileReader) { // FireFox, Chrome, Opera 확인.
+                                            var reader = new FileReader();
+                                            reader.onloadend = (function (aImg) {
+                                                return function (e) {
+                                                    aImg.src = e.target.result;
+                                                };
+                                            })(img);
+                                            reader.readAsDataURL(file);
+                                        } else { // safari is not supported FileReader
+                                            if (!document.getElementById("sfr_preview_error_" + previewId)) {
+                                                var info = document.createElement("p");
+                                                info.id = "sfr_preview_error_" + previewId;
+                                                info.innerHTML = "not supported FileReader";
+                                                preview.insertBefore(info, null);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        </script>
+
+                        <div class="row mb-3">
+                            <label class="col-sm-2 col-form-label">카테고리</label>
+                            <div class="col-sm-10">
+                                <div class="form-floating mb-3">
+                                    <select class="form-select" id="categoryId" name="categoryId" required>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                    </select>
+                                    <label for="categoryId">클래스 카테고리</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="className" class="col-sm-2 col-form-label d-flex align-items-center">분류</label>
+                            <div class="col-sm-10">
+                                <label class="radio_classification">
+                                    <input type="radio" name="classification" value="원데이" checked>
+                                    <span>원데이</span>
+                                </label>
+                                <label class="radio_classification">
+                                    <input type="radio" name="classification" value="정규">
+                                    <span>정규</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label class="col-sm-2 col-form-label">추가 정보</label>
+                            <div class="col-sm-10">
+                                <div class="input-group input-group-sm mb-2">
+                                    <span class="input-group-text d-flex justify-content-center" style="width: 90px;">소요시간</span>
+                                    <input type="text" class="form-control" name="timeRequired" id="timeRequired"
+                                           required>
+                                </div>
+                                <div class="input-group input-group-sm mb-2">
+                                    <span class="input-group-text justify-content-center"
+                                          style="width: 90px;">수강인원</span>
+                                    <input type="text" class="form-control" name="personnel" id="personnel" required>
+                                </div>
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-text justify-content-center" style="width: 90px;">가격</span>
+                                    <input type="text" class="form-control" name="price" id="price" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="ckeditor" class="col-sm-2 col-form-label">클래스 소개</label>
+                            <div class="col-sm-10">
+                                <textarea id="ckeditor" placeholder="" style="display: none; width: 100%;"></textarea>
+
+                                <script>
+                                    let editor;
+
+                                    ClassicEditor
+                                        .create(document.querySelector('#ckeditor'), {})
+                                        .then(newEditor => {
+                                            editor = newEditor;
+                                        })
+
+                                        .then(editor => {
+                                            window.editor = editor;
+
+                                        })
+                                        .catch(error => {
+                                            console.error('Oops, something went wrong!');
+                                            console.error('Please, report the following error on https://github.com/ckeditor/ckeditor5/issues with the build id and the error stack trace:');
+                                            console.warn('Build id: g64ljk55ssvc-goqlohse75uw');
+                                            console.error(error);
+                                        });
+                                </script>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label class="col-sm-2 col-form-label d-flex align-items-center">준비물</label>
+                            <div class="col-sm-10">
+                                <div class="materialLengthWrap d-flex justify-content-end">
+                                    <span class="materialTextCount">0자</span>
+                                    <span class="materialTextTotal">/200자</span>
+                                </div>
+                                <textarea class="form-control" placeholder="준비물을 입력해주세요" name="material" id="material"
+                                          maxlength="200" style="height: 100px; resize: none;"
+                                          required></textarea>
+
+                                <script>
+                                    $('#material').keyup(function (e) {
+                                        let content = $(this).val();
+
+                                        // 글자수 세기
+                                        if (content.length == 0 || content == '') {
+                                            $('.materialTextCount').text('0자');
+                                        } else {
+                                            $('.materialTextCount').text(content.length + '자');
+                                        }
+
+                                        // 글자수 제한
+                                        if (content.length > 200) {
+                                            // 200자 부터는 타이핑 되지 않도록
+                                            $(this).val($(this).val().substring(0, 200));
+                                            // 200자 넘으면 알림창 뜨도록
+                                            alert('200자까지 입력 가능합니다.');
+                                        }
+                                        ;
+                                    });
+                                </script>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label class="col-sm-2 col-form-label d-flex align-items-center">주의사항</label>
+                            <div class="col-sm-10">
+                                <div class="precautionsLengthWrap d-flex justify-content-end">
+                                    <span class="precautionsTextCount">0자</span>
+                                    <span class="precautionsTextTotal">/200자</span>
+                                </div>
+                                <textarea class="form-control" placeholder="주의사항을 입력해주세요" name="precautions"
+                                          id="precautions"
+                                          maxlength="200" style="height: 100px; resize: none;"
+                                          required></textarea>
+
+                                <script>
+                                    $('#precautions').keyup(function (e) {
+                                        let content = $(this).val();
+
+                                        // 글자수 세기
+                                        if (content.length == 0 || content == '') {
+                                            $('.precautionsTextCount').text('0자');
+                                        } else {
+                                            $('.precautionsTextCount').text(content.length + '자');
+                                        }
+
+                                        // 글자수 제한
+                                        if (content.length > 200) {
+                                            // 200자 부터는 타이핑 되지 않도록
+                                            $(this).val($(this).val().substring(0, 200));
+                                            // 200자 넘으면 알림창 뜨도록
+                                            alert('200자까지 입력 가능합니다.');
+                                        }
+                                        ;
+                                    });
+                                </script>
+                            </div>
+                        </div>
+
+                        <form id="curriculumForm">
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label">커리큘럼</label>
+                                <div class="col-sm-10">
+
+                                    <table id="addTable" style="width: 100%;">
+                                        <tr>
+                                            <td rowspan="4" class="fs-3 pt-4">1.</td>
+                                            <td width="90%">
+                                                <p class="mb-1">타이틀</p>
+                                                <input type='text' class='form-control' placeholder='30자까지 입력가능합니다.'>
+
+                                                <p class="mb-1 mt-2">내용</p>
+                                                <input type='text' class='form-control' placeholder='150자까지 입력가능합니다.'>
+                                            </td>
+                                            <td>
+                                                <label style="cursor:pointer;">삭제</label>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <label style="cursor:pointer;" onclick="insRow()"
+                                           class="d-flex justify-content-center">
+                                        <div class="fw-bold">추가하기 ▼</div>
+                                    </label>
+                                </div>
+                            </div>
+                        </form>
+
+                        <script>
+                            function insRow() {
+                                var table = document.getElementById('addTable');
+                                alert(table.rows.length);
+                                reloadIndex();
+                            }
+
+                            //인덱스 재설정
+                            function reloadIndex()
+                            {
+                                var table = document.getElementById('addTable');
+                                var tableRowLength = table.rows.length; // Row 개수
+                                var x;
+
+                                for(var i = 0; i < tableRowLength; i++)
+                                {
+                                    x = table.rows[i].cells;
+                                    x[0].innerText = table.rows[i].rowIndex + 1;
+                                }
+                            }
+
+                            // var oTbl;
+                            //
+                            // //Row 추가
+                            // function insRow() {
+                            //     oTbl = document.getElementById("addTable");
+                            //
+                            //     var oRow = oTbl.insertRow();
+                            //     oRow.onmouseover = function () {
+                            //         oTbl.clickedRowIndex = this.rowIndex
+                            //     }; //clickedRowIndex - 클릭한 Row의 위치를 확인;
+                            //     var oCell = oRow.insertCell();
+                            //
+                            //     //삽입될 Form Tag
+                            //     var frmTag = "<input type='text' class='form-control' placeholder='커리큘럼 타이틀'>";
+                            //     frmTag += "<input type=button value='삭제' onclick='removeRow()' style='cursor:hand'>";
+                            //     oCell.innerHTML = frmTag;
+                            // }
+                            //
+                            // //Row 삭제
+                            // function removeRow() {
+                            //     oTbl.deleteRow(oTbl.clickedRowIndex);
+                            // }
+                            //
+                            // function frmCheck() {
+                            //     var frm = document.form;
+                            //
+                            //     for (var i = 0; i <= frm.elements.length - 1; i++) {
+                            //         if (frm.elements[i].name == "addText") {
+                            //             if (!frm.elements[i].value) {
+                            //                 alert("텍스트박스에 값을 입력하세요!");
+                            //                 frm.elements[i].focus();
+                            //                 return;
+                            //             }
+                            //         }
+                            //     }
+                            // }
+                        </script>
+
+                    </div>
+
                 </div>
             </div>
-        </form>
-    </div>
-</div>
+        </div>
+        </div>
+    </section>
+</main><!-- End #main -->
+
+<!-- ======= Footer ======= -->
+<footer th:replace="layout/footer::footer"></footer>
+
 </body>
 
-<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0d7651756108879925f2e5555e0f1a7a&libraries=services"></script>
-<script>
-    // 우편번호 찾기 찾기 화면을 넣을 element
-    var element_wrap = document.getElementById('wrap');
-
-    function foldDaumPostcode() {
-        // iframe을 넣은 element를 안보이게 한다.
-        element_wrap.style.display = 'none';
-    }
-
-    function execDaumPostcode() {
-        // 현재 scroll 위치를 저장해놓는다.
-        var currentScroll = Math.max(document.body.scrollTop, document.documentElement.scrollTop);
-
-        new daum.Postcode({
-            oncomplete: function (data) {
-                // 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
-
-                // 각 주소의 노출 규칙에 따라 주소를 조합한다.
-                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
-                var addr = ''; // 주소 변수
-
-                //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
-                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
-                    addr = data.roadAddress;
-                } else { // 사용자가 지번 주소를 선택했을 경우(J)
-                    addr = data.jibunAddress;
-                }
-
-                // 주소 정보를 해당 필드에 넣는다.
-                document.getElementById("address").value = addr;
-                // 커서를 상세주소 필드로 이동한다.
-                document.getElementById("detailAddress").focus();
-
-                // iframe을 넣은 element를 안보이게 한다.
-                // (autoClose:false 기능을 이용한다면, 아래 코드를 제거해야 화면에서 사라지지 않는다.)
-                element_wrap.style.display = 'none';
-
-                // 우편번호 찾기 화면이 보이기 이전으로 scroll 위치를 되돌린다.
-                document.body.scrollTop = currentScroll;
-
-                //주소-좌표 변환 객체를 생성
-                var geocoder = new daum.maps.services.Geocoder();
-
-                geocoder.addressSearch(addr, function(results, status) {
-
-                    // 정상적으로 검색이 완료됐으면
-                    if (status === daum.maps.services.Status.OK) {
-
-                        var result = results[0]; //첫번째 결과의 값을 활용
-
-                        document.getElementById("lat").value = result.y;
-                        document.getElementById("lng").value = result.x;
-                    }
-                });
-            },
-            // 우편번호 찾기 화면 크기가 조정되었을때 실행할 코드를 작성하는 부분. iframe을 넣은 element의 높이값을 조정한다.
-            onresize: function (size) {
-                element_wrap.style.height = size.height + 'px';
-            },
-            width: '100%',
-            height: '100%'
-        }).embed(element_wrap);
-
-        // iframe을 넣은 element를 보이게 한다.
-        element_wrap.style.display = 'block';
-    }
-
-    //별점 드래그
-    const drawStar = (target) => {
-        document.querySelector(`.star span`).style.width = `${target.value * 20}%`;
-    }
-
-    //이미지 업로드
-    $(document).ready(function (e) {
-        var regex = new RegExp("(.*?)\.(exe|sh|zip|alz|tiff)$");
-        var maxSize = 10485760; //10MB
-
-        function checkExtension(fileName, fileSize){
-
-            if(fileSize >= maxSize){
-                alert("파일 사이즈 초과!");
-                return false;
-            }
-
-            if(regex.test(fileName)){
-                alert("지원하지 않는 파일 형식입니다!");
-                return false;
-            }
-            return true;
-        }
-
-        //파일 선택시 이벤트
-        $(".custom-file-input").on("change", function() {
-
-            var fileName = $(this).val().split("\\").pop();
-            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-
-            var formData = new FormData();
-
-            var inputFile = $(this);
-
-            var files = inputFile[0].files;
-
-            var appended = false;
-
-            for (var i = 0; i < files.length; i++) {
-
-                if(!checkExtension(files[i].name, files[i].size) ){
-                    return false;
-                }
-
-                console.log(files[i]);
-                formData.append("uploadFiles", files[i]);
-                appended = true;
-            }
-
-            //upload를 하지 않는다.
-            if (!appended) {return;}
-
-            for (var value of formData.values()) {
-                console.log(value);
-            }
-
-            //실제 업로드 부분
-            //upload ajax
-            $.ajax({
-                url: '/menuImgUpload',
-                processData: false,
-                contentType: false,
-                data: formData,
-                type: 'POST',
-                dataType:'json',
-                success: function(result){
-                    console.log(result);
-                    showResult(result);
-                },
-                error: function(jqXHR, textStatus, errorThrown){
-                    console.log(textStatus);
-                }
-            }); //$.ajax
-        }); //end change event
-    });
-
-    function showResult(uploadResultArr){
-
-        var uploadUL = $(".uploadResult ul");
-
-        var str ="";
-
-        $(uploadResultArr).each(function(i, obj) {
-
-            str += "<li data-name='" + obj.fileName + "' data-path='"+obj.folderPath+"' data-uuid='"+obj.uuid+"'>";
-            str + " <div>";
-            str += "<button type='button' data-file=\'" + obj.imageURL + "\' "
-            str += "class='btn-warning btn-sm'>X</button><br>";
-            str += "<img src='/display?fileName=" + obj.thumbnailURL + "'>";
-            str += "</div>";
-            str + "</li>";
-        });
-
-        uploadUL.append(str);
-    }
-</script>
-
-<div th:replace="layout/footer::footer"></div>
-</body>
 </html>

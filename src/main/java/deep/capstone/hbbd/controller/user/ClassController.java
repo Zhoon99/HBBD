@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/class")
 public class ClassController {
 
-    @GetMapping("/register")
+    @GetMapping("register")
     public String register() {
         return "user/class_register";
     }

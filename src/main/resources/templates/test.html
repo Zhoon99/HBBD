@@ -19,7 +19,17 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Datatables</h5>
-                        <p>asdasd</p>
+
+                        <textarea id="ckeditor" placeholder="" style="display: none; width: 100%;">   </textarea>
+
+                        <button type="button" class="btn btn-dark btn-lg px-5 ml-5" onclick="dataSubmit()">가입하기</button>
+
+                        <script>
+                            //form데이터 전송
+                            function dataSubmit() {
+                                alert(editor.getData())
+                            }
+                        </script>
                     </div>
                 </div>
             </div>
@@ -29,6 +39,8 @@
 
 <!-- ======= Footer ======= -->
 <footer th:replace="layout/footer::footer"></footer>
+
+<script th:src="@{/vendor/ckeditor/ckeditor.js}"></script>
 
 </body>
 
