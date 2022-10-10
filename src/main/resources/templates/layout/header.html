@@ -47,7 +47,7 @@
 
                 <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
                     <div>
-                        <img src="images/common/noimage.jpg" alt="Profile" id="profile_img">
+                        <img th:src="@{/images/common/noimage.jpg}" alt="Profile" id="profile_img">
                     </div>
                     <span class="d-none d-md-block dropdown-toggle ps-2" id="signed_user">err</span>
                 </a><!-- End Profile Iamge Icon -->
@@ -78,11 +78,11 @@
                 </ul><!-- End Profile Dropdown Items -->
                 <script>
                     $.ajax({
-                        url: "loadHeader",
+                        url: "/loadHeader",
                         type: "POST",
                         dataType: "json",
                         success: function (data) {
-                            $('img[id=profile_img]').attr('src', data.profileImg);
+                            $('img[id=profile_img]').attr('src', "/" + data.profileImg);
                             $('span[id=signed_user]').text(data.nickname);
                         },
                         error: function () {

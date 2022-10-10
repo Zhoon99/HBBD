@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable(); //CSRF off
         http
                 .authorizeRequests()
-                .antMatchers("/", "/login*", "/signUp", "/createUser", "/socialSignUp", "/class/register").permitAll()
+                .antMatchers("/", "/login*", "/signUp", "/createUser", "/socialSignUp", "/class/register", "/loadHeader", "/curTest").permitAll()
                 .antMatchers("/mypage").hasRole("USER") //hasRole : ROLE_권한명(prefix 로 ROLE_이 붙음)
                 .anyRequest().authenticated()
 
