@@ -259,7 +259,7 @@
                       formData.append("account", new Blob([JSON.stringify(account)], {type: "application/json"}));
 
                       $.ajax({
-                        url: "createUser",
+                        url: "/createUser",
                         data: formData,
                         processData: false,
                         contentType: false,

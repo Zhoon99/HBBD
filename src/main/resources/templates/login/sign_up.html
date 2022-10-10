@@ -119,7 +119,7 @@
 
                                                         var info = document.createElement("<p>");
                                                         info.id = "ie_preview_error_" + previewId;
-                                                        info.innerHTML = "a";
+                                                        info.innerHTML = e.name;
                                                         preview.insertBefore(info, null);
                                                     }
                                                 }
@@ -271,7 +271,7 @@
                                             formData.append("account", new Blob([JSON.stringify(account)], {type: "application/json"}));
 
                                             $.ajax({
-                                                url: "createUser",
+                                                url: "/createUser",
                                                 data: formData,
                                                 processData: false,
                                                 contentType: false,

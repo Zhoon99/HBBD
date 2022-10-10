@@ -54,7 +54,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">
-                    <div class="card-body">
+                    <div class="card-body px-5 fw-bold">
                         <h5 class="card-title">Datatables</h5>
 
                         <div class="row mb-3">
@@ -69,15 +69,15 @@
                             <label class="col-sm-2 col-form-label d-flex align-items-center">대표 이미지</label>
                             <div class="col-sm-10">
                                 <div style="display:inline;">
-                                    <label for="ex_file">
+                                    <label for="repImg">
                                         <img src="/images/common/add_img.png"
                                              style="width:100px; height:100px; cursor: pointer;">
                                     </label>
-                                    <input type="file" id="ex_file"
-                                           onchange="previewImage(this, 'user_upload_img');"
+                                    <input type="file" id="repImg"
+                                           onchange="previewImage(this, 'rep_img_preview');"
                                            style="display: none;">
 
-                                    <span id='user_upload_img'></span>
+                                    <span id='rep_img_preview'></span>
                                 </div>
                             </div>
                         </div>
@@ -122,7 +122,7 @@
 
                                             var info = document.createElement("<p>");
                                             info.id = "ie_preview_error_" + previewId;
-                                            info.innerHTML = "a";
+                                            info.innerHTML = e.name;
                                             preview.insertBefore(info, null);
                                         }
                                     }
@@ -226,7 +226,9 @@
                                 </div>
                                 <div class="input-group input-group-sm">
                                     <span class="input-group-text justify-content-center" style="width: 90px;">가격</span>
-                                    <input type="text" class="form-control" name="price" id="price" required>
+                                    <input type="text" class="form-control" name="price" id="price"
+                                           oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                                           required>
                                 </div>
                             </div>
                         </div>
@@ -330,150 +332,118 @@
                             </div>
                         </div>
 
-                        <form id="curriculumForm">
-                            <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label mt-4">커리큘럼</label>
-                                <div class="col-sm-10">
-
-                                    <table style="width: 100%;">
-                                        <tbody id="addTable">
-                                        <tr>
-                                            <td width="4%" class="fs-3 pt-4">
-                                                <span>1.</span>
-                                                <input type="hidden" name="curOrder" value="1">
-                                            </td>
-                                            <td colspan='2'>
-                                                <p class="mb-1">타이틀</p>
-                                                <input type='text' class='form-control' name="curTitle"
-                                                       placeholder='30자까지 입력가능합니다.'>
-
-                                                <p class="mb-1 mt-2">내용</p>
-                                                <input type='text' class='form-control' name="curContent"
-                                                       placeholder='150자까지 입력가능합니다.'>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td width="4%" class="fs-3 pt-4">
-                                                <span>2.</span>
-                                                <input type="hidden" name="curOrder" value="2">
-                                            </td>
-                                            <td>
-                                                <p class="mb-1">타이틀</p>
-                                                <input type='text' class='form-control' name="curTitle"
-                                                       placeholder='30자까지 입력가능합니다.'>
-
-                                                <p class="mb-1 mt-2">내용</p>
-                                                <input type='text' class='form-control' name="curContent"
-                                                       placeholder='150자까지 입력가능합니다.'>
-                                            </td>
-                                            <td width="4%" style="text-align: right; font-size: 70px;">
-                                                <button type="button" class="btn-close mt-4" onclick="removeRow(this)"></button>
-                                            </td>
-                                        </tr>
-
-                                        </tbody>
-                                    </table>
-                                    <label class="d-flex justify-content-center">
-                                        <div class="fw-bold" style="cursor:pointer;" onclick="insertRow()">추가하기 ▼</div>
+                        <div class="row mb-3">
+                            <label class="col-sm-2 col-form-label d-flex align-items-center">활동 사진</label>
+                            <div class="col-sm-10">
+                                <div style="display:inline;">
+                                    <label for="activityImg">
+                                        <img src="/images/common/add_img.png"
+                                             style="width:100px; height:100px; cursor: pointer;">
                                     </label>
+                                    <input type="file" id="activityImg"
+                                           onchange="atvPreviewImage(this,'atv_img_preview')"
+                                           style="display: none;" multiple>
+
+                                    <span id='atv_img_preview'></span>
                                 </div>
+
+                                <script>
+                                    var fileArr;
+                                    var fileInfoArr = [];
+
+                                    //썸네일 클릭시 삭제.
+                                    function atvFileRemove(index) {
+                                        fileInfoArr.splice(index, 1);
+                                        $("#img_id_" + index).remove();
+                                    }
+
+                                    //썸네일 미리보기.
+                                    function atvPreviewImage(targetObj, previewId) {
+                                        var files = targetObj.files;
+                                        fileArr = Array.prototype.slice.call(files);
+
+                                        var preview = document.getElementById(previewId); //div id
+                                        var ua = window.navigator.userAgent;
+
+                                        //ie일때(IE8 이하에서만 작동)
+                                        if (ua.indexOf("MSIE") > -1) {
+                                            targetObj.select();
+                                            try {
+                                                var src = document.selection.createRange().text; // get file full path(IE9, IE10에서 사용 불가)
+                                                var ie_preview_error = document.getElementById("ie_preview_error_" + previewId);
+
+
+                                                if (ie_preview_error) {
+                                                    preview.removeChild(ie_preview_error); //error가 있으면 delete
+                                                }
+
+                                                var img = document.getElementById(previewId); //이미지가 뿌려질 곳
+
+                                                //이미지 로딩, sizingMethod는 div에 맞춰서 사이즈를 자동조절 하는 역할
+                                                img.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + src + "', sizingMethod='scale')";
+                                            } catch (e) {
+                                                if (!document.getElementById("ie_preview_error_" + previewId)) {
+                                                    var info = document.createElement("<p>");
+                                                    info.id = "ie_preview_error_" + previewId;
+                                                    info.innerHTML = e.name;
+                                                    preview.insertBefore(info, null);
+                                                }
+                                            }
+                                            //ie가 아닐때(크롬, 사파리, FF)
+                                        } else {
+                                            var files = targetObj.files;
+
+                                            for (var i = 0; i < files.length; i++) {
+                                                var file = files[i];
+                                                fileInfoArr.push(file);
+
+                                                var imageType = /image.*/; //이미지 파일일경우만.. 뿌려준다.
+                                                if (!file.type.match(imageType))
+                                                    continue;
+
+                                                var span = document.createElement('span');
+                                                span.id = "img_id_" + i;
+                                                span.style.width = '100px';
+                                                span.style.height = '100px';
+                                                span.style.display = 'inline-block';
+                                                span.style.backgroundColor = '#cccccc';
+                                                span.style.textAlign = 'center';
+                                                span.style.marginRight = '10px';
+                                                preview.appendChild(span);
+
+                                                var img = document.createElement("img");
+                                                img.className = "addImg";
+                                                img.classList.add("obj");
+                                                img.file = file;
+                                                img.style.width = 'inherit';
+                                                img.style.height = 'inherit';
+                                                img.style.cursor = 'pointer';
+                                                const idx = i;
+                                                img.onclick = () => atvFileRemove(idx);//이미지를 클릭했을 때.
+                                                span.appendChild(img);
+
+                                                if (window.FileReader) { // FireFox, Chrome, Opera 확인.
+                                                    var reader = new FileReader();
+                                                    reader.onloadend = (function (aImg) {
+                                                        return function (e) {
+                                                            aImg.src = e.target.result;
+                                                        };
+                                                    })(img);
+                                                    reader.readAsDataURL(file);
+                                                } else { // safari is not supported FileReader
+                                                    if (!document.getElementById("sfr_preview_error_" + previewId)) {
+                                                        var info = document.createElement("p");
+                                                        info.id = "sfr_preview_error_" + previewId;
+                                                        info.innerHTML = "not supported FileReader";
+                                                        preview.insertBefore(info, null);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                </script>
                             </div>
-                        </form>
-
-                        <script>
-                            //Row 추가
-                            function insertRow() {
-                                var table = document.getElementById('addTable');
-
-                                var html = "";
-                                html += "<tr>\n" +
-                                    "                                            <td width=\"4%\" class=\"fs-3 pt-4\">\n" +
-                                    "                                                <span>2.</span>\n" +
-                                    "                                                <input type=\"hidden\" name=\"curOrder\" value=\"2\">\n" +
-                                    "                                            </td>\n" +
-                                    "                                            <td>\n" +
-                                    "                                                <p class=\"mb-1\">타이틀</p>\n" +
-                                    "                                                <input type='text' class='form-control' name=\"curTitle\"\n" +
-                                    "                                                       placeholder='30자까지 입력가능합니다.'>\n" +
-                                    "\n" +
-                                    "                                                <p class=\"mb-1 mt-2\">내용</p>\n" +
-                                    "                                                <input type='text' class='form-control' name=\"curContent\"\n" +
-                                    "                                                       placeholder='150자까지 입력가능합니다.'>\n" +
-                                    "                                            </td>\n" +
-                                    "                                            <td width=\"4%\" style=\"text-align: right; font-size: 70px;\">\n" +
-                                    "                                                <button type=\"button\" class=\"btn-close mt-4\" onclick=\"removeRow(this)\"></button>\n" +
-                                    "                                            </td>\n" +
-                                    "                                        </tr>";
-                                table.insertAdjacentHTML("beforeend", html);
-                                reloadIndex();
-                            }
-
-                            //Row 삭제
-                            function removeRow(element) {
-                                var table = document.getElementById('addTable');
-
-                                var td = element.parentNode;
-                                var tr = td.parentNode;
-
-                                table.removeChild(tr);
-                                reloadIndex();
-                            }
-
-                            //인덱스 재설정
-                            function reloadIndex() {
-                                var table = document.getElementById('addTable');
-                                var tableRowLength = table.rows.length; // Row 개수
-                                var cells;
-                                var html = "";
-
-                                for (var i = 1; i < tableRowLength; i++) {
-                                    html = "";
-                                    cells = table.rows[i].cells;
-
-                                    html += "<span>" + (table.rows[i].rowIndex + 1) + ".</span>";
-                                    html += "<input type='hidden' name='curOrder' value=" + (table.rows[i].rowIndex + 1) + ">";
-
-                                    cells[0].innerHTML = html;
-                                }
-                            }
-
-                            // var oTbl;
-                            //
-                            // //Row 추가
-                            // function insRow() {
-                            //     oTbl = document.getElementById("addTable");
-                            //
-                            //     var oRow = oTbl.insertRow();
-                            //     oRow.onmouseover = function () {
-                            //         oTbl.clickedRowIndex = this.rowIndex
-                            //     }; //clickedRowIndex - 클릭한 Row의 위치를 확인;
-                            //     var oCell = oRow.insertCell();
-                            //
-                            //     //삽입될 Form Tag
-                            //     var frmTag = "<input type='text' class='form-control' placeholder='커리큘럼 타이틀'>";
-                            //     frmTag += "<input type=button value='삭제' onclick='removeRow()' style='cursor:hand'>";
-                            //     oCell.innerHTML = frmTag;
-                            // }
-                            //
-                            // //Row 삭제
-                            // function removeRow() {
-                            //     oTbl.deleteRow(oTbl.clickedRowIndex);
-                            // }
-                            //
-                            // function frmCheck() {
-                            //     var frm = document.form;
-                            //
-                            //     for (var i = 0; i <= frm.elements.length - 1; i++) {
-                            //         if (frm.elements[i].name == "addText") {
-                            //             if (!frm.elements[i].value) {
-                            //                 alert("텍스트박스에 값을 입력하세요!");
-                            //                 frm.elements[i].focus();
-                            //                 return;
-                            //             }
-                            //         }
-                            //     }
-                            // }
-                        </script>
+                        </div>
 
                         <div class="row mb-3">
                             <label class="col-sm-2 col-form-label">주소</label>
@@ -490,13 +460,13 @@
                                 <input type="text" class="form-control mt-3" name="addressDetail" id="addressDetail"
                                        placeholder="상세주소"
                                        required>
-                            </div>
-                            <div id="wrap"
-                                 style="display:none;border:1px solid;width:100%;height:300px;margin:5px 0;position:relative">
-                                <img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnFoldWrap"
-                                     style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1"
-                                     onclick="foldDaumPostcode()"
-                                     alt="접기 버튼">
+                                <div id="wrap"
+                                     style="display:none;border:1px solid;width:100%;height:300px;margin:5px 0;position:relative">
+                                    <img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnFoldWrap"
+                                         style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1"
+                                         onclick="foldDaumPostcode()"
+                                         alt="접기 버튼">
+                                </div>
                             </div>
                             <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
                             <script>
@@ -549,13 +519,134 @@
                                     element_wrap.style.display = 'block';
                                 }
                             </script>
+
+                            <form id="curriculumForm">
+                                <div class="row mb-3">
+                                    <label class="col-sm-2 col-form-label mt-4">커리큘럼</label>
+                                    <div class="col-sm-10">
+
+                                        <table style="width: 100%;">
+                                            <tbody id="addTable">
+                                            <tr>
+                                                <td width="4%" class="fs-3 pt-4">
+                                                    <span>1.</span>
+                                                    <input type="hidden" name="curOrder" value="1">
+                                                </td>
+                                                <td colspan='2'>
+                                                    <p class="mb-1">타이틀</p>
+                                                    <input type='text' class='form-control' name="curTitle"
+                                                           placeholder='30자까지 입력가능합니다.'>
+
+                                                    <p class="mb-1 mt-2">내용</p>
+                                                    <input type='text' class='form-control' name="curContent"
+                                                           placeholder='150자까지 입력가능합니다.'>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td width="4%" class="fs-3 pt-4">
+                                                    <span>2.</span>
+                                                    <input type="hidden" name="curOrder" value="2">
+                                                </td>
+                                                <td>
+                                                    <p class="mb-1">타이틀</p>
+                                                    <input type='text' class='form-control' name="curTitle"
+                                                           placeholder='30자까지 입력가능합니다.'>
+
+                                                    <p class="mb-1 mt-2">내용</p>
+                                                    <input type='text' class='form-control' name="curContent"
+                                                           placeholder='150자까지 입력가능합니다.'>
+                                                </td>
+                                                <td width="4%" style="text-align: right; font-size: 70px;">
+                                                    <button type="button" class="btn-close mt-4"
+                                                            onclick="removeRow(this)"></button>
+                                                </td>
+                                            </tr>
+
+                                            </tbody>
+                                        </table>
+                                        <label class="d-flex justify-content-center">
+                                            <div class="fw-bold" style="cursor:pointer;" onclick="insertRow()">추가하기 ▼
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <script>
+                                //Row 추가
+                                function insertRow() {
+                                    var table = document.getElementById('addTable');
+
+                                    var html = "";
+                                    html +=
+                                        "<tr>" +
+                                        "<td width=\"4%\" class=\"fs-3 pt-4\">" +
+                                        "<span>1.</span>" +
+                                        "<input type=\"hidden\" name=\"curOrder\" value=\"1\">" +
+                                        "</td>" +
+                                        "<td>" +
+                                        "<p class=\"mb-1\">타이틀</p>" +
+                                        "<input type='text' class='form-control' name=\"curTitle\" placeholder='30자까지 입력가능합니다.'>" +
+                                        "<p class=\"mb-1 mt-2\">내용</p>" +
+                                        "<input type='text' class='form-control' name=\"curContent\" placeholder='150자까지 입력가능합니다.'>" +
+                                        "</td>" +
+                                        "<td width=\"4%\" style=\"text-align: right; font-size: 70px;\">" +
+                                        "<button type=\"button\" class=\"btn-close mt-4\" onclick=\"removeRow(this)\"></button>" +
+                                        "</td>" +
+                                        "</tr>";
+                                    table.insertAdjacentHTML("beforeend", html);
+                                    reloadIndex();
+                                    window.scrollTo(0, document.body.scrollHeight);
+                                }
+
+                                //Row 삭제
+                                function removeRow(element) {
+                                    var table = document.getElementById('addTable');
+
+                                    var td = element.parentNode;
+                                    var tr = td.parentNode;
+
+                                    table.removeChild(tr);
+                                    reloadIndex();
+                                }
+
+                                //인덱스 재설정
+                                function reloadIndex() {
+                                    var table = document.getElementById('addTable');
+                                    var tableRowLength = table.rows.length; // Row 개수
+                                    var cells;
+                                    var html = "";
+
+                                    for (var i = 1; i < tableRowLength; i++) {
+                                        html = "";
+                                        cells = table.rows[i].cells;
+
+                                        html += "<span>" + (table.rows[i].rowIndex + 1) + ".</span>";
+                                        html += "<input type='hidden' name='curOrder' value=" + (table.rows[i].rowIndex + 1) + ">";
+
+                                        cells[0].innerHTML = html;
+                                    }
+                                }
+                            </script>
+
+                            <div class="col-12 d-flex justify-content-center">
+                                <button type="button" class="btn btn-dark btn-lg px-5" onclick="history.back()">돌아가기
+                                </button>
+                                <button type="button" class="btn btn-dark btn-lg px-5 ml-5" onclick="dataSubmit()">
+                                    가입하기
+                                </button>
+                            </div>
+
                         </div>
 
                     </div> <!-- card-body end -->
 
                     <script>
-                        function datasend() {
-                            var table = document.getElementById('addTable');
+                        function dataSubmit() {
+
+                            var repImg = $("#repImg")[0].files[0];
+
+                            var activityImg = $("#activityImg")[0].files;
 
                             var curriculum = {
                                 order: 0,
@@ -584,6 +675,42 @@
                                         title: '',
                                         content: ''
                                     }
+                                }
+                            });
+
+                            var classData = {
+                                className: $('#className').val(),
+                                categoryId: $('#categoryId').val(),
+                                classification: $('input[name=classification]:checked').val(),
+                                timeRequired: $('#timeRequired').val(),
+                                personnel: $('#personnel').val(),
+                                price: $('#price').val(),
+                                classIntro: editor.getData(),
+                                material: $('#material').val(),
+                                precautions: $('#precautions').val(),
+                                curriculumList: curList
+                            };
+
+                            var formData = new FormData();
+
+                            formData.append("repImg", repImg);
+                            formData.append("class", new Blob([JSON.stringify(classData)], {type: "application/json"}));
+
+                            $.ajax({
+                                url: "/createUser",
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                enctype: 'multipart/form-data',
+                                type: "POST",
+                                success : function()
+                                {
+                                    // window.location = "/login";
+                                    // alert("회원가입에 성공했습니다.");
+                                },
+                                error : function() {
+                                    // window.location = "/login";
+                                    // alert("회원가입에 실패했습니다.");
                                 }
                             });
                         }
