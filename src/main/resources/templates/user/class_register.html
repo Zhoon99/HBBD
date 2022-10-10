@@ -367,15 +367,14 @@
                                                        placeholder='150자까지 입력가능합니다.'>
                                             </td>
                                             <td width="4%" style="text-align: right; font-size: 70px;">
-                                                <button type="button" class="btn-close mt-4" onclick="removeRow()"></button>
+                                                <button type="button" class="btn-close mt-4" onclick="removeRow(this)"></button>
                                             </td>
                                         </tr>
 
                                         </tbody>
                                     </table>
-                                    <label style="cursor:pointer;" onclick="insertRow()"
-                                           class="d-flex justify-content-center">
-                                        <div class="fw-bold">추가하기 ▼</div>
+                                    <label class="d-flex justify-content-center">
+                                        <div class="fw-bold" style="cursor:pointer;" onclick="insertRow()">추가하기 ▼</div>
                                     </label>
                                 </div>
                             </div>
@@ -389,8 +388,8 @@
                                 var html = "";
                                 html += "<tr>\n" +
                                     "                                            <td width=\"4%\" class=\"fs-3 pt-4\">\n" +
-                                    "                                                <span>1.</span>\n" +
-                                    "                                                <input type=\"hidden\" name=\"curOrder\" value=\"1\">\n" +
+                                    "                                                <span>2.</span>\n" +
+                                    "                                                <input type=\"hidden\" name=\"curOrder\" value=\"2\">\n" +
                                     "                                            </td>\n" +
                                     "                                            <td>\n" +
                                     "                                                <p class=\"mb-1\">타이틀</p>\n" +
@@ -402,17 +401,22 @@
                                     "                                                       placeholder='150자까지 입력가능합니다.'>\n" +
                                     "                                            </td>\n" +
                                     "                                            <td width=\"4%\" style=\"text-align: right; font-size: 70px;\">\n" +
-                                    "                                                <button type=\"button\" class=\"btn-close mt-4\" onclick=\"removeRow()\"></button>\n" +
+                                    "                                                <button type=\"button\" class=\"btn-close mt-4\" onclick=\"removeRow(this)\"></button>\n" +
                                     "                                            </td>\n" +
                                     "                                        </tr>";
                                 table.insertAdjacentHTML("beforeend", html);
-                                reloadIndex()
+                                reloadIndex();
                             }
 
                             //Row 삭제
-                            function removeRow() {
+                            function removeRow(element) {
                                 var table = document.getElementById('addTable');
-                                table.deleteRow(table.clickedRowIndex);
+
+                                var td = element.parentNode;
+                                var tr = td.parentNode;
+
+                                table.removeChild(tr);
+                                reloadIndex();
                             }
 
                             //인덱스 재설정
