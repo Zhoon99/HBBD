@@ -9,8 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CurTestDto {
-    private Integer order;
+public class CurriculumDto {
+
     private String title;
     private String content;
+    private Integer order;
+
 }

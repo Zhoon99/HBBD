@@ -340,10 +340,11 @@
                                         <img src="/images/common/add_img.png"
                                              style="width:100px; height:100px; cursor: pointer;">
                                     </label>
-                                    <input type="file" id="activityImg"
-                                           onchange="atvPreviewImage(this,'atv_img_preview')"
-                                           style="display: none;" multiple>
-
+                                    <form id="addForm"  method="post" enctype="multipart/form-data">
+                                        <input type="file" id="activityImg" name="activityImg[]"
+                                               onchange="atvPreviewImage(this,'atv_img_preview')"
+                                               style="display: none;" multiple="true">
+                                    </form>
                                     <span id='atv_img_preview'></span>
                                 </div>
 
@@ -643,10 +644,7 @@
 
                     <script>
                         function dataSubmit() {
-
                             var repImg = $("#repImg")[0].files[0];
-
-                            var activityImg = $("#activityImg")[0].files;
 
                             var curriculum = {
                                 order: 0,
@@ -693,24 +691,28 @@
 
                             var formData = new FormData();
 
+                            var totalfiles = document.getElementById('activityImg').files.length;
+                            for (var index = 0; index < totalfiles; index++) {
+                                formData.append("activityImg[]", document.getElementById('activityImg').files[index]);
+                            }
+
                             formData.append("repImg", repImg);
                             formData.append("class", new Blob([JSON.stringify(classData)], {type: "application/json"}));
 
                             $.ajax({
-                                url: "/createUser",
+                                url: "/curTest",
                                 data: formData,
                                 processData: false,
                                 contentType: false,
                                 enctype: 'multipart/form-data',
                                 type: "POST",
-                                success : function()
-                                {
+                                success: function () {
                                     // window.location = "/login";
-                                    // alert("회원가입에 성공했습니다.");
+                                    alert("회원가입에 성공했습니다.");
                                 },
-                                error : function() {
+                                error: function () {
                                     // window.location = "/login";
-                                    // alert("회원가입에 실패했습니다.");
+                                    alert("회원가입에 실패했습니다.");
                                 }
                             });
                         }
