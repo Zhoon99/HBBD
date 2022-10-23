@@ -4,11 +4,11 @@
 <head th:replace="layout/user_head::userHead"></head>
 
 <style>
-    .radio_classification input[type="radio"] {
+    .checkbox_week input[type="checkbox"] {
         display: none;
     }
 
-    .radio_classification input[type="radio"] + span {
+    .checkbox_week input[type="checkbox"] + span {
         display: inline-block;
         padding: 15px 10px;
         border: 1px solid #dfdfdf;
@@ -17,7 +17,7 @@
         cursor: pointer;
     }
 
-    .radio_classification input[type="radio"]:checked + span {
+    .checkbox_week input[type="checkbox"]:checked + span {
         background-color: #113a6b;
         color: #ffffff;
     }
@@ -46,7 +46,7 @@
         position: absolute;
         top: 50%;
         left: -6%;
-        z-index: 999;
+        z-index: 1;
         cursor: pointer
     }
 
@@ -57,22 +57,21 @@
         position: absolute;
         top: 50%;
         right: -6%;
-        z-index: 999;
-        cursor: pointer
+        z-index: 1;
+        cursor: pointer;
     }
 
     .prev-arrow.slick-disabled:before,
     .next-arrow.slick-disabled:before
     {
         opacity: .25;
+        cursor: default;
     }
 
-    .prev-arrow:hover,
-    .prev-arrow:focus,
-    .next-arrow:hover,
-    .next-arrow:focus
-    {
-        color: #A0C2FE;
+    .schedule-bolder {
+        border: 2px solid #012567;
+        border-radius: 10px;
+        padding: 20px 30px;
     }
 
 </style>
@@ -364,14 +363,87 @@
                                     <label for="className"
                                            class="col-sm-2 col-form-label d-flex align-items-center">분류</label>
                                     <div class="col-sm-10">
-                                        <label class="radio_classification">
-                                            <input type="radio" name="classification" value="원데이" checked>
-                                            <span>원데이</span>
-                                        </label>
-                                        <label class="radio_classification">
-                                            <input type="radio" name="classification" value="정규">
-                                            <span>정규</span>
-                                        </label>
+                                        <div class="schedule-bolder">
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label">시작일 / 종료일</label>
+                                                <div class="col-sm-10">
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <input type="date" class="form-control" name="startDate" id="startDate" required>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input type="date" class="form-control" name="lastDate" id="lastDate" required>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label">요일</label>
+                                                <div class="col-sm-10">
+                                                    <label class="checkbox_week">
+                                                        <input type="checkbox" name="schedule-week" value="1">
+                                                        <span>월요일</span>
+                                                    </label>
+                                                    <label class="checkbox_week">
+                                                        <input type="checkbox" name="schedule-week" value="2">
+                                                        <span>화요일</span>
+                                                    </label>
+                                                    <label class="checkbox_week">
+                                                        <input type="checkbox" name="schedule-week" value="3">
+                                                        <span>수요일</span>
+                                                    </label>
+                                                    <label class="checkbox_week">
+                                                        <input type="checkbox" name="schedule-week" value="4">
+                                                        <span>목요일</span>
+                                                    </label>
+                                                    <label class="checkbox_week">
+                                                        <input type="checkbox" name="schedule-week" value="5">
+                                                        <span>금요일</span>
+                                                    </label>
+                                                    <label class="checkbox_week">
+                                                        <input type="checkbox" name="schedule-week" value="6">
+                                                        <span>토요일</span>
+                                                    </label>
+                                                    <label class="checkbox_week">
+                                                        <input type="checkbox" name="schedule-week" value="0">
+                                                        <span>일요일</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                            <button type="button" class="btn btn-dark btn-lg px-5 ml-5" onclick="addSchedule()">
+                                                추가
+                                            </button>
+                                            <script>
+                                                function addSchedule() {
+                                                    let scheduleWeekList = [];
+                                                    $('input[name="schedule-week"]:checked').each(function (i) {
+                                                        scheduleWeekList.push($(this).val());
+                                                    });
+
+                                                    const startDate = $('#startDate').val();
+                                                    const lastDate = $('#lastDate').val();
+                                                    const dateRange = getDateRange(startDate, lastDate);
+
+                                                    let date;
+                                                    dateRange.forEach((element, index) => {
+                                                        date = new Date(element);
+                                                        alert(scheduleWeekList.includes(date.getDay().toString()));
+                                                    })
+                                                }
+
+                                                function getDateRange(startDate, lastDate) {
+                                                    let result = [];
+                                                    let curDate = new Date(startDate);
+                                                    while(curDate <= new Date(lastDate)) {
+                                                        result.push(curDate.toISOString().split("T")[0]);
+                                                        curDate.setDate(curDate.getDate() + 1);
+                                                    }
+                                                    return result;
+                                                }
+                                            </script>
+                                        </div> <!-- schedule-border end -->
                                     </div>
                                 </div>
                             </div> <!-- page-2 end -->
@@ -683,15 +755,16 @@
                                         }
                                     }
                                 </script>
+
+                                <div class="col-12 d-flex justify-content-center">
+                                    <button type="button" class="btn btn-dark btn-lg px-5" onclick="history.back()">돌아가기
+                                    </button>
+                                    <button type="button" class="btn btn-dark btn-lg px-5 ml-5" onclick="dataSubmit()">
+                                        가입하기
+                                    </button>
+                                </div>
                             </div> <!-- page-3 end -->
 
-                            <div class="col-12 d-flex justify-content-center">
-                                <button type="button" class="btn btn-dark btn-lg px-5" onclick="history.back()">돌아가기
-                                </button>
-                                <button type="button" class="btn btn-dark btn-lg px-5 ml-5" onclick="dataSubmit()">
-                                    가입하기
-                                </button>
-                            </div>
                         </div>
                     </div> <!-- card-body end -->
 
