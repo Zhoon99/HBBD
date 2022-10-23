@@ -3,6 +3,91 @@
 
 <head th:replace="layout/user_head::userHead"></head>
 
+<style>
+    .radio_classification input[type="radio"] {
+        display: none;
+    }
+
+    .radio_classification input[type="radio"] + span {
+        display: inline-block;
+        padding: 15px 10px;
+        border: 1px solid #dfdfdf;
+        background-color: #ffffff;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .radio_classification input[type="radio"]:checked + span {
+        background-color: #113a6b;
+        color: #ffffff;
+    }
+
+    .ck-editor__editable:not(.ck-editor__nested-editable) {
+        min-height: 300px;
+    }
+
+    table {
+        border-spacing: 0 30px;
+        border-collapse: separate;
+        font-size: 17px;
+        font-weight: bold;
+    }
+
+    .address-btn {
+        background-color: #113a6b;
+        color: #F7EFDC;
+        font-weight: bold;
+    }
+
+    .prev-arrow {
+        display: inline;
+        font-size: 100px;
+        color: #012567;
+        position: absolute;
+        top: 50%;
+        left: -6%;
+        z-index: 999;
+        cursor: pointer
+    }
+
+    .next-arrow {
+        display: inline-block;
+        font-size: 100px;
+        color: #012567;
+        position: absolute;
+        top: 50%;
+        right: -6%;
+        z-index: 999;
+        cursor: pointer
+    }
+
+    .prev-arrow.slick-disabled:before,
+    .next-arrow.slick-disabled:before
+    {
+        opacity: .25;
+    }
+
+    .prev-arrow:hover,
+    .prev-arrow:focus,
+    .next-arrow:hover,
+    .next-arrow:focus
+    {
+        color: #A0C2FE;
+    }
+
+</style>
+
+<script>
+    $(document).ready(function () {
+        $(".reg-split").slick({
+            dots: true,
+            infinite: false,
+            prevArrow: '<i class="prev-arrow bi bi-chevron-compact-left"></i>',
+            nextArrow: '<i class="next-arrow bi bi-chevron-compact-right"></i>',
+        });
+    });
+</script>
+
 <body>
 
 <!-- ======= Header ======= -->
@@ -12,25 +97,680 @@
 <aside th:replace="layout/sidebar::sidebar"></aside>
 
 <main id="main" class="main">
-    <div class="pagetitle"><h1>개발 페이지</h1></div>
+    <div class="pagetitle"><h1>클래스 등록</h1></div>
     <section class="section">
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Datatables</h5>
+                    <div class="card-body px-5 fw-bold">
+                        <div class="reg-split container">
+                            <div class="page-1 px-1">
+                                <h5 class="card-title">클래스 기본정보</h5>
 
-                        <textarea id="ckeditor" placeholder="" style="display: none; width: 100%;">   </textarea>
+                                <div class="row mb-3">
+                                    <label for="className" class="col-sm-2 col-form-label">클래스 명</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="className" id="className"
+                                               placeholder="클래스 명" required>
+                                    </div>
+                                </div>
 
-                        <button type="button" class="btn btn-dark btn-lg px-5 ml-5" onclick="dataSubmit()">가입하기</button>
+                                <div class="row mb-3">
+                                    <label class="col-sm-2 col-form-label d-flex align-items-center">대표 이미지</label>
+                                    <div class="col-sm-10">
+                                        <div style="display:inline;">
+                                            <label for="repImg">
+                                                <img src="/images/common/add_img.png"
+                                                     style="width:100px; height:100px; cursor: pointer;">
+                                            </label>
+                                            <input type="file" id="repImg"
+                                                   onchange="previewImage(this, 'rep_img_preview');"
+                                                   style="display: none;">
 
-                        <script>
-                            //form데이터 전송
-                            function dataSubmit() {
-                                alert(editor.getData())
+                                            <span id='rep_img_preview'></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <script>
+                                    var fileInfoArr = [];
+
+                                    //썸네일 클릭시 삭제.
+                                    function fileRemove() {
+                                        $("#profile_img").remove();
+                                        console.log(fileInfoArr);
+                                    }
+
+                                    //썸네일 미리보기.
+                                    function previewImage(targetObj, previewId) {
+
+                                        var ext = $(targetObj).val().split('.').pop().toLowerCase();
+
+                                        if ($.inArray(ext, ['gif', 'png', 'jpg', 'jpeg']) == -1) {
+                                            alert('gif, png, jpg, jpeg 형식만 업로드할 수 있습니다.');
+                                            return false;
+                                        }
+
+                                        var preview = document.getElementById(previewId); // 미리보기 div id
+                                        var ua = window.navigator.userAgent;
+
+                                        if (ua.indexOf("MSIE") > -1) { //ie일때
+
+                                            targetObj.select();
+                                            try {
+                                                var src = document.selection.createRange().text; // get file full path
+                                                var ie_preview_error = document.getElementById("ie_preview_error_" + previewId);
+
+                                                if (ie_preview_error) {
+                                                    preview.removeChild(ie_preview_error); //error가 있으면 delete
+                                                }
+
+                                                var img = document.getElementById(previewId); //이미지가 뿌려질 곳
+
+                                                img.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + src + "', sizingMethod='scale')"; //이미지 로딩, sizingMethod는 div에 맞춰서 사이즈를 자동조절 하는 역할
+                                            } catch (e) {
+                                                if (!document.getElementById("ie_preview_error_" + previewId)) {
+
+                                                    var info = document.createElement("<p>");
+                                                    info.id = "ie_preview_error_" + previewId;
+                                                    info.innerHTML = e.name;
+                                                    preview.insertBefore(info, null);
+                                                }
+                                            }
+                                        } else { //ie가 아닐때
+
+                                            var files = targetObj.files;
+
+                                            for (var i = 0; i < files.length; i++) {
+
+                                                var file = files[i];
+                                                var imageType = /image.*/; //이미지 파일일 경우만 뿌려줌.
+                                                if (!file.type.match(imageType))
+                                                    continue;
+
+                                                var prevImg = document.getElementById("profile_img"); // 이전에 미리보기가 있다면 삭제
+                                                if (prevImg) {
+                                                    preview.removeChild(prevImg);
+                                                }
+
+                                                var span = document.createElement('span');
+                                                span.id = "profile_img";
+                                                span.style.width = '100px';
+                                                span.style.height = '100px';
+                                                span.style.display = 'inline-block';
+                                                span.style.backgroundColor = '#cccccc';
+                                                span.style.textAlign = 'center';
+                                                preview.appendChild(span);
+
+                                                var img = document.createElement("img"); // 크롬은 div에 이미지가 뿌려지지 않기때문에 자식 Element를 만듬.
+                                                img.id = "prev_" + previewId;
+                                                img.className = "addImg";
+                                                img.classList.add("obj");
+                                                img.file = file;
+                                                img.style.width = 'auto';
+                                                img.style.height = 'inherit';
+                                                img.style.cursor = 'pointer';
+                                                img.onclick = () => fileRemove(); //이미지를 클릭했을 때.
+                                                span.appendChild(img);
+
+                                                if (window.FileReader) { // FireFox, Chrome, Opera 확인.
+                                                    var reader = new FileReader();
+                                                    reader.onloadend = (function (aImg) {
+                                                        return function (e) {
+                                                            aImg.src = e.target.result;
+                                                        };
+                                                    })(img);
+                                                    reader.readAsDataURL(file);
+                                                } else { // safari is not supported FileReader
+                                                    if (!document.getElementById("sfr_preview_error_" + previewId)) {
+                                                        var info = document.createElement("p");
+                                                        info.id = "sfr_preview_error_" + previewId;
+                                                        info.innerHTML = "not supported FileReader";
+                                                        preview.insertBefore(info, null);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                </script>
+
+                                <div class="row mb-3">
+                                    <label class="col-sm-2 col-form-label">카테고리</label>
+                                    <div class="col-sm-10">
+                                        <div class="form-floating mb-3">
+                                            <select class="form-select" id="categoryId" name="categoryId" required>
+                                                <option value="1">One</option>
+                                                <option value="2">Two</option>
+                                                <option value="3">Three</option>
+                                            </select>
+                                            <label for="categoryId">클래스 카테고리</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label for="ckeditor" class="col-sm-2 col-form-label">클래스 소개</label>
+                                    <div class="col-sm-10">
+                                        <textarea id="ckeditor" placeholder=""
+                                                  style="display: none; width: 100%;"></textarea>
+
+                                        <script>
+                                            let editor;
+
+                                            ClassicEditor
+                                                .create(document.querySelector('#ckeditor'), {})
+                                                .then(newEditor => {
+                                                    editor = newEditor;
+                                                })
+
+                                                .then(editor => {
+                                                    window.editor = editor;
+
+                                                })
+                                                .catch(error => {
+                                                    console.error('Oops, something went wrong!');
+                                                    console.error('Please, report the following error on https://github.com/ckeditor/ckeditor5/issues with the build id and the error stack trace:');
+                                                    console.warn('Build id: g64ljk55ssvc-goqlohse75uw');
+                                                    console.error(error);
+                                                });
+                                        </script>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label class="col-sm-2 col-form-label">주소</label>
+                                    <div class="col-sm-10">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="address" id="address"
+                                                   placeholder="주소"
+                                                   required
+                                                   readonly><br>
+                                            <span class="input-group-btn">
+                                        <button class="address-btn btn btn-default" onclick="execDaumPostcode()"
+                                                type="button">주소 찾기</button>
+                                    </span>
+                                        </div>
+                                        <input type="text" class="form-control mt-3" name="addressDetail"
+                                               id="addressDetail"
+                                               placeholder="상세주소"
+                                               required>
+                                        <div id="wrap"
+                                             style="display:none;border:1px solid;width:100%;height:300px;margin:5px 0;position:relative">
+                                            <img src="//t1.daumcdn.net/postcode/resource/images/close.png"
+                                                 id="btnFoldWrap"
+                                                 style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1"
+                                                 onclick="foldDaumPostcode()"
+                                                 alt="접기 버튼">
+                                        </div>
+                                    </div>
+                                    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+                                    <script>
+                                        // 우편번호 찾기 찾기 화면을 넣을 element
+                                        var element_wrap = document.getElementById('wrap');
+
+                                        function foldDaumPostcode() {
+                                            // iframe을 넣은 element를 안보이게 한다.
+                                            element_wrap.style.display = 'none';
+                                        }
+
+                                        function execDaumPostcode() {
+                                            // 현재 scroll 위치를 저장해놓는다.
+                                            var currentScroll = Math.max(document.body.scrollTop, document.documentElement.scrollTop);
+
+                                            new daum.Postcode({
+                                                oncomplete: function (data) {
+                                                    // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+                                                    // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                                                    var addr = ''; // 주소 변수
+
+                                                    //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                                                    if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                                                        addr = data.roadAddress;
+                                                    } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                                                        addr = data.jibunAddress;
+                                                    }
+
+                                                    // 주소 정보를 해당 필드에 넣는다.
+                                                    document.getElementById("address").value = addr;
+                                                    // 커서를 상세주소 필드로 이동한다.
+                                                    document.getElementById("addressDetail").focus();
+
+                                                    // iframe을 넣은 element를 안보이게 한다.
+                                                    // (autoClose:false 기능을 이용한다면, 아래 코드를 제거해야 화면에서 사라지지 않는다.)
+                                                    element_wrap.style.display = 'none';
+
+                                                    // 우편번호 찾기 화면이 보이기 이전으로 scroll 위치를 되돌린다.
+                                                    document.body.scrollTop = currentScroll;
+                                                },
+                                                // 우편번호 찾기 화면 크기가 조정되었을때 실행할 코드를 작성하는 부분. iframe을 넣은 element의 높이값을 조정한다.
+                                                onresize: function (size) {
+                                                    element_wrap.style.height = size.height + 'px';
+                                                },
+                                                width: '100%',
+                                                height: '100%'
+                                            }).embed(element_wrap);
+
+                                            // iframe을 넣은 element를 보이게 한다.
+                                            element_wrap.style.display = 'block';
+                                        }
+                                    </script>
+                                </div>
+
+                            </div> <!-- page-1 end -->
+
+                            <div class="page-2 px-1">
+                                <h5 class="card-title">클래스 일정</h5>
+
+                                <div class="row mb-3">
+                                    <label for="className"
+                                           class="col-sm-2 col-form-label d-flex align-items-center">분류</label>
+                                    <div class="col-sm-10">
+                                        <label class="radio_classification">
+                                            <input type="radio" name="classification" value="원데이" checked>
+                                            <span>원데이</span>
+                                        </label>
+                                        <label class="radio_classification">
+                                            <input type="radio" name="classification" value="정규">
+                                            <span>정규</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div> <!-- page-2 end -->
+
+                            <div class="page-3 px-1">
+                                <h5 class="card-title">클래스 부가정보</h5>
+
+                                <div class="row mb-3">
+                                    <label for="price" class="col-sm-2 col-form-label">가격</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="price" id="price"
+                                               oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                                               required>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label class="col-sm-2 col-form-label d-flex align-items-center">준비물</label>
+                                    <div class="col-sm-10">
+                                        <div class="materialLengthWrap d-flex justify-content-end">
+                                            <span class="materialTextCount">0자</span>
+                                            <span class="materialTextTotal">/200자</span>
+                                        </div>
+                                        <textarea class="form-control" placeholder="준비물을 입력해주세요" name="material"
+                                                  id="material"
+                                                  maxlength="200" style="height: 100px; resize: none;"
+                                                  required></textarea>
+
+                                        <script>
+                                            $('#material').keyup(function (e) {
+                                                let content = $(this).val();
+
+                                                // 글자수 세기
+                                                if (content.length == 0 || content == '') {
+                                                    $('.materialTextCount').text('0자');
+                                                } else {
+                                                    $('.materialTextCount').text(content.length + '자');
+                                                }
+
+                                                // 글자수 제한
+                                                if (content.length > 200) {
+                                                    // 200자 부터는 타이핑 되지 않도록
+                                                    $(this).val($(this).val().substring(0, 200));
+                                                    // 200자 넘으면 알림창 뜨도록
+                                                    alert('200자까지 입력 가능합니다.');
+                                                }
+                                                ;
+                                            });
+                                        </script>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label class="col-sm-2 col-form-label d-flex align-items-center">주의사항</label>
+                                    <div class="col-sm-10">
+                                        <div class="precautionsLengthWrap d-flex justify-content-end">
+                                            <span class="precautionsTextCount">0자</span>
+                                            <span class="precautionsTextTotal">/200자</span>
+                                        </div>
+                                        <textarea class="form-control" placeholder="주의사항을 입력해주세요" name="precautions"
+                                                  id="precautions"
+                                                  maxlength="200" style="height: 100px; resize: none;"
+                                                  required></textarea>
+
+                                        <script>
+                                            $('#precautions').keyup(function (e) {
+                                                let content = $(this).val();
+
+                                                // 글자수 세기
+                                                if (content.length == 0 || content == '') {
+                                                    $('.precautionsTextCount').text('0자');
+                                                } else {
+                                                    $('.precautionsTextCount').text(content.length + '자');
+                                                }
+
+                                                // 글자수 제한
+                                                if (content.length > 200) {
+                                                    // 200자 부터는 타이핑 되지 않도록
+                                                    $(this).val($(this).val().substring(0, 200));
+                                                    // 200자 넘으면 알림창 뜨도록
+                                                    alert('200자까지 입력 가능합니다.');
+                                                }
+                                                ;
+                                            });
+                                        </script>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label class="col-sm-2 col-form-label d-flex align-items-center">활동 사진</label>
+                                    <div class="col-sm-10">
+                                        <div style="display:inline;">
+                                            <label for="activityImg">
+                                                <img src="/images/common/add_img.png"
+                                                     style="width:100px; height:100px; cursor: pointer;">
+                                            </label>
+                                            <form id="addForm" method="post" enctype="multipart/form-data">
+                                                <input type="file" id="activityImg" name="activityImg[]"
+                                                       onchange="atvPreviewImage(this,'atv_img_preview')"
+                                                       style="display: none;" multiple="true">
+                                            </form>
+                                            <span id='atv_img_preview'></span>
+                                        </div>
+
+                                        <script>
+                                            var fileArr;
+                                            var fileInfoArr = [];
+
+                                            //썸네일 클릭시 삭제.
+                                            function atvFileRemove(index) {
+                                                fileInfoArr.splice(index, 1);
+                                                $("#img_id_" + index).remove();
+                                            }
+
+                                            //썸네일 미리보기.
+                                            function atvPreviewImage(targetObj, previewId) {
+                                                var files = targetObj.files;
+                                                fileArr = Array.prototype.slice.call(files);
+
+                                                var preview = document.getElementById(previewId); //div id
+                                                var ua = window.navigator.userAgent;
+
+                                                //ie일때(IE8 이하에서만 작동)
+                                                if (ua.indexOf("MSIE") > -1) {
+                                                    targetObj.select();
+                                                    try {
+                                                        var src = document.selection.createRange().text; // get file full path(IE9, IE10에서 사용 불가)
+                                                        var ie_preview_error = document.getElementById("ie_preview_error_" + previewId);
+
+
+                                                        if (ie_preview_error) {
+                                                            preview.removeChild(ie_preview_error); //error가 있으면 delete
+                                                        }
+
+                                                        var img = document.getElementById(previewId); //이미지가 뿌려질 곳
+
+                                                        //이미지 로딩, sizingMethod는 div에 맞춰서 사이즈를 자동조절 하는 역할
+                                                        img.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + src + "', sizingMethod='scale')";
+                                                    } catch (e) {
+                                                        if (!document.getElementById("ie_preview_error_" + previewId)) {
+                                                            var info = document.createElement("<p>");
+                                                            info.id = "ie_preview_error_" + previewId;
+                                                            info.innerHTML = e.name;
+                                                            preview.insertBefore(info, null);
+                                                        }
+                                                    }
+                                                    //ie가 아닐때(크롬, 사파리, FF)
+                                                } else {
+                                                    var files = targetObj.files;
+
+                                                    for (var i = 0; i < files.length; i++) {
+                                                        var file = files[i];
+                                                        fileInfoArr.push(file);
+
+                                                        var imageType = /image.*/; //이미지 파일일경우만.. 뿌려준다.
+                                                        if (!file.type.match(imageType))
+                                                            continue;
+
+                                                        var span = document.createElement('span');
+                                                        span.id = "img_id_" + i;
+                                                        span.style.width = '100px';
+                                                        span.style.height = '100px';
+                                                        span.style.display = 'inline-block';
+                                                        span.style.backgroundColor = '#cccccc';
+                                                        span.style.textAlign = 'center';
+                                                        span.style.marginRight = '10px';
+                                                        preview.appendChild(span);
+
+                                                        var img = document.createElement("img");
+                                                        img.className = "addImg";
+                                                        img.classList.add("obj");
+                                                        img.file = file;
+                                                        img.style.width = 'inherit';
+                                                        img.style.height = 'inherit';
+                                                        img.style.cursor = 'pointer';
+                                                        const idx = i;
+                                                        img.onclick = () => atvFileRemove(idx);//이미지를 클릭했을 때.
+                                                        span.appendChild(img);
+
+                                                        if (window.FileReader) { // FireFox, Chrome, Opera 확인.
+                                                            var reader = new FileReader();
+                                                            reader.onloadend = (function (aImg) {
+                                                                return function (e) {
+                                                                    aImg.src = e.target.result;
+                                                                };
+                                                            })(img);
+                                                            reader.readAsDataURL(file);
+                                                        } else { // safari is not supported FileReader
+                                                            if (!document.getElementById("sfr_preview_error_" + previewId)) {
+                                                                var info = document.createElement("p");
+                                                                info.id = "sfr_preview_error_" + previewId;
+                                                                info.innerHTML = "not supported FileReader";
+                                                                preview.insertBefore(info, null);
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </script>
+                                    </div>
+                                </div>
+
+                                <form id="curriculumForm">
+                                    <div class="row mb-3">
+                                        <label class="col-sm-2 col-form-label mt-4">커리큘럼</label>
+                                        <div class="col-sm-10">
+
+                                            <table style="width: 100%;">
+                                                <tbody id="addTable">
+                                                <tr>
+                                                    <td width="4%" class="fs-3 pt-4">
+                                                        <span>1.</span>
+                                                        <input type="hidden" name="curOrder" value="1">
+                                                    </td>
+                                                    <td colspan='2'>
+                                                        <p class="mb-1">타이틀</p>
+                                                        <input type='text' class='form-control' name="curTitle"
+                                                               placeholder='30자까지 입력가능합니다.'>
+
+                                                        <p class="mb-1 mt-2">내용</p>
+                                                        <input type='text' class='form-control' name="curContent"
+                                                               placeholder='150자까지 입력가능합니다.'>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="4%" class="fs-3 pt-4">
+                                                        <span>2.</span>
+                                                        <input type="hidden" name="curOrder" value="2">
+                                                    </td>
+                                                    <td>
+                                                        <p class="mb-1">타이틀</p>
+                                                        <input type='text' class='form-control' name="curTitle"
+                                                               placeholder='30자까지 입력가능합니다.'>
+
+                                                        <p class="mb-1 mt-2">내용</p>
+                                                        <input type='text' class='form-control' name="curContent"
+                                                               placeholder='150자까지 입력가능합니다.'>
+                                                    </td>
+                                                    <td width="4%" style="text-align: right; font-size: 70px;">
+                                                        <button type="button" class="btn-close mt-4"
+                                                                onclick="removeRow(this)"></button>
+                                                    </td>
+                                                </tr>
+
+                                                </tbody>
+                                            </table>
+                                            <label class="d-flex justify-content-center">
+                                                <div class="fw-bold" style="cursor:pointer;" onclick="insertRow()">
+                                                    추가하기 ▼
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <script>
+                                    //Row 추가
+                                    function insertRow() {
+                                        var table = document.getElementById('addTable');
+
+                                        var html = "";
+                                        html +=
+                                            "<tr>" +
+                                            "<td width=\"4%\" class=\"fs-3 pt-4\">" +
+                                            "<span>1.</span>" +
+                                            "<input type=\"hidden\" name=\"curOrder\" value=\"1\">" +
+                                            "</td>" +
+                                            "<td>" +
+                                            "<p class=\"mb-1\">타이틀</p>" +
+                                            "<input type='text' class='form-control' name=\"curTitle\" placeholder='30자까지 입력가능합니다.'>" +
+                                            "<p class=\"mb-1 mt-2\">내용</p>" +
+                                            "<input type='text' class='form-control' name=\"curContent\" placeholder='150자까지 입력가능합니다.'>" +
+                                            "</td>" +
+                                            "<td width=\"4%\" style=\"text-align: right; font-size: 70px;\">" +
+                                            "<button type=\"button\" class=\"btn-close mt-4\" onclick=\"removeRow(this)\"></button>" +
+                                            "</td>" +
+                                            "</tr>";
+                                        table.insertAdjacentHTML("beforeend", html);
+                                        reloadIndex();
+                                        window.scrollTo(0, document.body.scrollHeight);
+                                    }
+
+                                    //Row 삭제
+                                    function removeRow(element) {
+                                        var table = document.getElementById('addTable');
+
+                                        var td = element.parentNode;
+                                        var tr = td.parentNode;
+
+                                        table.removeChild(tr);
+                                        reloadIndex();
+                                    }
+
+                                    //인덱스 재설정
+                                    function reloadIndex() {
+                                        var table = document.getElementById('addTable');
+                                        var tableRowLength = table.rows.length; // Row 개수
+                                        var cells;
+                                        var html = "";
+
+                                        for (var i = 1; i < tableRowLength; i++) {
+                                            html = "";
+                                            cells = table.rows[i].cells;
+
+                                            html += "<span>" + (table.rows[i].rowIndex + 1) + ".</span>";
+                                            html += "<input type='hidden' name='curOrder' value=" + (table.rows[i].rowIndex + 1) + ">";
+
+                                            cells[0].innerHTML = html;
+                                        }
+                                    }
+                                </script>
+                            </div> <!-- page-3 end -->
+
+                            <div class="col-12 d-flex justify-content-center">
+                                <button type="button" class="btn btn-dark btn-lg px-5" onclick="history.back()">돌아가기
+                                </button>
+                                <button type="button" class="btn btn-dark btn-lg px-5 ml-5" onclick="dataSubmit()">
+                                    가입하기
+                                </button>
+                            </div>
+                        </div>
+                    </div> <!-- card-body end -->
+
+                    <script>
+                        function dataSubmit() {
+                            var repImg = $("#repImg")[0].files[0];
+
+                            var curriculum = {
+                                order: 0,
+                                title: '',
+                                content: ''
                             }
-                        </script>
-                    </div>
+                            var curList = [];
+
+                            $('#curriculumForm input').each(function (index) {
+                                var input = $(this);
+                                switch (input.attr('name')) {
+                                    case 'curOrder':
+                                        curriculum.order = input.val();
+                                        break;
+                                    case 'curTitle':
+                                        curriculum.title = input.val();
+                                        break;
+                                    case 'curContent':
+                                        curriculum.content = input.val();
+                                        break;
+                                }
+                                if (index % 3 == 2) { //3개씩 끊기
+                                    curList.push(curriculum);
+                                    curriculum = {
+                                        order: 0,
+                                        title: '',
+                                        content: ''
+                                    }
+                                }
+                            });
+
+                            var classData = {
+                                className: $('#className').val(),
+                                categoryId: $('#categoryId').val(),
+                                classification: $('input[name=classification]:checked').val(),
+                                timeRequired: $('#timeRequired').val(),
+                                personnel: $('#personnel').val(),
+                                price: $('#price').val(),
+                                classIntro: editor.getData(),
+                                material: $('#material').val(),
+                                precautions: $('#precautions').val(),
+                                curriculumList: curList
+                            };
+
+                            var formData = new FormData();
+
+                            var totalfiles = document.getElementById('activityImg').files.length;
+                            for (var index = 0; index < totalfiles; index++) {
+                                formData.append("activityImg[]", document.getElementById('activityImg').files[index]);
+                            }
+
+                            formData.append("repImg", repImg);
+                            formData.append("class", new Blob([JSON.stringify(classData)], {type: "application/json"}));
+
+                            $.ajax({
+                                url: "/curTest",
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                enctype: 'multipart/form-data',
+                                type: "POST",
+                                success: function () {
+                                    // window.location = "/login";
+                                    alert("회원가입에 성공했습니다.");
+                                },
+                                error: function () {
+                                    // window.location = "/login";
+                                    alert("회원가입에 실패했습니다.");
+                                }
+                            });
+                        }
+                    </script>
+
                 </div>
             </div>
         </div>
@@ -39,8 +779,6 @@
 
 <!-- ======= Footer ======= -->
 <footer th:replace="layout/footer::footer"></footer>
-
-<script th:src="@{/vendor/ckeditor/ckeditor.js}"></script>
 
 </body>
 
