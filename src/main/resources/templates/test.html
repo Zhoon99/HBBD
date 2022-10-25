@@ -364,6 +364,7 @@
                                            class="col-sm-2 col-form-label d-flex align-items-center">분류</label>
                                     <div class="col-sm-10">
                                         <div class="schedule-bolder">
+
                                             <div class="row mb-3">
                                                 <label class="col-sm-2 col-form-label">시작일 / 종료일</label>
                                                 <div class="col-sm-10">
@@ -412,6 +413,103 @@
                                                 </div>
                                             </div>
 
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label">수업 시작 시간</label>
+                                                <div class="col-sm-10">
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <select class="form-select" name="startTime_hour" id="startTime_hour">
+                                                                <option value="0" selected>0 시</option>
+                                                                <option value="1">1 시</option>
+                                                                <option value="2">2 시</option>
+                                                                <option value="3">3 시</option>
+                                                                <option value="4">4 시</option>
+                                                                <option value="5">5 시</option>
+                                                                <option value="6">6 시</option>
+                                                                <option value="7">7 시</option>
+                                                                <option value="8">8 시</option>
+                                                                <option value="9">9 시</option>
+                                                                <option value="10">10 시</option>
+                                                                <option value="11">11 시</option>
+                                                                <option value="12">12 시</option>
+                                                                <option value="13">13 시</option>
+                                                                <option value="14">14 시</option>
+                                                                <option value="15">15 시</option>
+                                                                <option value="16">16 시</option>
+                                                                <option value="17">17 시</option>
+                                                                <option value="18">18 시</option>
+                                                                <option value="19">19 시</option>
+                                                                <option value="20">20 시</option>
+                                                                <option value="21">21 시</option>
+                                                                <option value="22">22 시</option>
+                                                                <option value="23">23 시</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <select class="form-select" name="startTime_minutes" id="startTime_minutes">
+                                                                <option value="0" selected>0 분</option>
+                                                                <option value="10">10 분</option>
+                                                                <option value="20">20 분</option>
+                                                                <option value="30">30 분</option>
+                                                                <option value="40">40 분</option>
+                                                                <option value="50">50 분</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label">수업 소요 시간</label>
+                                                <div class="col-sm-10">
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <select class="form-select" name="timeRequired_hour" id="timeRequired_hour">
+                                                                <option value="0" selected>0 시간</option>
+                                                                <option value="1">1 시간</option>
+                                                                <option value="2">2 시간</option>
+                                                                <option value="3">3 시간</option>
+                                                                <option value="4">4 시간</option>
+                                                                <option value="5">5 시간</option>
+                                                                <option value="6">6 시간</option>
+                                                                <option value="7">7 시간</option>
+                                                                <option value="8">8 시간</option>
+                                                                <option value="9">9 시간</option>
+                                                                <option value="10">10 시간</option>
+                                                                <option value="11">11 시간</option>
+                                                                <option value="12">12 시간</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <select class="form-select" name="timeRequired_minutes" id="timeRequired_minutes">
+                                                                <option value="0" selected>0 분</option>
+                                                                <option value="10">10 분</option>
+                                                                <option value="20">20 분</option>
+                                                                <option value="30">30 분</option>
+                                                                <option value="40">40 분</option>
+                                                                <option value="50">50 분</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label">수강 인원 수</label>
+                                                <div class="col-sm-10">
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <input type="text" class="form-control" name="minPersonnel" id="minPersonnel" placeholder="최소 인원"
+                                                                   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input type="text" class="form-control" name="maxPersonnel" id="maxPersonnel" placeholder="최대 인원"
+                                                                   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                             <button type="button" class="btn btn-dark btn-lg px-5 ml-5" onclick="addSchedule()">
                                                 추가
                                             </button>
@@ -424,13 +522,40 @@
 
                                                     const startDate = $('#startDate').val();
                                                     const lastDate = $('#lastDate').val();
-                                                    const dateRange = getDateRange(startDate, lastDate);
+                                                    const startTime_hour = $('#startTime_hour').val();
+                                                    const startTime_minutes = $('#startTime_minutes').val();
+                                                    const timeRequired_hour = $('#timeRequired_hour').val();
+                                                    const timeRequired_minutes = $('#timeRequired_minutes').val();
+                                                    const minPersonnel = $('#minPersonnel').val();
+                                                    const maxPersonnel = $('#maxPersonnel').val();
 
+                                                    //시간 계산
+                                                    let tDate;
+
+                                                    tDate = new Date();
+                                                    tDate.setHours(startTime_hour);
+                                                    tDate.setMinutes(startTime_minutes);
+                                                    const startTime = tDate.getHours() + ":" + tDate.getMinutes();
+
+                                                    tDate = new Date();
+                                                    tDate.setHours(Number(startTime_hour) + Number(timeRequired_hour));
+                                                    tDate.setMinutes(Number(startTime_minutes) + Number(timeRequired_minutes));
+                                                    const endTime = tDate.getHours() + ":" + tDate.getMinutes();
+
+                                                    //날짜 계산
+                                                    const week = ['일', '월', '화', '수', '목', '금', '토'];
                                                     let date;
+                                                    let result = [];
+
+                                                    const dateRange = getDateRange(startDate, lastDate);
                                                     dateRange.forEach((element, index) => {
                                                         date = new Date(element);
-                                                        alert(scheduleWeekList.includes(date.getDay().toString()));
+                                                        if (scheduleWeekList.includes(date.getDay().toString())) {
+                                                            result.push(element + "(" + week[date.getDay()] + ")    " + startTime + "~" + endTime + "   " + minPersonnel + "~" + maxPersonnel);
+                                                        }
                                                     })
+
+                                                    alert(result);
                                                 }
 
                                                 function getDateRange(startDate, lastDate) {
@@ -444,6 +569,11 @@
                                                 }
                                             </script>
                                         </div> <!-- schedule-border end -->
+
+                                        <div id="schedule-result">
+
+                                        </div>
+
                                     </div>
                                 </div>
                             </div> <!-- page-2 end -->
@@ -665,29 +795,9 @@
 
                                                         <p class="mb-1 mt-2">내용</p>
                                                         <input type='text' class='form-control' name="curContent"
-                                                               placeholder='150자까지 입력가능합니다.'>
+                                                               placeholder='50자까지 입력가능합니다.'>
                                                     </td>
                                                 </tr>
-                                                <tr>
-                                                    <td width="4%" class="fs-3 pt-4">
-                                                        <span>2.</span>
-                                                        <input type="hidden" name="curOrder" value="2">
-                                                    </td>
-                                                    <td>
-                                                        <p class="mb-1">타이틀</p>
-                                                        <input type='text' class='form-control' name="curTitle"
-                                                               placeholder='30자까지 입력가능합니다.'>
-
-                                                        <p class="mb-1 mt-2">내용</p>
-                                                        <input type='text' class='form-control' name="curContent"
-                                                               placeholder='150자까지 입력가능합니다.'>
-                                                    </td>
-                                                    <td width="4%" style="text-align: right; font-size: 70px;">
-                                                        <button type="button" class="btn-close mt-4"
-                                                                onclick="removeRow(this)"></button>
-                                                    </td>
-                                                </tr>
-
                                                 </tbody>
                                             </table>
                                             <label class="d-flex justify-content-center">
@@ -715,7 +825,7 @@
                                             "<p class=\"mb-1\">타이틀</p>" +
                                             "<input type='text' class='form-control' name=\"curTitle\" placeholder='30자까지 입력가능합니다.'>" +
                                             "<p class=\"mb-1 mt-2\">내용</p>" +
-                                            "<input type='text' class='form-control' name=\"curContent\" placeholder='150자까지 입력가능합니다.'>" +
+                                            "<input type='text' class='form-control' name=\"curContent\" placeholder='50자까지 입력가능합니다.'>" +
                                             "</td>" +
                                             "<td width=\"4%\" style=\"text-align: right; font-size: 70px;\">" +
                                             "<button type=\"button\" class=\"btn-close mt-4\" onclick=\"removeRow(this)\"></button>" +
