@@ -18,7 +18,7 @@
     }
 
     .checkbox_week input[type="checkbox"]:checked + span {
-        background-color: #113a6b;
+        background-color: #012567;
         color: #ffffff;
     }
 
@@ -34,8 +34,8 @@
     }
 
     .address-btn {
-        background-color: #113a6b;
-        color: #F7EFDC;
+        background-color: #012567;
+        color: #ffffff;
         font-weight: bold;
     }
 
@@ -62,8 +62,7 @@
     }
 
     .prev-arrow.slick-disabled:before,
-    .next-arrow.slick-disabled:before
-    {
+    .next-arrow.slick-disabled:before {
         opacity: .25;
         cursor: default;
     }
@@ -72,6 +71,36 @@
         border: 2px solid #012567;
         border-radius: 10px;
         padding: 20px 30px;
+    }
+
+    #schedule-table {
+        border-collapse: collapse;
+        table-layout: fixed;
+        width: 100%;
+        text-align: left;
+        font-size: 14px;
+        line-height: 0.8;
+        border: 2px solid #ccc;
+        margin-top: 20px;
+    }
+
+    #schedule-table thead {
+        border-right: 2px solid #ccc;
+        border-left: 2px solid #ccc;
+        background: #012567;
+    }
+
+    #schedule-table thead th {
+        padding: 10px;
+        font-weight: bold;
+        vertical-align: top;
+        color: #fff;
+    }
+
+    #schedule-table td {
+        padding: 10px;
+        vertical-align: top;
+        border-bottom: 2px solid #ccc;
     }
 
 </style>
@@ -118,15 +147,15 @@
                                     <label class="col-sm-2 col-form-label d-flex align-items-center">대표 이미지</label>
                                     <div class="col-sm-10">
                                         <div style="display:inline;">
-                                            <label for="repImg">
-                                                <img src="/images/common/add_img.png"
-                                                     style="width:100px; height:100px; cursor: pointer;">
-                                            </label>
-                                            <input type="file" id="repImg"
-                                                   onchange="previewImage(this, 'rep_img_preview');"
-                                                   style="display: none;">
+                                            <span>
+                                                <label for="repImg">
+                                                    <img src="/images/common/add_img.png" style="width:100px; height:100px; cursor: pointer;">
+                                                </label>
+                                                <input type="file" id="repImg" onchange="previewImage(this, 'rep_img_preview');" style="display: none;">
 
-                                            <span id='rep_img_preview'></span>
+                                                <span id='rep_img_preview'>
+                                                </span>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -135,7 +164,7 @@
 
                                     //썸네일 클릭시 삭제.
                                     function fileRemove() {
-                                        $("#profile_img").remove();
+                                        $("#prev_repImg").remove();
                                         console.log(fileInfoArr);
                                     }
 
@@ -186,13 +215,13 @@
                                                 if (!file.type.match(imageType))
                                                     continue;
 
-                                                var prevImg = document.getElementById("profile_img"); // 이전에 미리보기가 있다면 삭제
+                                                var prevImg = document.getElementById("prev_repImg"); // 이전에 미리보기가 있다면 삭제
                                                 if (prevImg) {
                                                     preview.removeChild(prevImg);
                                                 }
 
                                                 var span = document.createElement('span');
-                                                span.id = "profile_img";
+                                                span.id = "prev_repImg";
                                                 span.style.width = '100px';
                                                 span.style.height = '100px';
                                                 span.style.display = 'inline-block';
@@ -361,7 +390,7 @@
 
                                 <div class="row mb-3">
                                     <label for="className"
-                                           class="col-sm-2 col-form-label d-flex align-items-center">분류</label>
+                                           class="col-sm-2 col-form-label">분류</label>
                                     <div class="col-sm-10">
                                         <div class="schedule-bolder">
 
@@ -370,10 +399,12 @@
                                                 <div class="col-sm-10">
                                                     <div class="row">
                                                         <div class="col-sm-6">
-                                                            <input type="date" class="form-control" name="startDate" id="startDate" required>
+                                                            <input type="date" class="form-control" name="startDate"
+                                                                   id="startDate" onchange="setLastDate()" required>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input type="date" class="form-control" name="lastDate" id="lastDate" required>
+                                                            <input type="date" class="form-control" name="lastDate"
+                                                                   id="lastDate" required>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -418,7 +449,8 @@
                                                 <div class="col-sm-10">
                                                     <div class="row">
                                                         <div class="col-sm-6">
-                                                            <select class="form-select" name="startTime_hour" id="startTime_hour">
+                                                            <select class="form-select" name="startTime_hour"
+                                                                    id="startTime_hour">
                                                                 <option value="0" selected>0 시</option>
                                                                 <option value="1">1 시</option>
                                                                 <option value="2">2 시</option>
@@ -446,8 +478,9 @@
                                                             </select>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <select class="form-select" name="startTime_minutes" id="startTime_minutes">
-                                                                <option value="0" selected>0 분</option>
+                                                            <select class="form-select" name="startTime_minutes"
+                                                                    id="startTime_minutes">
+                                                                <option value="00" selected>0 분</option>
                                                                 <option value="10">10 분</option>
                                                                 <option value="20">20 분</option>
                                                                 <option value="30">30 분</option>
@@ -464,7 +497,8 @@
                                                 <div class="col-sm-10">
                                                     <div class="row">
                                                         <div class="col-sm-6">
-                                                            <select class="form-select" name="timeRequired_hour" id="timeRequired_hour">
+                                                            <select class="form-select" name="timeRequired_hour"
+                                                                    id="timeRequired_hour">
                                                                 <option value="0" selected>0 시간</option>
                                                                 <option value="1">1 시간</option>
                                                                 <option value="2">2 시간</option>
@@ -481,7 +515,8 @@
                                                             </select>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <select class="form-select" name="timeRequired_minutes" id="timeRequired_minutes">
+                                                            <select class="form-select" name="timeRequired_minutes"
+                                                                    id="timeRequired_minutes">
                                                                 <option value="0" selected>0 분</option>
                                                                 <option value="10">10 분</option>
                                                                 <option value="20">20 분</option>
@@ -499,80 +534,214 @@
                                                 <div class="col-sm-10">
                                                     <div class="row">
                                                         <div class="col-sm-6">
-                                                            <input type="text" class="form-control" name="minPersonnel" id="minPersonnel" placeholder="최소 인원"
-                                                                   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required>
+                                                            <input type="text" class="form-control" name="minPersonnel"
+                                                                   id="minPersonnel" placeholder="최소 인원"
+                                                                   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                                                                   required>
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input type="text" class="form-control" name="maxPersonnel" id="maxPersonnel" placeholder="최대 인원"
-                                                                   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required>
+                                                            <input type="text" class="form-control" name="maxPersonnel"
+                                                                   id="maxPersonnel" placeholder="최대 인원"
+                                                                   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                                                                   required>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            <button type="button" class="btn btn-dark btn-lg px-5 ml-5" onclick="addSchedule()">
+                                            <button type="button" class="btn btn-dark btn-lg px-5 ml-5"
+                                                    onclick="addSchedule()">
                                                 추가
                                             </button>
                                             <script>
+                                                let scheduleList = [];
+                                                let schedule = {
+                                                    date: "",
+                                                    week: "",
+                                                    time: "",
+                                                    personnel: ""
+                                                }
+
                                                 function addSchedule() {
-                                                    let scheduleWeekList = [];
-                                                    $('input[name="schedule-week"]:checked').each(function (i) {
-                                                        scheduleWeekList.push($(this).val());
-                                                    });
+                                                    if (validateSchedule()) {
+                                                        let scheduleWeekList = [];
+                                                        $('input[name="schedule-week"]:checked').each(function (i) {
+                                                            scheduleWeekList.push($(this).val());
+                                                        });
 
-                                                    const startDate = $('#startDate').val();
-                                                    const lastDate = $('#lastDate').val();
-                                                    const startTime_hour = $('#startTime_hour').val();
-                                                    const startTime_minutes = $('#startTime_minutes').val();
-                                                    const timeRequired_hour = $('#timeRequired_hour').val();
-                                                    const timeRequired_minutes = $('#timeRequired_minutes').val();
-                                                    const minPersonnel = $('#minPersonnel').val();
-                                                    const maxPersonnel = $('#maxPersonnel').val();
+                                                        const startDate = $('#startDate').val();
+                                                        const lastDate = $('#lastDate').val();
+                                                        const startTime_hour = $('#startTime_hour').val();
+                                                        const startTime_minutes = $('#startTime_minutes').val();
+                                                        const timeRequired_hour = $('#timeRequired_hour').val();
+                                                        const timeRequired_minutes = $('#timeRequired_minutes').val();
+                                                        const minPersonnel = $('#minPersonnel').val();
+                                                        const maxPersonnel = $('#maxPersonnel').val();
 
-                                                    //시간 계산
-                                                    let tDate;
+                                                        //시간 계산
+                                                        let tDate;
 
-                                                    tDate = new Date();
-                                                    tDate.setHours(startTime_hour);
-                                                    tDate.setMinutes(startTime_minutes);
-                                                    const startTime = tDate.getHours() + ":" + tDate.getMinutes();
+                                                        tDate = new Date();
+                                                        tDate.setHours(startTime_hour);
+                                                        tDate.setMinutes(startTime_minutes);
+                                                        const startTime = startTime_hour + ":" + startTime_minutes;
 
-                                                    tDate = new Date();
-                                                    tDate.setHours(Number(startTime_hour) + Number(timeRequired_hour));
-                                                    tDate.setMinutes(Number(startTime_minutes) + Number(timeRequired_minutes));
-                                                    const endTime = tDate.getHours() + ":" + tDate.getMinutes();
-
-                                                    //날짜 계산
-                                                    const week = ['일', '월', '화', '수', '목', '금', '토'];
-                                                    let date;
-                                                    let result = [];
-
-                                                    const dateRange = getDateRange(startDate, lastDate);
-                                                    dateRange.forEach((element, index) => {
-                                                        date = new Date(element);
-                                                        if (scheduleWeekList.includes(date.getDay().toString())) {
-                                                            result.push(element + "(" + week[date.getDay()] + ")    " + startTime + "~" + endTime + "   " + minPersonnel + "~" + maxPersonnel);
+                                                        tDate = new Date();
+                                                        tDate.setHours(Number(startTime_hour) + Number(timeRequired_hour));
+                                                        tDate.setMinutes(Number(startTime_minutes) + Number(timeRequired_minutes));
+                                                        let endTime;
+                                                        if (tDate.getMinutes() == 0) {
+                                                            endTime = tDate.getHours() + ":00";
+                                                        } else {
+                                                            endTime = tDate.getHours() + ":" + tDate.getMinutes();
                                                         }
-                                                    })
 
-                                                    alert(result);
+                                                        //날짜 계산
+                                                        const week = ['일', '월', '화', '수', '목', '금', '토'];
+                                                        let date;
+
+                                                        const dateRange = getDateRange(startDate, lastDate);
+                                                        dateRange.forEach((element) => {
+                                                            date = new Date(element);
+                                                            if (scheduleWeekList.includes(date.getDay().toString())) {
+                                                                schedule.date = element;
+                                                                schedule.week = week[date.getDay()];
+                                                                schedule.time = startTime + "~" + endTime;
+                                                                schedule.personnel = minPersonnel + "~" + maxPersonnel;
+                                                                if (!JSON.stringify(scheduleList).includes(JSON.stringify(schedule))) {
+                                                                    scheduleList.push(schedule);
+                                                                }
+
+                                                                schedule = {
+                                                                    date: "",
+                                                                    week: "",
+                                                                    time: "",
+                                                                    personnel: ""
+                                                                }
+                                                            }
+                                                        })
+                                                        reloadSchedule();
+                                                    }
                                                 }
 
                                                 function getDateRange(startDate, lastDate) {
                                                     let result = [];
                                                     let curDate = new Date(startDate);
-                                                    while(curDate <= new Date(lastDate)) {
+                                                    while (curDate <= new Date(lastDate)) {
                                                         result.push(curDate.toISOString().split("T")[0]);
                                                         curDate.setDate(curDate.getDate() + 1);
                                                     }
                                                     return result;
                                                 }
+
+                                                function reloadSchedule() {
+                                                    const tbody = document.getElementById('schedule-result');
+                                                    let html = "";
+
+                                                    //일정 재정렬
+                                                    scheduleList.sort((a, b) => new Date(a.date + " " + a.time.split('~')[0]) - new Date(b.date + " " + b.time.split('~')[0]));
+
+                                                    scheduleList.forEach((element) => {
+                                                        html += "<tr>" +
+                                                            "<td>" + element.date + "</td>" +
+                                                            "<td>" + element.week + "요일</td>" +
+                                                            "<td>" + element.time + "</td>" +
+                                                            "<td>" + element.personnel + "</td>" +
+                                                            "<td class=\"text-danger\" style=\"cursor:pointer;\" onclick=\"deleteSchedule(this)\">삭제</td>" +
+                                                            "</tr>";
+                                                    })
+                                                    tbody.innerHTML = html;
+                                                }
+
+                                                function deleteSchedule(obj) {
+                                                    scheduleList.splice(obj.parentNode.rowIndex - 1, 1)
+                                                    obj.parentNode.remove();
+                                                    reloadSchedule();
+                                                }
+
+                                                function validateSchedule() {
+                                                    const startDate = $('#startDate');
+                                                    const lastDate = $('#lastDate');
+                                                    const timeRequired_hour = $('#timeRequired_hour');
+                                                    const timeRequired_minutes = $('#timeRequired_minutes');
+                                                    const minPersonnel = $('#minPersonnel');
+                                                    const maxPersonnel = $('#maxPersonnel');
+
+                                                    if (startDate.val() == "" || lastDate.val() == "") {
+                                                        alert('시작일/종료일을 입력해주세요.');
+                                                        startDate.focus();
+                                                        return false;
+                                                    }
+                                                    if (timeRequired_hour.val() == 0 && timeRequired_minutes.val() == 0) {
+                                                        alert('소요 시간을 선택해주세요.');
+                                                        timeRequired_hour.focus();
+                                                        return false;
+                                                    }
+                                                    if (minPersonnel.val() == "") {
+                                                        alert('최소 인원을 입력해주세요.');
+                                                        minPersonnel.focus();
+                                                        return false;
+                                                    }
+                                                    if (maxPersonnel.val() == "") {
+                                                        alert('최대 인원을 입력해주세요.');
+                                                        maxPersonnel.focus();
+                                                        return false;
+                                                    }
+
+                                                    if (new Date(startDate.val()) > new Date(lastDate.val())) {
+                                                        alert('시작일이 종료일보다 빠릅니다.');
+                                                        startDate.focus();
+                                                        return false;
+                                                    }
+                                                    if (minPersonnel.val() > maxPersonnel.val()) {
+                                                        alert('최소 인원이 최대 인원보다 많습니다.');
+                                                        minPersonnel.focus();
+                                                        return false;
+                                                    }
+                                                    return true;
+                                                }
+
+                                                //선택 날짜 최대, 최소 값 설정
+                                                window.onload = function () {
+                                                    const startDate = document.getElementById('startDate');
+                                                    const lastDate = document.getElementById('lastDate');
+                                                    let today;
+                                                    today = new Date();
+                                                    today.setDate(today.getDate());
+                                                    const minDate = new Date(today + 3240 * 10000).toISOString().split("T")[0];
+
+                                                    startDate.setAttribute("min", minDate.toString());
+                                                    lastDate.setAttribute("min", minDate.toString());
+
+                                                    today = new Date();
+                                                    today.setMonth(today.getMonth() + 12);
+                                                    const maxDate = new Date(today + 3240 * 10000).toISOString().split("T")[0];
+
+                                                    startDate.setAttribute("max", maxDate);
+                                                    lastDate.setAttribute("max", maxDate);
+                                                }
+
+                                                function setLastDate() {
+                                                    if (document.getElementById('lastDate').value == "") {
+                                                        document.getElementById('lastDate').value = document.getElementById('startDate').value;
+                                                    }
+                                                }
                                             </script>
                                         </div> <!-- schedule-border end -->
 
-                                        <div id="schedule-result">
-
-                                        </div>
+                                        <table id="schedule-table">
+                                            <thead>
+                                            <tr>
+                                                <th>날짜</th>
+                                                <th>요일</th>
+                                                <th>강의 시간</th>
+                                                <th>수강 인원</th>
+                                                <th>행 삭제</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="schedule-result">
+                                            </tbody>
+                                        </table>
 
                                     </div>
                                 </div>
@@ -656,7 +825,6 @@
                                                     // 200자 넘으면 알림창 뜨도록
                                                     alert('200자까지 입력 가능합니다.');
                                                 }
-                                                ;
                                             });
                                         </script>
                                     </div>
@@ -880,77 +1048,79 @@
 
                     <script>
                         function dataSubmit() {
-                            var repImg = $("#repImg")[0].files[0];
+                            alert(scheduleList);
 
-                            var curriculum = {
-                                order: 0,
-                                title: '',
-                                content: ''
-                            }
-                            var curList = [];
-
-                            $('#curriculumForm input').each(function (index) {
-                                var input = $(this);
-                                switch (input.attr('name')) {
-                                    case 'curOrder':
-                                        curriculum.order = input.val();
-                                        break;
-                                    case 'curTitle':
-                                        curriculum.title = input.val();
-                                        break;
-                                    case 'curContent':
-                                        curriculum.content = input.val();
-                                        break;
-                                }
-                                if (index % 3 == 2) { //3개씩 끊기
-                                    curList.push(curriculum);
-                                    curriculum = {
-                                        order: 0,
-                                        title: '',
-                                        content: ''
-                                    }
-                                }
-                            });
-
-                            var classData = {
-                                className: $('#className').val(),
-                                categoryId: $('#categoryId').val(),
-                                classification: $('input[name=classification]:checked').val(),
-                                timeRequired: $('#timeRequired').val(),
-                                personnel: $('#personnel').val(),
-                                price: $('#price').val(),
-                                classIntro: editor.getData(),
-                                material: $('#material').val(),
-                                precautions: $('#precautions').val(),
-                                curriculumList: curList
-                            };
-
-                            var formData = new FormData();
-
-                            var totalfiles = document.getElementById('activityImg').files.length;
-                            for (var index = 0; index < totalfiles; index++) {
-                                formData.append("activityImg[]", document.getElementById('activityImg').files[index]);
-                            }
-
-                            formData.append("repImg", repImg);
-                            formData.append("class", new Blob([JSON.stringify(classData)], {type: "application/json"}));
-
-                            $.ajax({
-                                url: "/curTest",
-                                data: formData,
-                                processData: false,
-                                contentType: false,
-                                enctype: 'multipart/form-data',
-                                type: "POST",
-                                success: function () {
-                                    // window.location = "/login";
-                                    alert("회원가입에 성공했습니다.");
-                                },
-                                error: function () {
-                                    // window.location = "/login";
-                                    alert("회원가입에 실패했습니다.");
-                                }
-                            });
+                            // var repImg = $("#repImg")[0].files[0];
+                            //
+                            // var curriculum = {
+                            //     order: 0,
+                            //     title: '',
+                            //     content: ''
+                            // }
+                            // var curList = [];
+                            //
+                            // $('#curriculumForm input').each(function (index) {
+                            //     var input = $(this);
+                            //     switch (input.attr('name')) {
+                            //         case 'curOrder':
+                            //             curriculum.order = input.val();
+                            //             break;
+                            //         case 'curTitle':
+                            //             curriculum.title = input.val();
+                            //             break;
+                            //         case 'curContent':
+                            //             curriculum.content = input.val();
+                            //             break;
+                            //     }
+                            //     if (index % 3 == 2) { //3개씩 끊기
+                            //         curList.push(curriculum);
+                            //         curriculum = {
+                            //             order: 0,
+                            //             title: '',
+                            //             content: ''
+                            //         }
+                            //     }
+                            // });
+                            //
+                            // var classData = {
+                            //     className: $('#className').val(),
+                            //     categoryId: $('#categoryId').val(),
+                            //     classification: $('input[name=classification]:checked').val(),
+                            //     timeRequired: $('#timeRequired').val(),
+                            //     personnel: $('#personnel').val(),
+                            //     price: $('#price').val(),
+                            //     classIntro: editor.getData(),
+                            //     material: $('#material').val(),
+                            //     precautions: $('#precautions').val(),
+                            //     curriculumList: curList
+                            // };
+                            //
+                            // var formData = new FormData();
+                            //
+                            // var totalfiles = document.getElementById('activityImg').files.length;
+                            // for (var index = 0; index < totalfiles; index++) {
+                            //     formData.append("activityImg[]", document.getElementById('activityImg').files[index]);
+                            // }
+                            //
+                            // formData.append("repImg", repImg);
+                            // formData.append("class", new Blob([JSON.stringify(classData)], {type: "application/json"}));
+                            //
+                            // $.ajax({
+                            //     url: "/curTest",
+                            //     data: formData,
+                            //     processData: false,
+                            //     contentType: false,
+                            //     enctype: 'multipart/form-data',
+                            //     type: "POST",
+                            //     success: function () {
+                            //         // window.location = "/login";
+                            //         alert("회원가입에 성공했습니다.");
+                            //     },
+                            //     error: function () {
+                            //         // window.location = "/login";
+                            //         alert("회원가입에 실패했습니다.");
+                            //     }
+                            // });
                         }
                     </script>
 
