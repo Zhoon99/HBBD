@@ -52,6 +52,9 @@ public class Account extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "account")
     private List<CategoryAccount> categoryAccounts = new ArrayList<>();
 
+    @OneToMany(mappedBy = "account")
+    private List<Classes> classesList = new ArrayList<>();
+
     public void setSocialProfile(String introduce, String nickname, String profileImg) {
         this.introduce = introduce;
         this.nickname = nickname;

@@ -4,39 +4,51 @@
 <head th:replace="layout/user_head::userHead"></head>
 
 <style>
-    .checkbox_week input[type="checkbox"] {
-        display: none;
-    }
-
-    .checkbox_week input[type="checkbox"] + span {
-        display: inline-block;
-        padding: 15px 10px;
-        border: 1px solid #dfdfdf;
-        background-color: #ffffff;
+    .searchBar {
+        width: 40%;
+        height: 60px;
         text-align: center;
-        cursor: pointer;
+        margin: 70px auto;
     }
 
-    .checkbox_week input[type="checkbox"]:checked + span {
-        background-color: #012567;
-        color: #ffffff;
+    .searchBar-input {
+        font-size: 16px;
+        font-weight: 600;
+        width: 100%;
+        border-radius: 50px;
+        border: 3px solid #0067A3;
+        padding: 7px 15px;
+        text-align: left;
+        display:inline;
+        outline: none;
     }
 
-    .ck-editor__editable:not(.ck-editor__nested-editable) {
-        min-height: 300px;
+    .searchBar-button {
+        font-size: 16px;
+        font-weight: 800;
+        border-radius: 50px;
+        color: white;
+        background-color: #0067A3;
+        border: 3px solid #0067A3;
+        padding: 7px 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        display:inline;
+        position: absolute;
+        z-index: 1;
     }
 
-    table {
-        border-spacing: 0 30px;
-        border-collapse: separate;
-        font-size: 17px;
-        font-weight: bold;
+    .slider-wrap {
+        margin: 20px auto;
+        width: 90%;
     }
 
-    .address-btn {
-        background-color: #012567;
-        color: #ffffff;
-        font-weight: bold;
+    .slick-slide {
+        margin: 0 10px;
+    }
+    .slick-list {
+        margin: 0 -10px;
     }
 
     .prev-arrow {
@@ -44,8 +56,8 @@
         font-size: 100px;
         color: #012567;
         position: absolute;
-        top: 50%;
-        left: -6%;
+        top: 25%;
+        left: -7%;
         z-index: 1;
         cursor: pointer
     }
@@ -55,63 +67,46 @@
         font-size: 100px;
         color: #012567;
         position: absolute;
-        top: 50%;
-        right: -6%;
+        top: 25%;
+        right: -7%;
         z-index: 1;
         cursor: pointer;
     }
 
-    .prev-arrow.slick-disabled:before,
-    .next-arrow.slick-disabled:before {
-        opacity: .25;
-        cursor: default;
-    }
-
-    .schedule-bolder {
-        border: 2px solid #012567;
-        border-radius: 10px;
-        padding: 20px 30px;
-    }
-
-    #schedule-table {
-        border-collapse: collapse;
-        table-layout: fixed;
+    .imgWrap {
+        position: relative;
         width: 100%;
-        text-align: left;
-        font-size: 14px;
-        line-height: 0.8;
-        border: 2px solid #ccc;
-        margin-top: 20px;
+        height: 225px;
     }
 
-    #schedule-table thead {
-        border-right: 2px solid #ccc;
-        border-left: 2px solid #ccc;
-        background: #012567;
+    .imgWrap img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: translate(50, 50);
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        margin: auto;
     }
 
-    #schedule-table thead th {
-        padding: 10px;
-        font-weight: bold;
-        vertical-align: top;
-        color: #fff;
+    #map {
+        position: absolute;
+        width:400px;
+        height:400px;
+        visibility: hidden;
     }
-
-    #schedule-table td {
-        padding: 10px;
-        vertical-align: top;
-        border-bottom: 2px solid #ccc;
-    }
-
 </style>
 
 <script>
     $(document).ready(function () {
-        $(".reg-split").slick({
-            dots: true,
-            infinite: false,
+        $('#popular-slider').slick({
+            slidesToShow: 4,
+            slidesToScroll: 4,
+            autoplay: true,
+            autoplaySpeed: 3000,
             prevArrow: '<i class="prev-arrow bi bi-chevron-compact-left"></i>',
-            nextArrow: '<i class="next-arrow bi bi-chevron-compact-right"></i>',
+            nextArrow: '<i class="next-arrow bi bi-chevron-compact-right"></i>'
         });
     });
 </script>
@@ -125,1005 +120,99 @@
 <aside th:replace="layout/sidebar::sidebar"></aside>
 
 <main id="main" class="main">
-    <div class="pagetitle"><h1>클래스 등록</h1></div>
+
+    <div id="map"></div>
+
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0d7651756108879925f2e5555e0f1a7a&libraries=services"></script>
+    <script>
+        var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+            mapOption = {
+                center: new kakao.maps.LatLng(37.448496000714265, 126.65734801675858), // 지도의 중심좌표
+                level: 3 // 지도의 확대 레벨
+            };
+
+        // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
+        var map = new kakao.maps.Map(mapContainer, mapOption);
+
+        /// HTML5의 geolocation으로 사용할 수 있는지 확인합니다
+        if (navigator.geolocation) {
+
+            // GeoLocation을 이용해서 접속 위치를 얻어옵니다
+            navigator.geolocation.getCurrentPosition(function (position) {
+
+                var lat = position.coords.latitude, // 위도
+                    lon = position.coords.longitude; // 경도
+
+                var locPosition = new kakao.maps.LatLng(lat, lon); // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
+
+                // 지도 중심좌표를 접속위치로 변경합니다
+                map.setCenter(locPosition);
+            });
+            addMapCondition();
+        } else {
+            alert("좌표를 불러오는데 오류가 발생했습니다.");
+
+            // HTML5의 GeoLocation을 사용할 수 없을때 기본 좌표 설정.
+            var locPosition = new kakao.maps.LatLng(37.448496000714265, 126.65734801675858);
+
+            // 지도 중심좌표를 접속위치로 변경합니다
+            map.setCenter(locPosition);
+
+            addMapCondition();
+        }
+
+        function addMapCondition() {
+            var bound = map.getBounds();
+            //ajax로 보낼 오브젝트 생성
+            var bounds = {
+                "swLat": bound.getSouthWest().getLat(),
+                "swLng": bound.getSouthWest().getLng(),
+                "neLat": bound.getNorthEast().getLat(),
+                "neLng": bound.getNorthEast().getLng()
+            };
+
+            alert(JSON.stringify(bounds));
+
+            $.ajax({
+                url: "/class/bounds",
+                dataType: "json",
+                contentType: "application/json; charset=UTF-8",
+                type: "POST",
+                data: JSON.stringify(bounds),
+                success: function (data) {
+                    alert(data.length);
+                    if (data.length > 0) {
+                        for (var i in data) {
+                            var latlng = new kakao.maps.LatLng(data[i].lat, data[i].lng)
+
+                            var marker = new kakao.maps.Marker({
+                                map: map, //마커를 표시할 지도
+                                position: latlng, //마커를 표시할 위치
+                                title: data[i].postName, //마커에 커서를 올리면 표시될 타이틀
+                            });
+                        }
+                    }
+                }, error: function (request, status, error) {
+                    console.log("AJAX_ERROR");
+                }, beforeSend: function () { //로딩 표시
+                    $('.wrap-loading').removeClass('display-none');
+                }, complete: function () { //로딩 숨기기
+                    $('.wrap-loading').addClass('display-none');
+                }
+            });
+        }
+    </script>
+
+    <div class="pagetitle"><h1>인기 클래스</h1></div>
     <section class="section">
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">
-                    <div class="card-body px-5 fw-bold">
-                        <div class="reg-split container">
-                            <div class="page-1 px-1">
-                                <h5 class="card-title">클래스 기본정보</h5>
+                    <div class="card-body">
 
-                                <div class="row mb-3">
-                                    <label for="className" class="col-sm-2 col-form-label">클래스 명</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="className" id="className"
-                                               placeholder="클래스 명" required>
-                                    </div>
-                                </div>
 
-                                <div class="row mb-3">
-                                    <label class="col-sm-2 col-form-label d-flex align-items-center">대표 이미지</label>
-                                    <div class="col-sm-10">
-                                        <div style="display:inline;">
-                                            <span>
-                                                <label for="repImg">
-                                                    <img src="/images/common/add_img.png" style="width:100px; height:100px; cursor: pointer;">
-                                                </label>
-                                                <input type="file" id="repImg" onchange="previewImage(this, 'rep_img_preview');" style="display: none;">
 
-                                                <span id='rep_img_preview'>
-                                                </span>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <script>
-                                    var fileInfoArr = [];
-
-                                    //썸네일 클릭시 삭제.
-                                    function fileRemove() {
-                                        $("#prev_repImg").remove();
-                                        console.log(fileInfoArr);
-                                    }
-
-                                    //썸네일 미리보기.
-                                    function previewImage(targetObj, previewId) {
-
-                                        var ext = $(targetObj).val().split('.').pop().toLowerCase();
-
-                                        if ($.inArray(ext, ['gif', 'png', 'jpg', 'jpeg']) == -1) {
-                                            alert('gif, png, jpg, jpeg 형식만 업로드할 수 있습니다.');
-                                            return false;
-                                        }
-
-                                        var preview = document.getElementById(previewId); // 미리보기 div id
-                                        var ua = window.navigator.userAgent;
-
-                                        if (ua.indexOf("MSIE") > -1) { //ie일때
-
-                                            targetObj.select();
-                                            try {
-                                                var src = document.selection.createRange().text; // get file full path
-                                                var ie_preview_error = document.getElementById("ie_preview_error_" + previewId);
-
-                                                if (ie_preview_error) {
-                                                    preview.removeChild(ie_preview_error); //error가 있으면 delete
-                                                }
-
-                                                var img = document.getElementById(previewId); //이미지가 뿌려질 곳
-
-                                                img.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + src + "', sizingMethod='scale')"; //이미지 로딩, sizingMethod는 div에 맞춰서 사이즈를 자동조절 하는 역할
-                                            } catch (e) {
-                                                if (!document.getElementById("ie_preview_error_" + previewId)) {
-
-                                                    var info = document.createElement("<p>");
-                                                    info.id = "ie_preview_error_" + previewId;
-                                                    info.innerHTML = e.name;
-                                                    preview.insertBefore(info, null);
-                                                }
-                                            }
-                                        } else { //ie가 아닐때
-
-                                            var files = targetObj.files;
-
-                                            for (var i = 0; i < files.length; i++) {
-
-                                                var file = files[i];
-                                                var imageType = /image.*/; //이미지 파일일 경우만 뿌려줌.
-                                                if (!file.type.match(imageType))
-                                                    continue;
-
-                                                var prevImg = document.getElementById("prev_repImg"); // 이전에 미리보기가 있다면 삭제
-                                                if (prevImg) {
-                                                    preview.removeChild(prevImg);
-                                                }
-
-                                                var span = document.createElement('span');
-                                                span.id = "prev_repImg";
-                                                span.style.width = '100px';
-                                                span.style.height = '100px';
-                                                span.style.display = 'inline-block';
-                                                span.style.backgroundColor = '#cccccc';
-                                                span.style.textAlign = 'center';
-                                                preview.appendChild(span);
-
-                                                var img = document.createElement("img"); // 크롬은 div에 이미지가 뿌려지지 않기때문에 자식 Element를 만듬.
-                                                img.id = "prev_" + previewId;
-                                                img.className = "addImg";
-                                                img.classList.add("obj");
-                                                img.file = file;
-                                                img.style.width = 'auto';
-                                                img.style.height = 'inherit';
-                                                img.style.cursor = 'pointer';
-                                                img.onclick = () => fileRemove(); //이미지를 클릭했을 때.
-                                                span.appendChild(img);
-
-                                                if (window.FileReader) { // FireFox, Chrome, Opera 확인.
-                                                    var reader = new FileReader();
-                                                    reader.onloadend = (function (aImg) {
-                                                        return function (e) {
-                                                            aImg.src = e.target.result;
-                                                        };
-                                                    })(img);
-                                                    reader.readAsDataURL(file);
-                                                } else { // safari is not supported FileReader
-                                                    if (!document.getElementById("sfr_preview_error_" + previewId)) {
-                                                        var info = document.createElement("p");
-                                                        info.id = "sfr_preview_error_" + previewId;
-                                                        info.innerHTML = "not supported FileReader";
-                                                        preview.insertBefore(info, null);
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                </script>
-
-                                <div class="row mb-3">
-                                    <label class="col-sm-2 col-form-label">카테고리</label>
-                                    <div class="col-sm-10">
-                                        <div class="form-floating mb-3">
-                                            <select class="form-select" id="categoryId" name="categoryId" required>
-                                                <option value="1">One</option>
-                                                <option value="2">Two</option>
-                                                <option value="3">Three</option>
-                                            </select>
-                                            <label for="categoryId">클래스 카테고리</label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <label for="ckeditor" class="col-sm-2 col-form-label">클래스 소개</label>
-                                    <div class="col-sm-10">
-                                        <textarea id="ckeditor" placeholder=""
-                                                  style="display: none; width: 100%;"></textarea>
-
-                                        <script>
-                                            let editor;
-
-                                            ClassicEditor
-                                                .create(document.querySelector('#ckeditor'), {})
-                                                .then(newEditor => {
-                                                    editor = newEditor;
-                                                })
-
-                                                .then(editor => {
-                                                    window.editor = editor;
-
-                                                })
-                                                .catch(error => {
-                                                    console.error('Oops, something went wrong!');
-                                                    console.error('Please, report the following error on https://github.com/ckeditor/ckeditor5/issues with the build id and the error stack trace:');
-                                                    console.warn('Build id: g64ljk55ssvc-goqlohse75uw');
-                                                    console.error(error);
-                                                });
-                                        </script>
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <label class="col-sm-2 col-form-label">주소</label>
-                                    <div class="col-sm-10">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" name="address" id="address"
-                                                   placeholder="주소"
-                                                   required
-                                                   readonly><br>
-                                            <span class="input-group-btn">
-                                        <button class="address-btn btn btn-default" onclick="execDaumPostcode()"
-                                                type="button">주소 찾기</button>
-                                    </span>
-                                        </div>
-                                        <input type="text" class="form-control mt-3" name="addressDetail"
-                                               id="addressDetail"
-                                               placeholder="상세주소"
-                                               required>
-                                        <div id="wrap"
-                                             style="display:none;border:1px solid;width:100%;height:300px;margin:5px 0;position:relative">
-                                            <img src="//t1.daumcdn.net/postcode/resource/images/close.png"
-                                                 id="btnFoldWrap"
-                                                 style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1"
-                                                 onclick="foldDaumPostcode()"
-                                                 alt="접기 버튼">
-                                        </div>
-                                    </div>
-                                    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-                                    <script>
-                                        // 우편번호 찾기 찾기 화면을 넣을 element
-                                        var element_wrap = document.getElementById('wrap');
-
-                                        function foldDaumPostcode() {
-                                            // iframe을 넣은 element를 안보이게 한다.
-                                            element_wrap.style.display = 'none';
-                                        }
-
-                                        function execDaumPostcode() {
-                                            // 현재 scroll 위치를 저장해놓는다.
-                                            var currentScroll = Math.max(document.body.scrollTop, document.documentElement.scrollTop);
-
-                                            new daum.Postcode({
-                                                oncomplete: function (data) {
-                                                    // 각 주소의 노출 규칙에 따라 주소를 조합한다.
-                                                    // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
-                                                    var addr = ''; // 주소 변수
-
-                                                    //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
-                                                    if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
-                                                        addr = data.roadAddress;
-                                                    } else { // 사용자가 지번 주소를 선택했을 경우(J)
-                                                        addr = data.jibunAddress;
-                                                    }
-
-                                                    // 주소 정보를 해당 필드에 넣는다.
-                                                    document.getElementById("address").value = addr;
-                                                    // 커서를 상세주소 필드로 이동한다.
-                                                    document.getElementById("addressDetail").focus();
-
-                                                    // iframe을 넣은 element를 안보이게 한다.
-                                                    // (autoClose:false 기능을 이용한다면, 아래 코드를 제거해야 화면에서 사라지지 않는다.)
-                                                    element_wrap.style.display = 'none';
-
-                                                    // 우편번호 찾기 화면이 보이기 이전으로 scroll 위치를 되돌린다.
-                                                    document.body.scrollTop = currentScroll;
-                                                },
-                                                // 우편번호 찾기 화면 크기가 조정되었을때 실행할 코드를 작성하는 부분. iframe을 넣은 element의 높이값을 조정한다.
-                                                onresize: function (size) {
-                                                    element_wrap.style.height = size.height + 'px';
-                                                },
-                                                width: '100%',
-                                                height: '100%'
-                                            }).embed(element_wrap);
-
-                                            // iframe을 넣은 element를 보이게 한다.
-                                            element_wrap.style.display = 'block';
-                                        }
-                                    </script>
-                                </div>
-
-                            </div> <!-- page-1 end -->
-
-                            <div class="page-2 px-1">
-                                <h5 class="card-title">클래스 일정</h5>
-
-                                <div class="row mb-3">
-                                    <label for="className"
-                                           class="col-sm-2 col-form-label">분류</label>
-                                    <div class="col-sm-10">
-                                        <div class="schedule-bolder">
-
-                                            <div class="row mb-3">
-                                                <label class="col-sm-2 col-form-label">시작일 / 종료일</label>
-                                                <div class="col-sm-10">
-                                                    <div class="row">
-                                                        <div class="col-sm-6">
-                                                            <input type="date" class="form-control" name="startDate"
-                                                                   id="startDate" onchange="setLastDate()" required>
-                                                        </div>
-                                                        <div class="col-sm-6">
-                                                            <input type="date" class="form-control" name="lastDate"
-                                                                   id="lastDate" required>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="row mb-3">
-                                                <label class="col-sm-2 col-form-label">요일</label>
-                                                <div class="col-sm-10">
-                                                    <label class="checkbox_week">
-                                                        <input type="checkbox" name="schedule-week" value="1">
-                                                        <span>월요일</span>
-                                                    </label>
-                                                    <label class="checkbox_week">
-                                                        <input type="checkbox" name="schedule-week" value="2">
-                                                        <span>화요일</span>
-                                                    </label>
-                                                    <label class="checkbox_week">
-                                                        <input type="checkbox" name="schedule-week" value="3">
-                                                        <span>수요일</span>
-                                                    </label>
-                                                    <label class="checkbox_week">
-                                                        <input type="checkbox" name="schedule-week" value="4">
-                                                        <span>목요일</span>
-                                                    </label>
-                                                    <label class="checkbox_week">
-                                                        <input type="checkbox" name="schedule-week" value="5">
-                                                        <span>금요일</span>
-                                                    </label>
-                                                    <label class="checkbox_week">
-                                                        <input type="checkbox" name="schedule-week" value="6">
-                                                        <span>토요일</span>
-                                                    </label>
-                                                    <label class="checkbox_week">
-                                                        <input type="checkbox" name="schedule-week" value="0">
-                                                        <span>일요일</span>
-                                                    </label>
-                                                </div>
-                                            </div>
-
-                                            <div class="row mb-3">
-                                                <label class="col-sm-2 col-form-label">수업 시작 시간</label>
-                                                <div class="col-sm-10">
-                                                    <div class="row">
-                                                        <div class="col-sm-6">
-                                                            <select class="form-select" name="startTime_hour"
-                                                                    id="startTime_hour">
-                                                                <option value="0" selected>0 시</option>
-                                                                <option value="1">1 시</option>
-                                                                <option value="2">2 시</option>
-                                                                <option value="3">3 시</option>
-                                                                <option value="4">4 시</option>
-                                                                <option value="5">5 시</option>
-                                                                <option value="6">6 시</option>
-                                                                <option value="7">7 시</option>
-                                                                <option value="8">8 시</option>
-                                                                <option value="9">9 시</option>
-                                                                <option value="10">10 시</option>
-                                                                <option value="11">11 시</option>
-                                                                <option value="12">12 시</option>
-                                                                <option value="13">13 시</option>
-                                                                <option value="14">14 시</option>
-                                                                <option value="15">15 시</option>
-                                                                <option value="16">16 시</option>
-                                                                <option value="17">17 시</option>
-                                                                <option value="18">18 시</option>
-                                                                <option value="19">19 시</option>
-                                                                <option value="20">20 시</option>
-                                                                <option value="21">21 시</option>
-                                                                <option value="22">22 시</option>
-                                                                <option value="23">23 시</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-sm-6">
-                                                            <select class="form-select" name="startTime_minutes"
-                                                                    id="startTime_minutes">
-                                                                <option value="00" selected>0 분</option>
-                                                                <option value="10">10 분</option>
-                                                                <option value="20">20 분</option>
-                                                                <option value="30">30 분</option>
-                                                                <option value="40">40 분</option>
-                                                                <option value="50">50 분</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="row mb-3">
-                                                <label class="col-sm-2 col-form-label">수업 소요 시간</label>
-                                                <div class="col-sm-10">
-                                                    <div class="row">
-                                                        <div class="col-sm-6">
-                                                            <select class="form-select" name="timeRequired_hour"
-                                                                    id="timeRequired_hour">
-                                                                <option value="0" selected>0 시간</option>
-                                                                <option value="1">1 시간</option>
-                                                                <option value="2">2 시간</option>
-                                                                <option value="3">3 시간</option>
-                                                                <option value="4">4 시간</option>
-                                                                <option value="5">5 시간</option>
-                                                                <option value="6">6 시간</option>
-                                                                <option value="7">7 시간</option>
-                                                                <option value="8">8 시간</option>
-                                                                <option value="9">9 시간</option>
-                                                                <option value="10">10 시간</option>
-                                                                <option value="11">11 시간</option>
-                                                                <option value="12">12 시간</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-sm-6">
-                                                            <select class="form-select" name="timeRequired_minutes"
-                                                                    id="timeRequired_minutes">
-                                                                <option value="0" selected>0 분</option>
-                                                                <option value="10">10 분</option>
-                                                                <option value="20">20 분</option>
-                                                                <option value="30">30 분</option>
-                                                                <option value="40">40 분</option>
-                                                                <option value="50">50 분</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="row mb-3">
-                                                <label class="col-sm-2 col-form-label">수강 인원 수</label>
-                                                <div class="col-sm-10">
-                                                    <div class="row">
-                                                        <div class="col-sm-6">
-                                                            <input type="text" class="form-control" name="minPersonnel"
-                                                                   id="minPersonnel" placeholder="최소 인원"
-                                                                   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
-                                                                   required>
-                                                        </div>
-                                                        <div class="col-sm-6">
-                                                            <input type="text" class="form-control" name="maxPersonnel"
-                                                                   id="maxPersonnel" placeholder="최대 인원"
-                                                                   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
-                                                                   required>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <button type="button" class="btn btn-dark btn-lg px-5 ml-5"
-                                                    onclick="addSchedule()">
-                                                추가
-                                            </button>
-                                            <script>
-                                                let scheduleList = [];
-                                                let schedule = {
-                                                    date: "",
-                                                    week: "",
-                                                    time: "",
-                                                    personnel: ""
-                                                }
-
-                                                function addSchedule() {
-                                                    if (validateSchedule()) {
-                                                        let scheduleWeekList = [];
-                                                        $('input[name="schedule-week"]:checked').each(function (i) {
-                                                            scheduleWeekList.push($(this).val());
-                                                        });
-
-                                                        const startDate = $('#startDate').val();
-                                                        const lastDate = $('#lastDate').val();
-                                                        const startTime_hour = $('#startTime_hour').val();
-                                                        const startTime_minutes = $('#startTime_minutes').val();
-                                                        const timeRequired_hour = $('#timeRequired_hour').val();
-                                                        const timeRequired_minutes = $('#timeRequired_minutes').val();
-                                                        const minPersonnel = $('#minPersonnel').val();
-                                                        const maxPersonnel = $('#maxPersonnel').val();
-
-                                                        //시간 계산
-                                                        let tDate;
-
-                                                        tDate = new Date();
-                                                        tDate.setHours(startTime_hour);
-                                                        tDate.setMinutes(startTime_minutes);
-                                                        const startTime = startTime_hour + ":" + startTime_minutes;
-
-                                                        tDate = new Date();
-                                                        tDate.setHours(Number(startTime_hour) + Number(timeRequired_hour));
-                                                        tDate.setMinutes(Number(startTime_minutes) + Number(timeRequired_minutes));
-                                                        let endTime;
-                                                        if (tDate.getMinutes() == 0) {
-                                                            endTime = tDate.getHours() + ":00";
-                                                        } else {
-                                                            endTime = tDate.getHours() + ":" + tDate.getMinutes();
-                                                        }
-
-                                                        //날짜 계산
-                                                        const week = ['일', '월', '화', '수', '목', '금', '토'];
-                                                        let date;
-
-                                                        const dateRange = getDateRange(startDate, lastDate);
-                                                        dateRange.forEach((element) => {
-                                                            date = new Date(element);
-                                                            if (scheduleWeekList.includes(date.getDay().toString())) {
-                                                                schedule.date = element;
-                                                                schedule.week = week[date.getDay()];
-                                                                schedule.time = startTime + "~" + endTime;
-                                                                schedule.personnel = minPersonnel + "~" + maxPersonnel;
-                                                                if (!JSON.stringify(scheduleList).includes(JSON.stringify(schedule))) {
-                                                                    scheduleList.push(schedule);
-                                                                }
-
-                                                                schedule = {
-                                                                    date: "",
-                                                                    week: "",
-                                                                    time: "",
-                                                                    personnel: ""
-                                                                }
-                                                            }
-                                                        })
-                                                        reloadSchedule();
-                                                    }
-                                                }
-
-                                                function getDateRange(startDate, lastDate) {
-                                                    let result = [];
-                                                    let curDate = new Date(startDate);
-                                                    while (curDate <= new Date(lastDate)) {
-                                                        result.push(curDate.toISOString().split("T")[0]);
-                                                        curDate.setDate(curDate.getDate() + 1);
-                                                    }
-                                                    return result;
-                                                }
-
-                                                function reloadSchedule() {
-                                                    const tbody = document.getElementById('schedule-result');
-                                                    let html = "";
-
-                                                    //일정 재정렬
-                                                    scheduleList.sort((a, b) => new Date(a.date + " " + a.time.split('~')[0]) - new Date(b.date + " " + b.time.split('~')[0]));
-
-                                                    scheduleList.forEach((element) => {
-                                                        html += "<tr>" +
-                                                            "<td>" + element.date + "</td>" +
-                                                            "<td>" + element.week + "요일</td>" +
-                                                            "<td>" + element.time + "</td>" +
-                                                            "<td>" + element.personnel + "</td>" +
-                                                            "<td class=\"text-danger\" style=\"cursor:pointer;\" onclick=\"deleteSchedule(this)\">삭제</td>" +
-                                                            "</tr>";
-                                                    })
-                                                    tbody.innerHTML = html;
-                                                }
-
-                                                function deleteSchedule(obj) {
-                                                    scheduleList.splice(obj.parentNode.rowIndex - 1, 1)
-                                                    obj.parentNode.remove();
-                                                    reloadSchedule();
-                                                }
-
-                                                function validateSchedule() {
-                                                    const startDate = $('#startDate');
-                                                    const lastDate = $('#lastDate');
-                                                    const timeRequired_hour = $('#timeRequired_hour');
-                                                    const timeRequired_minutes = $('#timeRequired_minutes');
-                                                    const minPersonnel = $('#minPersonnel');
-                                                    const maxPersonnel = $('#maxPersonnel');
-
-                                                    if (startDate.val() == "" || lastDate.val() == "") {
-                                                        alert('시작일/종료일을 입력해주세요.');
-                                                        startDate.focus();
-                                                        return false;
-                                                    }
-                                                    if (timeRequired_hour.val() == 0 && timeRequired_minutes.val() == 0) {
-                                                        alert('소요 시간을 선택해주세요.');
-                                                        timeRequired_hour.focus();
-                                                        return false;
-                                                    }
-                                                    if (minPersonnel.val() == "") {
-                                                        alert('최소 인원을 입력해주세요.');
-                                                        minPersonnel.focus();
-                                                        return false;
-                                                    }
-                                                    if (maxPersonnel.val() == "") {
-                                                        alert('최대 인원을 입력해주세요.');
-                                                        maxPersonnel.focus();
-                                                        return false;
-                                                    }
-
-                                                    if (new Date(startDate.val()) > new Date(lastDate.val())) {
-                                                        alert('시작일이 종료일보다 빠릅니다.');
-                                                        startDate.focus();
-                                                        return false;
-                                                    }
-                                                    if (minPersonnel.val() > maxPersonnel.val()) {
-                                                        alert('최소 인원이 최대 인원보다 많습니다.');
-                                                        minPersonnel.focus();
-                                                        return false;
-                                                    }
-                                                    return true;
-                                                }
-
-                                                //선택 날짜 최대, 최소 값 설정
-                                                window.onload = function () {
-                                                    const startDate = document.getElementById('startDate');
-                                                    const lastDate = document.getElementById('lastDate');
-                                                    let today;
-                                                    today = new Date();
-                                                    today.setDate(today.getDate());
-                                                    const minDate = new Date(today + 3240 * 10000).toISOString().split("T")[0];
-
-                                                    startDate.setAttribute("min", minDate.toString());
-                                                    lastDate.setAttribute("min", minDate.toString());
-
-                                                    today = new Date();
-                                                    today.setMonth(today.getMonth() + 12);
-                                                    const maxDate = new Date(today + 3240 * 10000).toISOString().split("T")[0];
-
-                                                    startDate.setAttribute("max", maxDate);
-                                                    lastDate.setAttribute("max", maxDate);
-                                                }
-
-                                                function setLastDate() {
-                                                    if (document.getElementById('lastDate').value == "") {
-                                                        document.getElementById('lastDate').value = document.getElementById('startDate').value;
-                                                    }
-                                                }
-                                            </script>
-                                        </div> <!-- schedule-border end -->
-
-                                        <table id="schedule-table">
-                                            <thead>
-                                            <tr>
-                                                <th>날짜</th>
-                                                <th>요일</th>
-                                                <th>강의 시간</th>
-                                                <th>수강 인원</th>
-                                                <th>행 삭제</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody id="schedule-result">
-                                            </tbody>
-                                        </table>
-
-                                    </div>
-                                </div>
-                            </div> <!-- page-2 end -->
-
-                            <div class="page-3 px-1">
-                                <h5 class="card-title">클래스 부가정보</h5>
-
-                                <div class="row mb-3">
-                                    <label for="price" class="col-sm-2 col-form-label">가격</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="price" id="price"
-                                               oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
-                                               required>
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <label class="col-sm-2 col-form-label d-flex align-items-center">준비물</label>
-                                    <div class="col-sm-10">
-                                        <div class="materialLengthWrap d-flex justify-content-end">
-                                            <span class="materialTextCount">0자</span>
-                                            <span class="materialTextTotal">/200자</span>
-                                        </div>
-                                        <textarea class="form-control" placeholder="준비물을 입력해주세요" name="material"
-                                                  id="material"
-                                                  maxlength="200" style="height: 100px; resize: none;"
-                                                  required></textarea>
-
-                                        <script>
-                                            $('#material').keyup(function (e) {
-                                                let content = $(this).val();
-
-                                                // 글자수 세기
-                                                if (content.length == 0 || content == '') {
-                                                    $('.materialTextCount').text('0자');
-                                                } else {
-                                                    $('.materialTextCount').text(content.length + '자');
-                                                }
-
-                                                // 글자수 제한
-                                                if (content.length > 200) {
-                                                    // 200자 부터는 타이핑 되지 않도록
-                                                    $(this).val($(this).val().substring(0, 200));
-                                                    // 200자 넘으면 알림창 뜨도록
-                                                    alert('200자까지 입력 가능합니다.');
-                                                }
-                                                ;
-                                            });
-                                        </script>
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <label class="col-sm-2 col-form-label d-flex align-items-center">주의사항</label>
-                                    <div class="col-sm-10">
-                                        <div class="precautionsLengthWrap d-flex justify-content-end">
-                                            <span class="precautionsTextCount">0자</span>
-                                            <span class="precautionsTextTotal">/200자</span>
-                                        </div>
-                                        <textarea class="form-control" placeholder="주의사항을 입력해주세요" name="precautions"
-                                                  id="precautions"
-                                                  maxlength="200" style="height: 100px; resize: none;"
-                                                  required></textarea>
-
-                                        <script>
-                                            $('#precautions').keyup(function (e) {
-                                                let content = $(this).val();
-
-                                                // 글자수 세기
-                                                if (content.length == 0 || content == '') {
-                                                    $('.precautionsTextCount').text('0자');
-                                                } else {
-                                                    $('.precautionsTextCount').text(content.length + '자');
-                                                }
-
-                                                // 글자수 제한
-                                                if (content.length > 200) {
-                                                    // 200자 부터는 타이핑 되지 않도록
-                                                    $(this).val($(this).val().substring(0, 200));
-                                                    // 200자 넘으면 알림창 뜨도록
-                                                    alert('200자까지 입력 가능합니다.');
-                                                }
-                                            });
-                                        </script>
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <label class="col-sm-2 col-form-label d-flex align-items-center">활동 사진</label>
-                                    <div class="col-sm-10">
-                                        <div style="display:inline;">
-                                            <label for="activityImg">
-                                                <img src="/images/common/add_img.png"
-                                                     style="width:100px; height:100px; cursor: pointer;">
-                                            </label>
-                                            <form id="addForm" method="post" enctype="multipart/form-data">
-                                                <input type="file" id="activityImg" name="activityImg[]"
-                                                       onchange="atvPreviewImage(this,'atv_img_preview')"
-                                                       style="display: none;" multiple="true">
-                                            </form>
-                                            <span id='atv_img_preview'></span>
-                                        </div>
-
-                                        <script>
-                                            var fileArr;
-                                            var fileInfoArr = [];
-
-                                            //썸네일 클릭시 삭제.
-                                            function atvFileRemove(index) {
-                                                fileInfoArr.splice(index, 1);
-                                                $("#img_id_" + index).remove();
-                                            }
-
-                                            //썸네일 미리보기.
-                                            function atvPreviewImage(targetObj, previewId) {
-                                                var files = targetObj.files;
-                                                fileArr = Array.prototype.slice.call(files);
-
-                                                var preview = document.getElementById(previewId); //div id
-                                                var ua = window.navigator.userAgent;
-
-                                                //ie일때(IE8 이하에서만 작동)
-                                                if (ua.indexOf("MSIE") > -1) {
-                                                    targetObj.select();
-                                                    try {
-                                                        var src = document.selection.createRange().text; // get file full path(IE9, IE10에서 사용 불가)
-                                                        var ie_preview_error = document.getElementById("ie_preview_error_" + previewId);
-
-
-                                                        if (ie_preview_error) {
-                                                            preview.removeChild(ie_preview_error); //error가 있으면 delete
-                                                        }
-
-                                                        var img = document.getElementById(previewId); //이미지가 뿌려질 곳
-
-                                                        //이미지 로딩, sizingMethod는 div에 맞춰서 사이즈를 자동조절 하는 역할
-                                                        img.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + src + "', sizingMethod='scale')";
-                                                    } catch (e) {
-                                                        if (!document.getElementById("ie_preview_error_" + previewId)) {
-                                                            var info = document.createElement("<p>");
-                                                            info.id = "ie_preview_error_" + previewId;
-                                                            info.innerHTML = e.name;
-                                                            preview.insertBefore(info, null);
-                                                        }
-                                                    }
-                                                    //ie가 아닐때(크롬, 사파리, FF)
-                                                } else {
-                                                    var files = targetObj.files;
-
-                                                    for (var i = 0; i < files.length; i++) {
-                                                        var file = files[i];
-                                                        fileInfoArr.push(file);
-
-                                                        var imageType = /image.*/; //이미지 파일일경우만.. 뿌려준다.
-                                                        if (!file.type.match(imageType))
-                                                            continue;
-
-                                                        var span = document.createElement('span');
-                                                        span.id = "img_id_" + i;
-                                                        span.style.width = '100px';
-                                                        span.style.height = '100px';
-                                                        span.style.display = 'inline-block';
-                                                        span.style.backgroundColor = '#cccccc';
-                                                        span.style.textAlign = 'center';
-                                                        span.style.marginRight = '10px';
-                                                        preview.appendChild(span);
-
-                                                        var img = document.createElement("img");
-                                                        img.className = "addImg";
-                                                        img.classList.add("obj");
-                                                        img.file = file;
-                                                        img.style.width = 'inherit';
-                                                        img.style.height = 'inherit';
-                                                        img.style.cursor = 'pointer';
-                                                        const idx = i;
-                                                        img.onclick = () => atvFileRemove(idx);//이미지를 클릭했을 때.
-                                                        span.appendChild(img);
-
-                                                        if (window.FileReader) { // FireFox, Chrome, Opera 확인.
-                                                            var reader = new FileReader();
-                                                            reader.onloadend = (function (aImg) {
-                                                                return function (e) {
-                                                                    aImg.src = e.target.result;
-                                                                };
-                                                            })(img);
-                                                            reader.readAsDataURL(file);
-                                                        } else { // safari is not supported FileReader
-                                                            if (!document.getElementById("sfr_preview_error_" + previewId)) {
-                                                                var info = document.createElement("p");
-                                                                info.id = "sfr_preview_error_" + previewId;
-                                                                info.innerHTML = "not supported FileReader";
-                                                                preview.insertBefore(info, null);
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        </script>
-                                    </div>
-                                </div>
-
-                                <form id="curriculumForm">
-                                    <div class="row mb-3">
-                                        <label class="col-sm-2 col-form-label mt-4">커리큘럼</label>
-                                        <div class="col-sm-10">
-
-                                            <table style="width: 100%;">
-                                                <tbody id="addTable">
-                                                <tr>
-                                                    <td width="4%" class="fs-3 pt-4">
-                                                        <span>1.</span>
-                                                        <input type="hidden" name="curOrder" value="1">
-                                                    </td>
-                                                    <td colspan='2'>
-                                                        <p class="mb-1">타이틀</p>
-                                                        <input type='text' class='form-control' name="curTitle"
-                                                               placeholder='30자까지 입력가능합니다.'>
-
-                                                        <p class="mb-1 mt-2">내용</p>
-                                                        <input type='text' class='form-control' name="curContent"
-                                                               placeholder='50자까지 입력가능합니다.'>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                            <label class="d-flex justify-content-center">
-                                                <div class="fw-bold" style="cursor:pointer;" onclick="insertRow()">
-                                                    추가하기 ▼
-                                                </div>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </form>
-
-                                <script>
-                                    //Row 추가
-                                    function insertRow() {
-                                        var table = document.getElementById('addTable');
-
-                                        var html = "";
-                                        html +=
-                                            "<tr>" +
-                                            "<td width=\"4%\" class=\"fs-3 pt-4\">" +
-                                            "<span>1.</span>" +
-                                            "<input type=\"hidden\" name=\"curOrder\" value=\"1\">" +
-                                            "</td>" +
-                                            "<td>" +
-                                            "<p class=\"mb-1\">타이틀</p>" +
-                                            "<input type='text' class='form-control' name=\"curTitle\" placeholder='30자까지 입력가능합니다.'>" +
-                                            "<p class=\"mb-1 mt-2\">내용</p>" +
-                                            "<input type='text' class='form-control' name=\"curContent\" placeholder='50자까지 입력가능합니다.'>" +
-                                            "</td>" +
-                                            "<td width=\"4%\" style=\"text-align: right; font-size: 70px;\">" +
-                                            "<button type=\"button\" class=\"btn-close mt-4\" onclick=\"removeRow(this)\"></button>" +
-                                            "</td>" +
-                                            "</tr>";
-                                        table.insertAdjacentHTML("beforeend", html);
-                                        reloadIndex();
-                                        window.scrollTo(0, document.body.scrollHeight);
-                                    }
-
-                                    //Row 삭제
-                                    function removeRow(element) {
-                                        var table = document.getElementById('addTable');
-
-                                        var td = element.parentNode;
-                                        var tr = td.parentNode;
-
-                                        table.removeChild(tr);
-                                        reloadIndex();
-                                    }
-
-                                    //인덱스 재설정
-                                    function reloadIndex() {
-                                        var table = document.getElementById('addTable');
-                                        var tableRowLength = table.rows.length; // Row 개수
-                                        var cells;
-                                        var html = "";
-
-                                        for (var i = 1; i < tableRowLength; i++) {
-                                            html = "";
-                                            cells = table.rows[i].cells;
-
-                                            html += "<span>" + (table.rows[i].rowIndex + 1) + ".</span>";
-                                            html += "<input type='hidden' name='curOrder' value=" + (table.rows[i].rowIndex + 1) + ">";
-
-                                            cells[0].innerHTML = html;
-                                        }
-                                    }
-                                </script>
-
-                                <div class="col-12 d-flex justify-content-center">
-                                    <button type="button" class="btn btn-dark btn-lg px-5" onclick="history.back()">돌아가기
-                                    </button>
-                                    <button type="button" class="btn btn-dark btn-lg px-5 ml-5" onclick="dataSubmit()">
-                                        가입하기
-                                    </button>
-                                </div>
-                            </div> <!-- page-3 end -->
-
-                        </div>
-                    </div> <!-- card-body end -->
-
-                    <script>
-                        function dataSubmit() {
-                            alert(scheduleList);
-
-                            // var repImg = $("#repImg")[0].files[0];
-                            //
-                            // var curriculum = {
-                            //     order: 0,
-                            //     title: '',
-                            //     content: ''
-                            // }
-                            // var curList = [];
-                            //
-                            // $('#curriculumForm input').each(function (index) {
-                            //     var input = $(this);
-                            //     switch (input.attr('name')) {
-                            //         case 'curOrder':
-                            //             curriculum.order = input.val();
-                            //             break;
-                            //         case 'curTitle':
-                            //             curriculum.title = input.val();
-                            //             break;
-                            //         case 'curContent':
-                            //             curriculum.content = input.val();
-                            //             break;
-                            //     }
-                            //     if (index % 3 == 2) { //3개씩 끊기
-                            //         curList.push(curriculum);
-                            //         curriculum = {
-                            //             order: 0,
-                            //             title: '',
-                            //             content: ''
-                            //         }
-                            //     }
-                            // });
-                            //
-                            // var classData = {
-                            //     className: $('#className').val(),
-                            //     categoryId: $('#categoryId').val(),
-                            //     classification: $('input[name=classification]:checked').val(),
-                            //     timeRequired: $('#timeRequired').val(),
-                            //     personnel: $('#personnel').val(),
-                            //     price: $('#price').val(),
-                            //     classIntro: editor.getData(),
-                            //     material: $('#material').val(),
-                            //     precautions: $('#precautions').val(),
-                            //     curriculumList: curList
-                            // };
-                            //
-                            // var formData = new FormData();
-                            //
-                            // var totalfiles = document.getElementById('activityImg').files.length;
-                            // for (var index = 0; index < totalfiles; index++) {
-                            //     formData.append("activityImg[]", document.getElementById('activityImg').files[index]);
-                            // }
-                            //
-                            // formData.append("repImg", repImg);
-                            // formData.append("class", new Blob([JSON.stringify(classData)], {type: "application/json"}));
-                            //
-                            // $.ajax({
-                            //     url: "/curTest",
-                            //     data: formData,
-                            //     processData: false,
-                            //     contentType: false,
-                            //     enctype: 'multipart/form-data',
-                            //     type: "POST",
-                            //     success: function () {
-                            //         // window.location = "/login";
-                            //         alert("회원가입에 성공했습니다.");
-                            //     },
-                            //     error: function () {
-                            //         // window.location = "/login";
-                            //         alert("회원가입에 실패했습니다.");
-                            //     }
-                            // });
-                        }
-                    </script>
-
+                    </div>
                 </div>
             </div>
         </div>

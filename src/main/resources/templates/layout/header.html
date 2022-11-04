@@ -77,21 +77,19 @@
 
                 </ul><!-- End Profile Dropdown Items -->
                 <script>
-                    window.onload = function () {
-                        $.ajax({
-                            url: "/loadHeader",
-                            type: "POST",
-                            dataType: "json",
-                            success: function (data) {
-                                $('img[id=profile_img]').attr('src', "/" + data.profileImg);
-                                $('span[id=signed_user]').text(data.nickname);
-                            },
-                            error: function () {
-                                window.location = "/login";
-                                alert("프로필을 불러오는데 오류가 생겼습니다.");
-                            }
-                        });
-                    }
+                    $.ajax({
+                        url: "/loadHeader",
+                        type: "POST",
+                        dataType: "json",
+                        success: function (data) {
+                            $('img[id=profile_img]').attr('src', "/" + data.profileImg);
+                            $('span[id=signed_user]').text(data.nickname);
+                        },
+                        error: function () {
+                            window.location = "/login";
+                            alert("프로필을 불러오는데 오류가 생겼습니다.");
+                        }
+                    });
                 </script>
 
             </li><!-- End Profile Nav -->

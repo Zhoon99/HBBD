@@ -111,7 +111,7 @@
             dots: true,
             infinite: false,
             prevArrow: '<i class="prev-arrow bi bi-chevron-compact-left"></i>',
-            nextArrow: '<i class="next-arrow bi bi-chevron-compact-right"></i>',
+            nextArrow: '<i class="next-arrow bi bi-chevron-compact-right"></i>'
         });
     });
 </script>
@@ -149,9 +149,12 @@
                                         <div style="display:inline;">
                                             <span>
                                                 <label for="repImg">
-                                                    <img src="/images/common/add_img.png" style="width:100px; height:100px; cursor: pointer;">
+                                                    <img src="/images/common/add_img.png"
+                                                         style="width:100px; height:100px; cursor: pointer;">
                                                 </label>
-                                                <input type="file" id="repImg" onchange="previewImage(this, 'rep_img_preview');" style="display: none;">
+                                                <input type="file" id="repImg"
+                                                       onchange="previewImage(this, 'rep_img_preview');"
+                                                       style="display: none;">
 
                                                 <span id='rep_img_preview'>
                                                 </span>
@@ -265,10 +268,25 @@
                                     <label class="col-sm-2 col-form-label">카테고리</label>
                                     <div class="col-sm-10">
                                         <div class="form-floating mb-3">
-                                            <select class="form-select" id="categoryId" name="categoryId" required>
-                                                <option value="1">One</option>
-                                                <option value="2">Two</option>
-                                                <option value="3">Three</option>
+                                            <select class="form-select" id="categoryId" name="categoryId">
+                                                <option value=1>자기개발</option>
+                                                <option value=2>스포츠</option>
+                                                <option value=3>요리</option>
+                                                <option value=4>베이킹</option>
+                                                <option value=5>애니/만화</option>
+                                                <option value=6>DIY</option>
+                                                <option value=7>음악</option>
+                                                <option value=8>춤</option>
+                                                <option value=9>사진</option>
+                                                <option value=10>공연/축제</option>
+                                                <option value=11>언어</option>
+                                                <option value=12>인문</option>
+                                                <option value=13>게임</option>
+                                                <option value=14>여행</option>
+                                                <option value=15>봉사</option>
+                                                <option value=16>낚시</option>
+                                                <option value=17>동물</option>
+                                                <option value=18>기타</option>
                                             </select>
                                             <label for="categoryId">클래스 카테고리</label>
                                         </div>
@@ -308,6 +326,8 @@
                                     <label class="col-sm-2 col-form-label">주소</label>
                                     <div class="col-sm-10">
                                         <div class="input-group">
+                                            <input type="hidden" class="form-control" name="lat" id="lat">
+                                            <input type="hidden" class="form-control" name="lng" id="lng">
                                             <input type="text" class="form-control" name="address" id="address"
                                                    placeholder="주소"
                                                    required
@@ -331,6 +351,7 @@
                                         </div>
                                     </div>
                                     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+                                    <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0d7651756108879925f2e5555e0f1a7a&libraries=services"></script>
                                     <script>
                                         // 우편번호 찾기 찾기 화면을 넣을 element
                                         var element_wrap = document.getElementById('wrap');
@@ -346,6 +367,8 @@
 
                                             new daum.Postcode({
                                                 oncomplete: function (data) {
+                                                    // 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
                                                     // 각 주소의 노출 규칙에 따라 주소를 조합한다.
                                                     // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
                                                     var addr = ''; // 주소 변수
@@ -368,6 +391,21 @@
 
                                                     // 우편번호 찾기 화면이 보이기 이전으로 scroll 위치를 되돌린다.
                                                     document.body.scrollTop = currentScroll;
+
+                                                    //주소-좌표 변환 객체를 생성
+                                                    var geocoder = new daum.maps.services.Geocoder();
+
+                                                    geocoder.addressSearch(addr, function(results, status) {
+
+                                                        // 정상적으로 검색이 완료됐으면
+                                                        if (status === daum.maps.services.Status.OK) {
+
+                                                            var result = results[0]; //첫번째 결과의 값을 활용
+
+                                                            document.getElementById("lat").value = result.y;
+                                                            document.getElementById("lng").value = result.x;
+                                                        }
+                                                    });
                                                 },
                                                 // 우편번호 찾기 화면 크기가 조정되었을때 실행할 코드를 작성하는 부분. iframe을 넣은 element의 높이값을 조정한다.
                                                 onresize: function (size) {
@@ -1048,79 +1086,84 @@
 
                     <script>
                         function dataSubmit() {
-                            alert(scheduleList);
+                            var repImg = $("#repImg")[0].files[0];
 
-                            // var repImg = $("#repImg")[0].files[0];
-                            //
-                            // var curriculum = {
-                            //     order: 0,
-                            //     title: '',
-                            //     content: ''
-                            // }
-                            // var curList = [];
-                            //
-                            // $('#curriculumForm input').each(function (index) {
-                            //     var input = $(this);
-                            //     switch (input.attr('name')) {
-                            //         case 'curOrder':
-                            //             curriculum.order = input.val();
-                            //             break;
-                            //         case 'curTitle':
-                            //             curriculum.title = input.val();
-                            //             break;
-                            //         case 'curContent':
-                            //             curriculum.content = input.val();
-                            //             break;
-                            //     }
-                            //     if (index % 3 == 2) { //3개씩 끊기
-                            //         curList.push(curriculum);
-                            //         curriculum = {
-                            //             order: 0,
-                            //             title: '',
-                            //             content: ''
-                            //         }
-                            //     }
-                            // });
-                            //
-                            // var classData = {
-                            //     className: $('#className').val(),
-                            //     categoryId: $('#categoryId').val(),
-                            //     classification: $('input[name=classification]:checked').val(),
-                            //     timeRequired: $('#timeRequired').val(),
-                            //     personnel: $('#personnel').val(),
-                            //     price: $('#price').val(),
-                            //     classIntro: editor.getData(),
-                            //     material: $('#material').val(),
-                            //     precautions: $('#precautions').val(),
-                            //     curriculumList: curList
-                            // };
-                            //
-                            // var formData = new FormData();
-                            //
-                            // var totalfiles = document.getElementById('activityImg').files.length;
-                            // for (var index = 0; index < totalfiles; index++) {
-                            //     formData.append("activityImg[]", document.getElementById('activityImg').files[index]);
-                            // }
-                            //
-                            // formData.append("repImg", repImg);
-                            // formData.append("class", new Blob([JSON.stringify(classData)], {type: "application/json"}));
-                            //
-                            // $.ajax({
-                            //     url: "/curTest",
-                            //     data: formData,
-                            //     processData: false,
-                            //     contentType: false,
-                            //     enctype: 'multipart/form-data',
-                            //     type: "POST",
-                            //     success: function () {
-                            //         // window.location = "/login";
-                            //         alert("회원가입에 성공했습니다.");
-                            //     },
-                            //     error: function () {
-                            //         // window.location = "/login";
-                            //         alert("회원가입에 실패했습니다.");
-                            //     }
-                            // });
+                            var curriculum = {
+                                sequence: 0,
+                                title: '',
+                                content: ''
+                            }
+                            var curList = [];
+
+                            $('#curriculumForm input').each(function (index) {
+                                var input = $(this);
+                                switch (input.attr('name')) {
+                                    case 'curOrder':
+                                        curriculum.sequence = input.val();
+                                        break;
+                                    case 'curTitle':
+                                        curriculum.title = input.val();
+                                        break;
+                                    case 'curContent':
+                                        curriculum.content = input.val();
+                                        break;
+                                }
+                                if (index % 3 == 2) { //3개씩 끊기
+                                    curList.push(curriculum);
+                                    curriculum = {
+                                        sequence: 0,
+                                        title: '',
+                                        content: ''
+                                    }
+                                }
+                            });
+
+                            var classData = {
+                                className: $('#className').val(),
+                                categoryId: $('#categoryId').val(),
+                                classIntro: editor.getData(),
+                                address: $('#address').val(),
+                                addressDetail: $('#addressDetail').val(),
+                                lat: $('#lat').val(),
+                                lng: $('#lng').val(),
+                                timeRequired: $('#timeRequired_hour').val() + "시간 " + $('#timeRequired_minutes').val() + "분",
+                                personnel: $('#minPersonnel').val() + "~" + $('#maxPersonnel').val() + "명",
+                                price: $('#price').val(),
+                                material: $('#material').val(),
+                                precautions: $('#precautions').val(),
+                                curriculumList: curList
+                            };
+
+                            const scheduleData = {
+                                scheduleList: scheduleList
+                            }
+
+                            var formData = new FormData();
+
+                            var totalfiles = document.getElementById('activityImg').files.length;
+                            for (var index = 0; index < totalfiles; index++) {
+                                formData.append("activityImg", document.getElementById('activityImg').files[index]);
+                            }
+                            formData.append("repImg", repImg);
+                            formData.append("class", new Blob([JSON.stringify(classData)], {type: "application/json"}));
+                            formData.append("schedule", new Blob([JSON.stringify(scheduleData)], {type: "application/json"}));
+
+                            $.ajax({
+                                url: "/class/register",
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                enctype: 'multipart/form-data',
+                                type: "POST",
+                                success: function () {
+                                    window.location = "/";
+                                    alert("클래스 등록에 성공했습니다.");
+                                },
+                                error: function () {
+                                    // window.location = "/login";
+                                    alert("클래스 등록에 실패했습니다.");
+                                }
+                            });
                         }
                     </script>
 

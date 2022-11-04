@@ -5,14 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CurriculumDto {
+public class ImageDto {
 
-    private String title;
-    private String content;
-    private Short sequence;
-
+    private String path;
+    private String uuid;
+    private String imgName;
 }

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-public class ClassDto {
+public class ClassesDto {
 
     @Data
     @Builder
@@ -16,12 +16,16 @@ public class ClassDto {
     public static class Request {
         private String className;
         private Long categoryId;
-        private String classification;
+        private String classIntro;
+        private String address;
+        private String addressDetail;
+        private String lat;
+        private String lng;
         private String timeRequired;
         private String personnel;
         private Integer price;
-        private String classIntro;
         private String material;
+        private String precautions;
         private List<CurriculumDto> curriculumList;
     }
 }

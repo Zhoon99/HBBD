@@ -22,10 +22,10 @@ public class Curriculum {
     private String title;
 
     @Column(length = 100, nullable = false)
-    private Long content;
+    private String content;
 
     @Column(nullable = false)
-    private Short className;
+    private Short sequence;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "classes_id")

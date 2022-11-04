@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-@ToString(exclude = {""})
+@ToString(exclude = {"activityImgList", "curriculumList", "classScheduleList"})
 @NoArgsConstructor
 @AllArgsConstructor
 public class Classes {
@@ -19,9 +19,6 @@ public class Classes {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "classes_id")
     private Long id;
-
-    @Column(nullable = false)
-    private Long accountId;
 
     @Column(nullable = false)
     private Long categoryId;
@@ -69,6 +66,11 @@ public class Classes {
     private String longitude;
 
     private Integer views = 0;
+
+    //작성자
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id")
+    private Account account;
 
     @OneToMany(mappedBy = "activityImgClasses")
     private List<ActivityImg> activityImgList = new ArrayList<>();
