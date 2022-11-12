@@ -14,7 +14,7 @@ public class TestController {
 
     @GetMapping(value="/test")
     public String test() throws Exception {
-        return "test";
+        return "profile_design";
     }
 
     @PostMapping(value = "/curTest")

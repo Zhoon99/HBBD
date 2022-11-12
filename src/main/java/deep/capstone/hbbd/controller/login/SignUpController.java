@@ -42,10 +42,4 @@ public class SignUpController {
         accountService.createUser(accountDto, file);
     }
 
-    @PostMapping(value = "loadHeader")
-    @ResponseBody
-    public ProfileDto loadHeader(Authentication authentication) {
-        return accountService.loadHeader(authentication);
-    }
-
 }

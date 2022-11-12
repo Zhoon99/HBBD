@@ -1,4 +1,4 @@
-package deep.capstone.hbbd.controller.user;
+package deep.capstone.hbbd.controller.user.classes;
 
 import deep.capstone.hbbd.dto.ClassScheduleDto;
 import deep.capstone.hbbd.dto.ClassesDto;
@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/class")
+@RequestMapping("/user/class")
 public class ClassController {
 
     private final ClassService classService;
@@ -21,9 +21,8 @@ public class ClassController {
     private final CategoryRepository categoryRepository;
 
     @GetMapping("/register")
-    public String register(Model model) {
-        model.addAttribute("categoryList", categoryRepository.findAll());
-        return "user/class_register";
+    public String register() {
+        return "user/class/class_register";
     }
 
     @PostMapping(value = "/register")

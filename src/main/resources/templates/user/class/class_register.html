@@ -1149,7 +1149,7 @@
                             formData.append("schedule", new Blob([JSON.stringify(scheduleData)], {type: "application/json"}));
 
                             $.ajax({
-                                url: "/class/register",
+                                url: "/user/class/register",
                                 data: formData,
                                 processData: false,
                                 contentType: false,
@@ -1160,7 +1160,7 @@
                                     alert("클래스 등록에 성공했습니다.");
                                 },
                                 error: function () {
-                                    // window.location = "/login";
+                                    window.location = "/user/class/register";
                                     alert("클래스 등록에 실패했습니다.");
                                 }
                             });

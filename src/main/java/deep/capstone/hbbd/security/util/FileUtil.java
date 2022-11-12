@@ -1,6 +1,7 @@
 package deep.capstone.hbbd.security.util;
 
 import deep.capstone.hbbd.dto.ImageDto;
+import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnailator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,12 +14,11 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
+@Slf4j
 public class FileUtil {
 
-    @Value("${image.upload.path}")
-    private String updatePath;
+    public static ImageDto saveFileAndThumbnail(String updatePath, MultipartFile file, int thumbWidth, int thumbHeight) {
 
-    public ImageDto saveFileAndThumbnail(MultipartFile file, int thumbWidth, int thumbHeight) {
         //실제 파일 이름 IE나 Edge 는 전체 경로가 들어오므로 마지막 단어를 가져옴
         String originalName = file.getOriginalFilename();
         String fileName = originalName.substring(originalName.lastIndexOf("\\") + 1);

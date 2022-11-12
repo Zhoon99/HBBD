@@ -20,9 +20,6 @@ public class Classes {
     @Column(name = "classes_id")
     private Long id;
 
-    @Column(nullable = false)
-    private Long categoryId;
-
     @Column(length = 30, nullable = false)
     private String className;
 
@@ -72,6 +69,10 @@ public class Classes {
     @JoinColumn(name = "account_id")
     private Account account;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
     @OneToMany(mappedBy = "activityImgClasses")
     private List<ActivityImg> activityImgList = new ArrayList<>();
 
@@ -80,4 +81,15 @@ public class Classes {
 
     @OneToMany(mappedBy = "scheduleClasses")
     private List<ClassSchedule> classScheduleList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "classes")
+    private List<Comment> commentList = new ArrayList<>();
+
+    public String getImageUrl(String updatePath) {
+        return updatePath + "/" + imgPath + "/" + imgUuid + "_" + imgName;
+    }
+
+    public String getThumbnailUrl(String updatePath) {
+        return updatePath + "/" + imgPath + "/s_" + imgUuid + "_" + imgName;
+    }
 }

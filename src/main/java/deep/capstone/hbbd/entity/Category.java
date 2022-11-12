@@ -24,4 +24,7 @@ public class Category {
 
     @OneToMany(mappedBy = "category")
     private List<CategoryAccount> categoryAccounts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "category")
+    private List<Classes> classesList = new ArrayList<>();
 }
