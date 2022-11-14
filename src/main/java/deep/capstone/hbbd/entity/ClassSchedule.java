@@ -32,5 +32,5 @@ public class ClassSchedule {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "classes_id")
-    private Classes scheduleClasses;
+    private Classes classes;
 }

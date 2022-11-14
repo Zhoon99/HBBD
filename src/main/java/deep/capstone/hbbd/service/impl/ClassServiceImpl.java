@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -81,7 +82,7 @@ public class ClassServiceImpl implements ClassService {
                             .title(element.getTitle())
                             .content(element.getContent())
                             .sequence(element.getSequence())
-                            .curriculumClasses(savedClass)
+                            .classes(savedClass)
                             .build();
                     curriculumList.add(curriculum);
                 });
@@ -96,7 +97,7 @@ public class ClassServiceImpl implements ClassService {
                             .week(element.getWeek())
                             .startTime(element.getTime().split("~")[0])
                             .personnel(Integer.valueOf(element.getPersonnel().split("~")[1]))
-                            .scheduleClasses(savedClass)
+                            .classes(savedClass)
                             .build();
                     classScheduleList.add(classSchedule);
                 });
@@ -110,7 +111,7 @@ public class ClassServiceImpl implements ClassService {
                             .path(element.getPath())
                             .uuid(element.getUuid())
                             .imgName(element.getImgName())
-                            .activityImgClasses(savedClass)
+                            .classes(savedClass)
                             .build();
                     activityImgList.add(newActivityImg);
                 });
@@ -119,11 +120,42 @@ public class ClassServiceImpl implements ClassService {
         }
     }
 
+    @Override
+    @Transactional
+    public List<PreviewDto> getPreviewList(List<Classes> classesList) {
+        List<PreviewDto> previewDtoList = new ArrayList<>();
+        PreviewDto previewDto;
+        for (Classes classes : classesList) {
+            List<Double> cmtScopeList = classes.getCommentList().stream().map(Comment::getScope).collect(Collectors.toList());
+            previewDto = PreviewDto.builder()
+                    .classesId(classes.getId())
+                    .categoryName(classes.getClassName())
+                    .imgPath(classes.getImgPath())
+                    .imgUuid(classes.getImgUuid())
+                    .imgName(classes.getImgName())
+                    .thumbnailSrc(classes.getImgPath() + "/s_" + classes.getImgUuid() + "_" + classes.getImgName())
+                    .classification(classes.getClassification())
+                    .price(classes.getPrice())
+                    .latitude(classes.getLatitude())
+                    .longitude(classes.getLongitude())
+                    .categoryName(classes.getCategory().getCategoryName())
+                    .province(classes.getAddress().split(" ")[0])
+                    .city(classes.getAddress().split(" ")[1])
+                    .cmtCount(classes.getCommentList().size())
+                    .cmfAvg(Math.round(getCommentScopeAverage(cmtScopeList) * 10) / 10.0)
+                    .build();
+            previewDtoList.add(previewDto);
+        }
+        return previewDtoList;
+    }
+
     /**
-     * 현재위치 기준 일정 범위 내 클래스 반환
+     * 댓글 평점 평균 구하기
      */
-//    public ClassesDto.Preview getCloseClass() {
-//
-//    }
+    private static double getCommentScopeAverage(List<Double> list) {
+        return list.stream()
+                .mapToDouble(a -> a)
+                .average().orElse(0.0);
+    }
 
 }

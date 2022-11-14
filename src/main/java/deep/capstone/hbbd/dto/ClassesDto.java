@@ -64,26 +64,4 @@ public class ClassesDto {
         private String precautions;
         private List<CurriculumDto> curriculumList;
     }
-
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Preview {
-        private Long classesId;
-        private String className;
-        private String imgPath;
-        private String imgUuid;
-        private String imgName;
-        private String classification;
-        private Integer price;
-        private String latitude;
-        private String longitude;
-        private String categoryName;
-        private String province;
-        private String city;
-        private Integer cmtCount;
-        private Float cmfAvg;
-    }
-
 }

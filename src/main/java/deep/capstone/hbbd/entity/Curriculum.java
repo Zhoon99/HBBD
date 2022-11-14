@@ -29,5 +29,5 @@ public class Curriculum {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "classes_id")
-    private Classes curriculumClasses;
+    private Classes classes;
 }

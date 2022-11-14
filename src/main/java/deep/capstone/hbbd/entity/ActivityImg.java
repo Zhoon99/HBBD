@@ -29,5 +29,5 @@ public class ActivityImg {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "classes_id")
-    private Classes activityImgClasses;
+    private Classes classes;
 }

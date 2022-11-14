@@ -73,13 +73,13 @@ public class Classes {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToMany(mappedBy = "activityImgClasses")
+    @OneToMany(mappedBy = "classes")
     private List<ActivityImg> activityImgList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "curriculumClasses")
+    @OneToMany(mappedBy = "classes")
     private List<Curriculum> curriculumList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "scheduleClasses")
+    @OneToMany(mappedBy = "classes")
     private List<ClassSchedule> classScheduleList = new ArrayList<>();
 
     @OneToMany(mappedBy = "classes")

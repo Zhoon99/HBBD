@@ -93,11 +93,18 @@
     .class-name {
         height: 45px;
     }
+
+    #map {
+        position: absolute;
+        width:400px;
+        height:400px;
+        visibility: hidden;
+    }
 </style>
 
 <script>
     $(document).ready(function () {
-        $('#popular-slider').slick({
+        $('#distance-class').slick({
             slidesToShow: 4,
             slidesToScroll: 4,
             autoplay: true,
@@ -131,7 +138,7 @@
                     <div class="card-body">
 
                         <div class="slider-wrap">
-                            <div id="popular-slider">
+                            <div id="distance-class" class="slider">
 
                                 <div class="col">
                                     <div class="card shadow-sm">
@@ -243,7 +250,115 @@
             </div>
         </div>
     </section>
+
+    <div id="map"></div>
 </main><!-- End #main -->
+
+<script type="text/javascript" charset="utf-8" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0d7651756108879925f2e5555e0f1a7a"></script>
+<script>
+        var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+            mapOption = {
+                center: new kakao.maps.LatLng(37.448496000714265, 126.65734801675858), // 지도의 중심좌표
+                level: 14 // 지도의 확대 레벨
+            };
+
+        // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
+        var map = new kakao.maps.Map(mapContainer, mapOption);
+
+        /// HTML5의 geolocation으로 사용할 수 있는지 확인합니다
+        if (navigator.geolocation) {
+
+            // GeoLocation을 이용해서 접속 위치를 얻어옵니다
+            navigator.geolocation.getCurrentPosition(function (position) {
+
+                var lat = position.coords.latitude, // 위도
+                    lon = position.coords.longitude; // 경도
+
+                var locPosition = new kakao.maps.LatLng(lat, lon); // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
+
+                // 지도 중심좌표를 접속위치로 변경합니다
+                map.setCenter(locPosition);
+            });
+            addMapCondition();
+        } else {
+            alert("좌표를 불러오는데 오류가 발생했습니다.");
+
+            // HTML5의 GeoLocation을 사용할 수 없을때 기본 좌표 설정.
+            var locPosition = new kakao.maps.LatLng(37.448496000714265, 126.65734801675858);
+
+            // 지도 중심좌표를 접속위치로 변경합니다
+            map.setCenter(locPosition);
+
+            addMapCondition();
+        }
+
+        function addMapCondition() {
+            var bound = map.getBounds();
+            //ajax로 보낼 오브젝트 생성
+            var bounds = {
+                "swLat": bound.getSouthWest().getLat(),
+                "swLng": bound.getSouthWest().getLng(),
+                "neLat": bound.getNorthEast().getLat(),
+                "neLng": bound.getNorthEast().getLng()
+            };
+
+            $.ajax({
+                url: "/class/classesInBounds",
+                dataType: "json",
+                contentType: "application/json; charset=UTF-8",
+                type: "POST",
+                data: JSON.stringify(bounds),
+                success: function (data) {
+                    alert(JSON.stringify(data))
+                    if (data.length > 0) {
+                        const tbody = document.getElementById('distance-class');
+                        let html = "";
+                        for (var i in data) {
+                            html += "<div class=\"col\">" +
+                                "<div class=\"card shadow-sm\">" +
+                                "<div class=\"imgWrap\">" +
+                                "<img class=\"card-img-top\" src=\"/display?img=" + data[i].imgPath + "/" + data[i].imgUuid + "_" + data[i].imgName + "\" alt=\"Card image cap\">" +
+                                "</div>" +
+                                "<div class=\"card-body px-1 fw-bold\">" +
+                                "<p class=\"mb-2\">베이킹(부천시/경기)</p>" +
+                                "<p class=\"class-name fs-5\">계절 꽃을 이용한 플라워 클래스 계절 꽃을 이용한 플라워 클래스</p>" +
+                                "<div class=\"d-flex justify-content-between align-items-center\">" +
+                                "<div class=\"btn-group\">" +
+                                "<span style=\"color: #dc3545\">★★★★☆&nbsp;</span>(14)" +
+                                "</div>" +
+                                "<small class=\"fs-5\">30,000원</small>" +
+                                "</div>" +
+                                "</div>" +
+                                "</div>" +
+                                "</div>";
+                            // var latlng = new kakao.maps.LatLng(data[i].lat, data[i].lng)
+                            //
+                            // var marker = new kakao.maps.Marker({
+                            //     map: map, //마커를 표시할 지도
+                            //     position: latlng, //마커를 표시할 위치
+                            //     title: data[i].postName, //마커에 커서를 올리면 표시될 타이틀
+                            // });
+                        }
+                        tbody.innerHTML = html;
+                    }
+                }, error: function (request, status, error) {
+                    console.log("AJAX_ERROR");
+                }, beforeSend: function () { //로딩 표시
+                    $('.wrap-loading').removeClass('display-none');
+                }, complete: function () { //로딩 숨기기
+                    $('.wrap-loading').addClass('display-none');
+                    $('#distance-class').slick({
+                        slidesToShow: 4,
+                        slidesToScroll: 4,
+                        autoplay: true,
+                        autoplaySpeed: 3000,
+                        prevArrow: '<i class="prev-arrow bi bi-chevron-compact-left"></i>',
+                        nextArrow: '<i class="next-arrow bi bi-chevron-compact-right"></i>'
+                    });
+                }
+            });
+        }
+</script>
 
 <!-- ======= Footer ======= -->
 <footer th:replace="layout/footer::footer"></footer>
