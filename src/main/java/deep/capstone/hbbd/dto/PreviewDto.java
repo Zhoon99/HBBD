@@ -24,13 +24,14 @@ public class PreviewDto {
     private String latitude;
     private String longitude;
     private String categoryName;
-    private String province;
-    private String city;
+//    private String province;
+//    private String city;
+    private String addressSummary;
     private Integer cmtCount;
     private Double cmfAvg;
 
     @QueryProjection
-    public PreviewDto(Long classesId, String className, String imgPath, String imgUuid, String imgName, String thumbnailSrc, String classification, Integer price, String latitude, String longitude, String categoryName, String province, String city, Integer cmtCount, Double cmfAvg) {
+    public PreviewDto(Long classesId, String className, String imgPath, String imgUuid, String imgName, String thumbnailSrc, String classification, Integer price, String latitude, String longitude, String categoryName, String addressSummary, Integer cmtCount, Double cmfAvg) {
         this.classesId = classesId;
         this.className = className;
         this.imgPath = imgPath;
@@ -42,8 +43,9 @@ public class PreviewDto {
         this.latitude = latitude;
         this.longitude = longitude;
         this.categoryName = categoryName;
-        this.province = province;
-        this.city = city;
+        this.addressSummary = addressSummary;
+//        this.province = province;
+//        this.city = city;
         this.cmtCount = cmtCount;
         this.cmfAvg = cmfAvg;
     }

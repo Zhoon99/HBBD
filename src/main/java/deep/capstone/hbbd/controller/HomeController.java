@@ -37,10 +37,8 @@ public class HomeController {
 	@PostMapping(value = "/class/classesInBounds")
 	@ResponseBody
 	public List<PreviewDto> getClassesInBounds(@RequestBody BoundsDto boundsDto) {
-		log.info(boundsDto.toString());
 		List<Classes> classesInBounds = classesRepository.getClassesInBounds(boundsDto.getSwLat(), boundsDto.getNeLat(), boundsDto.getSwLng(), boundsDto.getNeLng());
 		List<PreviewDto> previewList = classService.getPreviewList(classesInBounds);
-		log.info(previewList.toString());
 		return previewList;
 	}
 
