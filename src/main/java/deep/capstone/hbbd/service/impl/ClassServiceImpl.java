@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class ClassServiceImpl implements ClassService {
 
     private final ClassesRepository classesRepository;
@@ -120,6 +121,9 @@ public class ClassServiceImpl implements ClassService {
         }
     }
 
+    /**
+     * 클래스 리스트로 미리보기를 생성해 반환
+     */
     @Override
     @Transactional
     public List<PreviewDto> getPreviewList(List<Classes> classesList) {
