@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-@ToString(exclude = {"activityImgList", "curriculumList", "classScheduleList"})
+@ToString(exclude = {"activityImgList", "curriculumList", "classScheduleList", "commentList"})
 @NoArgsConstructor
 @AllArgsConstructor
 public class Classes {

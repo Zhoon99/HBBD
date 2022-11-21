@@ -1,16 +1,20 @@
 package deep.capstone.hbbd.controller.common.classes;
 
 import deep.capstone.hbbd.dto.BoundsDto;
+import deep.capstone.hbbd.dto.ClassesDto;
 import deep.capstone.hbbd.dto.PreviewDto;
 import deep.capstone.hbbd.entity.Classes;
 import deep.capstone.hbbd.repository.ClassesRepository;
 import deep.capstone.hbbd.service.ClassService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -20,6 +24,20 @@ public class CommonClassController {
 
     private final ClassService classService;
     private final ClassesRepository classesRepository;
+
+    @GetMapping("/detail/{cId}")
+    public String classDetail(@PathVariable Long cId, Model model) {
+        Optional<Classes> classDetail = classesRepository.findById(cId);
+
+        ModelMapper modelMapper = new ModelMapper();
+        ClassesDto.detail classesDto = modelMapper.map(classDetail.get(), ClassesDto.detail.class);
+
+        classesDto.setWriter(classDetail.get().getAccount().getNickname());
+        classesDto.setCategoryName(classDetail.get().getCategory().getCategoryName());
+
+        model.addAttribute("class", classesDto);
+        return "common/class/class_detail";
+    }
 
     @GetMapping("/map")
     public String classMap() {

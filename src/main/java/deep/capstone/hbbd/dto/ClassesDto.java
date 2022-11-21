@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +18,7 @@ public class ClassesDto {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class Dto {
+    public static class detail {
 
         private Long id;
         private String className;
@@ -30,18 +32,35 @@ public class ClassesDto {
         private String classIntro;
         private String material;
         private String precautions;
-        private String address;
-        private String addressDetail;
         private String latitude;
         private String longitude;
+        private String address;
+        private String addressDetail;
         private Integer views;
 
-        private Long account_id;
-        private Long category_id;
+        private String writer;
+        private String categoryName;
 
-        private List<ActivityImg> activityImgList;
-        private List<Curriculum> curriculumList;
-        private List<ClassSchedule> classScheduleList;
+        private List<ClassScheduleDto.Response> classScheduleList;
+        private List<ActivityImgDto.Response> activityImgList;
+        private List<CurriculumDto> curriculumList;
+
+        public String getImageURL(){
+            try {
+                return URLEncoder.encode(imgPath+"/"+imgUuid+"_"+imgName,"UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            return "";
+        }
+        public String getThumbnailURL(){
+            try {
+                return URLEncoder.encode(imgPath+"/s_"+imgUuid+"_"+imgName,"UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            return "";
+        }
 
     }
 

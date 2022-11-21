@@ -14,6 +14,17 @@ public class ClassScheduleDto {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    public static class Response {
+        private String classDate;
+        private String week;
+        private String startTime;
+        private String personnel;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Request {
         private String date;
         private String week;

@@ -11,6 +11,22 @@
         margin: 20px auto;
     }
 
+    .center-mark-wrap {
+        width: 100%;
+        height: 400px;
+
+        display: flex;
+        justify-content:center;
+        align-items : center;
+    }
+
+    .center-mark {
+        position: absolute;
+        z-index: 1;
+        color: #ed3c0d;
+        font-size: 35px;
+    }
+
     #class-map {
         width: 100%;
         height: 400px;
@@ -59,9 +75,11 @@
                     <div class="card-body">
 
                         <div class="map-wrap mb-5">
-                            <button onclick="setCenter()" class="geolocation"><i class="bi bi-browser-safari"></i>
-                            </button>
-                            <div id="class-map"></div>
+                            <button onclick="setCenter()" class="geolocation"><i class="bi bi-browser-safari"></i></button>
+                            <div class="center-mark-wrap">
+                                <div id="class-map"></div>
+                                <i class="center-mark bi bi-geo-alt-fill"></i>
+                            </div>
                         </div>
 
                         <div class="search-result-wrap mt-5 mx-3">
@@ -154,6 +172,7 @@
             success: function (data) {
                 setTimeout(function () {
                     if (data.length > 0) {
+
                         let resultArr = [];
                         let html = "";
                         for (let i in data) {

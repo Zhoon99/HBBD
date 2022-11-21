@@ -103,16 +103,16 @@
 </style>
 
 <script>
-    // $(document).ready(function () {
-    //     $('#distance-class').slick({
-    //         slidesToShow: 4,
-    //         slidesToScroll: 4,
-    //         autoplay: true,
-    //         autoplaySpeed: 3000,
-    //         prevArrow: '<i class="prev-arrow bi bi-chevron-compact-left"></i>',
-    //         nextArrow: '<i class="next-arrow bi bi-chevron-compact-right"></i>'
-    //     });
-    // });
+    $(document).ready(function () {
+        $('#popular-class').slick({
+            slidesToShow: 4,
+            slidesToScroll: 4,
+            autoplay: true,
+            autoplaySpeed: 3000,
+            prevArrow: '<i class="prev-arrow bi bi-chevron-compact-left"></i>',
+            nextArrow: '<i class="next-arrow bi bi-chevron-compact-right"></i>'
+        });
+    });
 </script>
 
 <body>
@@ -130,9 +130,7 @@
         <button class="searchBar-button" type="submit"><i class="fas fa-search"></i></button>
     </div>
 
-    <div class="pagetitle"><h1>인기 클래스</h1></div>
-    <span class="rateit" data-rateit-value="1.6" data-rateit-readonly="true"></span>
-    <div class="jstars" data-value="3.0"></div>
+    <div class="pagetitle"><h1>내 주위 클래스</h1></div>
     <section class="section">
         <div class="row">
             <div class="col-lg-12">
@@ -142,105 +140,120 @@
                         <div class="slider-wrap">
                             <div id="distance-class" class="slider">
 
-<!--                                <div class="col">-->
-<!--                                    <div class="card shadow-sm">-->
-<!--                                        <div class="imgWrap">-->
-<!--                                            <img class="card-img-top" src="https://t1.daumcdn.net/cfile/tistory/266D1B3B57470DF20E"-->
-<!--                                                 alt=" Card image cap">-->
-<!--                                        </div>-->
+                            </div>
+                        </div>
 
-<!--                                        <div class="card-body px-1 fw-bold">-->
-<!--                                            <p class="mb-2">기타(의정부시/경기)</p>-->
-<!--                                            <p class="class-name fs-5">계절 꽃을 이용한 플라워 클래스 계절 꽃을 이용한 플라워 클래스</p>-->
-<!--                                            <div class="d-flex justify-content-between align-items-center">-->
-<!--                                                <div class="btn-group">-->
-<!--                                                    <span style="color: #dc3545">★★★★☆&nbsp;</span>(14)-->
-<!--                                                </div>-->
-<!--                                                <small class="fs-5">30,000원</small>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
+                        <a href="/common/class/map"><p class="d-flex justify-content-center fw-bold fs-5 text-black">더 보기▼</p></a>
 
-<!--                                <div class="col">-->
-<!--                                    <div class="card shadow-sm">-->
-<!--                                        <div class="imgWrap">-->
-<!--                                            <img class="card-img-top" src="https://static.cdn.soomgo.com/upload/service/4dbc7821-49aa-4ef2-92fb-08ca97121952.png"-->
-<!--                                                 alt=" Card image cap">-->
-<!--                                        </div>-->
+                    </div>
+                </div>
 
-<!--                                        <div class="card-body px-1 fw-bold">-->
-<!--                                            <p class="mb-2">스포츠(평창군/강원)</p>-->
-<!--                                            <p class="class-name fs-5">쉽게 배우는 스노우 보드 클래스</p>-->
-<!--                                            <div class="d-flex justify-content-between align-items-center">-->
-<!--                                                <div class="btn-group">-->
-<!--                                                    <span style="color: #dc3545">★★★★☆&nbsp;</span>(23)-->
-<!--                                                </div>-->
-<!--                                                <small class="fs-5">50,000원</small>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
+                <div class="pagetitle"><h1>인기 클래스</h1></div>
+                <div class="card">
+                    <div class="card-body">
 
-<!--                                <div class="col">-->
-<!--                                    <div class="card shadow-sm">-->
-<!--                                        <div class="imgWrap">-->
-<!--                                            <img class="card-img-top" src="https://img.insight.co.kr/static/2020/08/29/700/6zg10ds040q4253ln7pd.jpg"-->
-<!--                                                 alt=" Card image cap">-->
-<!--                                        </div>-->
+                        <div class="slider-wrap">
+                            <div id="popular-class" class="slider">
 
-<!--                                        <div class="card-body px-1 fw-bold">-->
-<!--                                            <p class="mb-2">베이킹(부천시/경기)</p>-->
-<!--                                            <p class="class-name fs-5">4종 르뱅쿠키 만들기</p>-->
-<!--                                            <div class="d-flex justify-content-between align-items-center">-->
-<!--                                                <div class="btn-group">-->
-<!--                                                    <span style="color: #dc3545">★★★★★&nbsp;</span>(155)-->
-<!--                                                </div>-->
-<!--                                                <small class="fs-5">40,000원</small>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
+                                <div class="col">
+                                    <div class="card shadow-sm">
+                                        <div class="imgWrap">
+                                            <img class="card-img-top" src="https://t1.daumcdn.net/cfile/tistory/266D1B3B57470DF20E"
+                                                 alt=" Card image cap">
+                                        </div>
 
-<!--                                <div class="col">-->
-<!--                                    <div class="card shadow-sm">-->
-<!--                                        <div class="imgWrap">-->
-<!--                                            <img class="card-img-top" src="https://blog.kakaocdn.net/dn/cX83jt/btqOFiS2C1T/ViJ2CN0WBuiol69ZEGZ6b1/img.jpg"-->
-<!--                                                 alt=" Card image cap">-->
-<!--                                        </div>-->
+                                        <div class="card-body px-1 fw-bold">
+                                            <p class="mb-2">기타(의정부시/경기)</p>
+                                            <p class="class-name fs-5">계절 꽃을 이용한 플라워 클래스 계절 꽃을 이용한 플라워 클래스</p>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="btn-group">
+                                                    <span style="color: #dc3545">★★★★☆&nbsp;</span>(14)
+                                                </div>
+                                                <small class="fs-5">30,000원</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-<!--                                        <div class="card-body px-1 fw-bold">-->
-<!--                                            <p class="mb-2">스포츠(강북구/서울)</p>-->
-<!--                                            <p class="class-name fs-5">볼더링 원데이 클래스</p>-->
-<!--                                            <div class="d-flex justify-content-between align-items-center">-->
-<!--                                                <div class="btn-group">-->
-<!--                                                    <span style="color: #dc3545">★★★★☆&nbsp;</span>(14)-->
-<!--                                                </div>-->
-<!--                                                <small class="fs-5">20,000원</small>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
+                                <div class="col">
+                                    <div class="card shadow-sm">
+                                        <div class="imgWrap">
+                                            <img class="card-img-top" src="https://static.cdn.soomgo.com/upload/service/4dbc7821-49aa-4ef2-92fb-08ca97121952.png"
+                                                 alt=" Card image cap">
+                                        </div>
 
-<!--                                <div class="col">-->
-<!--                                    <div class="card shadow-sm">-->
-<!--                                        <div class="imgWrap">-->
-<!--                                            <img class="card-img-top" src="http://cdn.edujin.co.kr/news/photo/202007/33437_61357_5116.jpg"-->
-<!--                                                 alt=" Card image cap">-->
-<!--                                        </div>-->
+                                        <div class="card-body px-1 fw-bold">
+                                            <p class="mb-2">스포츠(평창군/강원)</p>
+                                            <p class="class-name fs-5">쉽게 배우는 스노우 보드 클래스</p>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="btn-group">
+                                                    <span style="color: #dc3545">★★★★☆&nbsp;</span>(23)
+                                                </div>
+                                                <small class="fs-5">50,000원</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-<!--                                        <div class="card-body px-1 fw-bold">-->
-<!--                                            <p class="mb-2">기타(의정부시/경기)</p>-->
-<!--                                            <p class="class-name fs-5">수학의 정석 수능수학 강의</p>-->
-<!--                                            <div class="d-flex justify-content-between align-items-center">-->
-<!--                                                <div class="btn-group">-->
-<!--                                                    <span style="color: #dc3545">★★★☆☆&nbsp;</span>(3)-->
-<!--                                                </div>-->
-<!--                                                <small class="fs-5">40,000원</small>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
+                                                                <div class="col">
+                                                                    <div class="card shadow-sm">
+                                                                        <div class="imgWrap">
+                                                                            <img class="card-img-top" src="https://img.insight.co.kr/static/2020/08/29/700/6zg10ds040q4253ln7pd.jpg"
+                                                                                 alt=" Card image cap">
+                                                                        </div>
+
+                                                                        <div class="card-body px-1 fw-bold">
+                                                                            <p class="mb-2">베이킹(부천시/경기)</p>
+                                                                            <p class="class-name fs-5">4종 르뱅쿠키 만들기</p>
+                                                                            <div class="d-flex justify-content-between align-items-center">
+                                                                                <div class="btn-group">
+                                                                                    <span style="color: #dc3545">★★★★★&nbsp;</span>(155)
+                                                                                </div>
+                                                                                <small class="fs-5">40,000원</small>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col">
+                                                                    <div class="card shadow-sm">
+                                                                        <div class="imgWrap">
+                                                                            <img class="card-img-top" src="https://blog.kakaocdn.net/dn/cX83jt/btqOFiS2C1T/ViJ2CN0WBuiol69ZEGZ6b1/img.jpg"
+                                                                                 alt=" Card image cap">
+                                                                        </div>
+
+                                                                        <div class="card-body px-1 fw-bold">
+                                                                            <p class="mb-2">스포츠(강북구/서울)</p>
+                                                                            <p class="class-name fs-5">볼더링 원데이 클래스</p>
+                                                                            <div class="d-flex justify-content-between align-items-center">
+                                                                                <div class="btn-group">
+                                                                                    <span style="color: #dc3545">★★★★☆&nbsp;</span>(14)
+                                                                                </div>
+                                                                                <small class="fs-5">20,000원</small>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col">
+                                                                    <div class="card shadow-sm">
+                                                                        <div class="imgWrap">
+                                                                            <img class="card-img-top" src="http://cdn.edujin.co.kr/news/photo/202007/33437_61357_5116.jpg"
+                                                                                 alt=" Card image cap">
+                                                                        </div>
+
+                                                                        <div class="card-body px-1 fw-bold">
+                                                                            <p class="mb-2">기타(의정부시/경기)</p>
+                                                                            <p class="class-name fs-5">수학의 정석 수능수학 강의</p>
+                                                                            <div class="d-flex justify-content-between align-items-center">
+                                                                                <div class="btn-group">
+                                                                                    <span style="color: #dc3545">★★★☆☆&nbsp;</span>(3)
+                                                                                </div>
+                                                                                <small class="fs-5">40,000원</small>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
 
                             </div>
                         </div>
@@ -249,6 +262,7 @@
 
                     </div>
                 </div>
+
             </div>
         </div>
     </section>
@@ -331,7 +345,7 @@
 
                         let html = "";
                         resultArrTop12.forEach((el) => {
-                            html += "<div class=\"col\"><a href='/' style='color: black'>" +
+                            html += "<div class=\"col\"><a href='/common/class/detail/" + el.classesId + "' style='color: black'>" +
                                 "<div class=\"card shadow-sm\">" +
                                 "<div class=\"imgWrap\">" +
                                 "<img class=\"card-img-top\" src=\"/display?img=" + el.imgPath + "/" + el.imgUuid + "_" + el.imgName + "\" alt=\"Card image cap\">" +
