@@ -38,12 +38,21 @@ public class ClassesDto {
         private String addressDetail;
         private Integer views;
 
-        private String writer;
-        private String categoryName;
+        private ProfileDto account;
+        private CategoryDto.Request category;
+
+        private Integer cmtCount;
+        private Double cmtAvg;
 
         private List<ClassScheduleDto.Response> classScheduleList;
         private List<ActivityImgDto.Response> activityImgList;
         private List<CurriculumDto> curriculumList;
+        private List<CommentDto.Request> commentList;
+
+        public void setCmtCountAndAvg(Integer count, Double avg) {
+            this.cmtCount = count;
+            this.cmtAvg = avg;
+        }
 
         public String getImageURL(){
             try {

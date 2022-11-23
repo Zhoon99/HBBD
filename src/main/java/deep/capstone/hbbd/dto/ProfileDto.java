@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ProfileDto {
 
+    private Long id;
     private String nickname;
     private String introduce;
     private String profileImg;

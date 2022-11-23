@@ -8,6 +8,7 @@ import deep.capstone.hbbd.security.util.FileUtil;
 import deep.capstone.hbbd.service.ClassService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -148,7 +149,7 @@ public class ClassServiceImpl implements ClassService {
 //                    .province(classes.getAddress().split(" ")[0])
 //                    .city(classes.getAddress().split(" ")[1])
                     .cmtCount(classes.getCommentList().size())
-                    .cmfAvg(Math.round(getCommentScopeAverage(cmtScopeList) * 10) / 10.0)
+                    .cmtAvg(Math.round(getCommentScopeAverage(cmtScopeList) * 10) / 10.0)
                     .build();
             previewDtoList.add(previewDto);
         }
@@ -164,4 +165,16 @@ public class ClassServiceImpl implements ClassService {
                 .average().orElse(0.0);
     }
 
+    @Override
+    public ClassesDto.detail getClassesDetail(Long cId) {
+        Optional<Classes> classDetail = classesRepository.findById(cId);
+
+        ModelMapper modelMapper = new ModelMapper();
+        ClassesDto.detail classesDto = modelMapper.map(classDetail.get(), ClassesDto.detail.class);
+
+        List<Double> cmtScopeList = classDetail.get().getCommentList().stream().map(Comment::getScope).collect(Collectors.toList());
+        classesDto.setCmtCountAndAvg(classDetail.get().getCommentList().size(), Math.round(getCommentScopeAverage(cmtScopeList) * 10) / 10.0);
+
+        return classesDto;
+    }
 }

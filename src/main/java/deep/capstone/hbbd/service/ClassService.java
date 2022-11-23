@@ -15,4 +15,6 @@ public interface ClassService {
     void registerClass(ClassesDto.Request classesDto, ClassScheduleDto.RequestList classScheduleDto, MultipartFile repImg, MultipartFile[] activityImg, Authentication authentication);
 
     List<PreviewDto> getPreviewList(List<Classes> classesList);
+
+    ClassesDto.detail getClassesDetail(Long cId);
 }

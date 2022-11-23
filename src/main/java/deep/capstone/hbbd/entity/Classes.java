@@ -13,7 +13,7 @@ import java.util.List;
 @ToString(exclude = {"activityImgList", "curriculumList", "classScheduleList", "commentList"})
 @NoArgsConstructor
 @AllArgsConstructor
-public class Classes {
+public class Classes extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

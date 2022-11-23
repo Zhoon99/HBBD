@@ -13,7 +13,7 @@ import java.util.List;
 @ToString(exclude = {})
 @NoArgsConstructor
 @AllArgsConstructor
-public class Comment {
+public class Comment extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -27,15 +27,10 @@ public class CommonClassController {
 
     @GetMapping("/detail/{cId}")
     public String classDetail(@PathVariable Long cId, Model model) {
-        Optional<Classes> classDetail = classesRepository.findById(cId);
 
-        ModelMapper modelMapper = new ModelMapper();
-        ClassesDto.detail classesDto = modelMapper.map(classDetail.get(), ClassesDto.detail.class);
+        ClassesDto.detail classesDetail = classService.getClassesDetail(cId);
 
-        classesDto.setWriter(classDetail.get().getAccount().getNickname());
-        classesDto.setCategoryName(classDetail.get().getCategory().getCategoryName());
-
-        model.addAttribute("class", classesDto);
+        model.addAttribute("class", classesDetail);
         return "common/class/class_detail";
     }
 

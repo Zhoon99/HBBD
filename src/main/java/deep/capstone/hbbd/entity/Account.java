@@ -13,7 +13,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Builder
-@ToString(exclude = {"userRoles", "categoryAccounts"})
+@ToString(exclude = {"userRoles", "categoryAccounts", "classesList"})
 @NoArgsConstructor
 @AllArgsConstructor
 public class Account extends BaseEntity implements Serializable {
