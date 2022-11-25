@@ -35,4 +35,9 @@ public class ClassController {
 
         classService.registerClass(classDto, classScheduleDto, repImg, activityImg, authentication);
     }
+
+    @GetMapping("/comment/{cId}")
+    public String comment(@PathVariable Long cId) {
+        return "user/class/class_comment";
+    }
 }

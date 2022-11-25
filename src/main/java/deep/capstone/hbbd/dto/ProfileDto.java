@@ -17,6 +17,6 @@ public class ProfileDto {
     private String nickname;
     private String introduce;
     private String profileImg;
-    private List<String> interest;
+    private List<CategoryDto.Request> interest;
 
 }

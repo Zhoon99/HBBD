@@ -2,13 +2,14 @@ package deep.capstone.hbbd.service.impl;
 
 import deep.capstone.hbbd.dto.AccountDto;
 import deep.capstone.hbbd.dto.CategoryAccountDto;
+import deep.capstone.hbbd.dto.CategoryDto;
 import deep.capstone.hbbd.dto.ProfileDto;
 import deep.capstone.hbbd.entity.Account;
 import deep.capstone.hbbd.entity.Category;
 import deep.capstone.hbbd.entity.CategoryAccount;
 import deep.capstone.hbbd.entity.Role;
 import deep.capstone.hbbd.repository.AccountRepository;
-import deep.capstone.hbbd.repository.CategoryProfileRepository;
+import deep.capstone.hbbd.repository.CategoryAccountRepository;
 import deep.capstone.hbbd.repository.CategoryRepository;
 import deep.capstone.hbbd.repository.RoleRepository;
 import deep.capstone.hbbd.security.form.service.UserPrincipal;
@@ -37,7 +38,7 @@ public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final RoleRepository roleRepository;
     private final CategoryRepository categoryRepository;
-    private final CategoryProfileRepository categoryProfileRepository;
+    private final CategoryAccountRepository categoryAccountRepository;
     private final PasswordEncoder passwordEncoder;
 
     // 이미지 저장 위치
@@ -127,7 +128,7 @@ public class AccountServiceImpl implements AccountService {
                         .build();
                 categoryAccountList.add(categoryAccountDto.toEntity());
             });
-            categoryProfileRepository.saveAll(categoryAccountList);
+            categoryAccountRepository.saveAll(categoryAccountList);
         }
     }
 
@@ -141,6 +142,33 @@ public class AccountServiceImpl implements AccountService {
                 .nickname(loginAccount.getNickname())
                 .profileImg(loginAccount.getProfileImg())
                 .build();
+        return profileDto;
+    }
+
+    @Override
+    @Transactional
+    public ProfileDto getUserprofile(Authentication authentication) {
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        Account loginAccount = accountRepository.findById(userPrincipal.getAccount().getId()).get();
+
+        List<CategoryDto.Request> categoryDtoList = new ArrayList<>();
+        Category category;
+        for (CategoryAccount categoryAccount : loginAccount.getCategoryAccounts()) {
+            category = categoryAccount.getCategory();
+            CategoryDto.Request categoryDto = CategoryDto.Request.builder()
+                    .id(category.getId())
+                    .categoryName(category.getCategoryName())
+                    .build();
+            categoryDtoList.add(categoryDto);
+        }
+
+        ProfileDto profileDto = ProfileDto.builder()
+                .id(loginAccount.getId())
+                .nickname(loginAccount.getNickname())
+                .introduce(loginAccount.getIntroduce())
+                .interest(categoryDtoList)
+                .build();
+
         return profileDto;
     }
 }

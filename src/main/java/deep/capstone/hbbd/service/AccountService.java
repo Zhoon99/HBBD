@@ -10,4 +10,6 @@ public interface AccountService {
     void createUser(AccountDto accountDto, MultipartFile file);
 
     ProfileDto loadHeader(Authentication authentication);
+
+    ProfileDto getUserprofile(Authentication authentication);
 }

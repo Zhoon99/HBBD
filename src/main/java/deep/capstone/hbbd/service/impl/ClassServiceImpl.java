@@ -146,8 +146,6 @@ public class ClassServiceImpl implements ClassService {
                     .longitude(classes.getLongitude())
                     .categoryName(classes.getCategory().getCategoryName())
                     .addressSummary("(" + classes.getAddress().split(" ")[1] + "/" + classes.getAddress().split(" ")[0] + ")")
-//                    .province(classes.getAddress().split(" ")[0])
-//                    .city(classes.getAddress().split(" ")[1])
                     .cmtCount(classes.getCommentList().size())
                     .cmtAvg(Math.round(getCommentScopeAverage(cmtScopeList) * 10) / 10.0)
                     .build();

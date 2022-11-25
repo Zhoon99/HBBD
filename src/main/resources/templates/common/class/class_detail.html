@@ -5,7 +5,7 @@
 
 <style>
     .content-wrap {
-        max-width: 1200px;
+        max-width: 1000px;
         margin: 0 auto;
     }
 
@@ -29,6 +29,7 @@
     }
 
     .class-base-info-wrap {
+        line-height: 35px;
         display: flex;
         flex-direction: row;
         margin-top: 30px;
@@ -36,7 +37,8 @@
     }
 
     .class-tag {
-        font-size: 12px;
+        font-size: 13px;
+        font-weight: 900;
         border: 2px solid #012970;
         border-radius: 3rem;
         padding: 2px 15px;
@@ -52,12 +54,15 @@
     }
 
     .class-button {
-        margin-left: auto;
+        display: flex;
+        flex-direction: row;
+        justify-content: right;
+        text-align: center;
         margin-top: auto;
     }
 
-    .like-btn {
-        font-size: 40px;
+    .like-btn, .cmt-write-btn {
+        font-size: 35px;
     }
 
     .class-extra-info {
@@ -167,6 +172,29 @@
         justify-content: left;
     }
 
+    /*.topButton {*/
+    /*    z-index: 100;*/
+    /*    position: fixed;*/
+    /*    bottom: 20px;*/
+    /*    right: 20px;*/
+    /*    width: 80px;*/
+    /*    height: 80px;*/
+    /*    border-radius: 50%;*/
+    /*    border: 0px;*/
+    /*    background-color: #0067A3;*/
+    /*    box-shadow: 3px 3px 5px #495057;*/
+    /*    color: white;*/
+    /*    font-size: 20px;*/
+    /*    text-align: center;*/
+    /*}*/
+
+    .fixed-btn-wrap {
+        z-index: 100;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+    }
+
 </style>
 
 <body>
@@ -187,20 +215,22 @@
 
                         <!-- 대표 이미지 -->
                         <div class="repImg-wrap">
-                            <img class="repImg" th:src="'/display?img=' + ${class.getImgPath()} + '/' + ${class.getImgUuid()} + '_' + ${class.getImgName()}">
+                            <img class="repImg"
+                                 th:src="'/display?img=' + ${class.getImgPath()} + '/' + ${class.getImgUuid()} + '_' + ${class.getImgName()}">
                         </div>
 
                         <!-- 클래스 기본 정보 -->
                         <div class="class-base-info-wrap">
                             <div class="class-base-info">
-                                <span class="class-tag" th:text="${class.category.getCategoryName()}"></span>
-                                <span class="class-tag ms-2" th:text="${class.getClassification()}"></span>
-                                <div class="className" th:text="${class.getClassName()}"></div>
+                                <span class="class-tag" th:text="${class.category.getCategoryName()}">err</span>
+                                <span class="class-tag ms-2" th:text="${class.getClassification()}">err</span>
+                                <div class="className mt-0" th:text="${class.getClassName()}">err</div>
                                 <div class="fs-4">★0.0</div>
                             </div>
 
                             <div class="class-button">
-                                <i class="like-btn bi bi-suit-heart text-danger"></i>
+                                <a th:href="${'/user/class/comment/' + class.getId()}"><i class="cmt-write-btn bi bi-pencil text-black"></i></a>
+                                <a><i class="like-btn bi bi-suit-heart text-danger ms-4"></i></a>
                             </div>
                         </div>
 
@@ -210,15 +240,15 @@
                         <div class="class-extra-info fw-bold">
                             <div>
                                 <p>소요 시간</p>
-                                <p th:text="${class.getTimeRequired()}"></p>
+                                <p th:text="${class.getTimeRequired()}">err</p>
                             </div>
                             <div class="class-extra">
                                 <p>수강 인원</p>
-                                <p th:text="${class.getPersonnel()}"></p>
+                                <p th:text="${class.getPersonnel()}">err</p>
                             </div>
                             <div>
                                 <p>가격</p>
-                                <p class="text-danger" th:text="${class.getPrice()}"></p>
+                                <p class="text-danger" th:text="${class.getPrice() + ' 원'}">err</p>
                             </div>
                         </div>
 
@@ -228,10 +258,10 @@
                             <p class="fw-bold fs-6">일정</p>
                             <div class="schedule">
                                 <div th:each="el, i: ${class.getClassScheduleList()}">
-                                    <p class="fw-bold" th:text="${el.getClassDate()}"></p>
-                                    <p class="fw-bold" th:text="'(' + ${el.getWeek()} + '요일)'"></p>
-                                    <p class="fw-bold" th:text="${el.getStartTime()} + ' 수업'"></p>
-                                    <p class="fw-bold mb-0" th:text="'0 / ' + ${el.getPersonnel()}"></p>
+                                    <p class="fw-bold" th:text="${el.getClassDate()}">err</p>
+                                    <p class="fw-bold" th:text="'(' + ${el.getWeek()} + '요일)'">err</p>
+                                    <p class="fw-bold" th:text="${el.getStartTime()} + ' 수업'">err</p>
+                                    <p class="fw-bold mb-0" th:text="'0 / ' + ${el.getPersonnel()}">err</p>
                                 </div>
                             </div>
                         </div>
@@ -251,14 +281,14 @@
 
                         <div class="material-wrap px-3">
                             <p class="fw-bold fs-6">준비물</p>
-                            <p class="material" th:text="${class.getMaterial()}"></p>
+                            <p class="material" th:text="${class.getMaterial()}">err</p>
                         </div>
 
                         <hr>
 
                         <div class="precautions-wrap px-3">
                             <p class="fw-bold fs-6">주의 사항</p>
-                            <p class="precautions" th:text="${class.getPrecautions()}"></p>
+                            <p class="precautions" th:text="${class.getPrecautions()}">err</p>
                         </div>
 
                         <hr>
@@ -269,11 +299,11 @@
                                 <div th:each="el, i: ${class.getCurriculumList()}">
                                     <div class="row ms-3">
                                         <div class="col-1 curriculum-no">
-                                            <p th:text="${el.getSequence() + '.'}"></p>
+                                            <p th:text="${el.getSequence() + '.'}">err</p>
                                         </div>
                                         <div class="col-11">
-                                            <p class="fw-bold fs-5" th:text="${el.getTitle()}"></p>
-                                            <p th:text="${el.getContent()}"></p>
+                                            <p class="fw-bold fs-5" th:text="${el.getTitle()}">err</p>
+                                            <p th:text="${el.getContent()}">err</p>
                                         </div>
                                     </div>
                                 </div>
@@ -286,7 +316,8 @@
                         <div class="act-img-wrap-sec">
                             <div class="row act-img-wrap">
                                 <div class="col act-img" th:each="el, i: ${class.getActivityImgList()}">
-                                    <img th:src="'/display?img=' + ${el.getPath()} + '/' + ${el.getUuid()} + '_' + ${el.getImgName()}" class="act-img">
+                                    <img th:src="'/display?img=' + ${el.getPath()} + '/' + ${el.getUuid()} + '_' + ${el.getImgName()}"
+                                         class="act-img">
                                 </div>
                             </div>
                         </div>
@@ -295,8 +326,8 @@
 
                         <div class="map-wrap px-3">
                             <p class="fw-bold fs-6">위치 보기</p>
-                            <p class="fw-bold" th:text="${class.getAddress()}"></p>
-                            <p th:text="${class.getAddressDetail()}"></p>
+                            <p class="fw-bold" th:text="${class.getAddress()}">err</p>
+                            <p th:text="${class.getAddressDetail()}">err</p>
                             <div id="map"></div>
                             <script type="text/javascript"
                                     src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0d7651756108879925f2e5555e0f1a7a"></script>
@@ -316,8 +347,8 @@
 
                         <div class="cmt-wrap">
                             <div class="cmt-total">
-                                <p th:text="'리뷰(' + ${class.getCmtCount()} + ')'"></p>
-                                <p class="ms-4" th:text="'평균 별 점 ' + ${class.getCmtAvg()}"></p>
+                                <p th:text="'리뷰(' + ${class.getCmtCount()} + ')'">err</p>
+                                <p class="ms-4" th:text="'평균 별 점 ' + ${class.getCmtAvg()}">err</p>
                             </div>
                             <div class="cmt" th:each="el, i: ${class.getCommentList()}">
                                 <hr>
@@ -325,20 +356,30 @@
                                     <div>
 
                                     </div>
-                                    <p th:text="${el.getAccount().getNickname()}"></p>
+                                    <p th:text="${el.getAccount().getNickname()}">err</p>
                                 </div>
                                 <div class="cmt-info">
-                                    <p th:text="${#strings.arraySplit(el.getRegDate(),'T')[0]}"></p>
-                                    <p th:text="${el.getScope()}"></p>
-                                    <p th:text="${el.getContent()}"></p>
+                                    <p th:text="${#strings.arraySplit(el.getRegDate(),'T')[0]}">err</p>
+                                    <p th:text="${el.getScope()}">err</p>
+                                    <p th:text="${el.getContent()}">err</p>
                                 </div>
                                 <div class="cmt-btn">
-                                    <p th:text="${el.getCommentImgList()}"></p>
+                                    <p th:text="${el.getCommentImgList()}">err</p>
                                 </div>
                             </div>
                         </div>
 
                     </section>
+
+                    <div class="fixed-btn-wrap">
+                        <div class="d-flex justify-content-end">
+                            <button type="button" class="topButton" onclick="window.scrollTo(0,0);">TOP▲</button>
+                        </div>
+                        <div>
+                            <button type="button" class="inquiry-btn">문의하기</button>
+                            <button type="button" class="payment-btn"><span th:text="${class.getPrice() + '원'}">err</span><br>결제하기</button>
+                        </div>
+                    </div>
 
                 </div>
             </div>
