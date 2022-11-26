@@ -16,6 +16,16 @@ public class CommentImgDto {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    public static class Response {
+        private String path;
+        private String uuid;
+        private String imgName;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Request {
         private String path;
         private String uuid;

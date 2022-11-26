@@ -11,5 +11,5 @@ public interface AccountService {
 
     ProfileDto loadHeader(Authentication authentication);
 
-    ProfileDto getUserprofile(Authentication authentication);
+    ProfileDto getUserprofile(Long accountId);
 }

@@ -20,6 +20,16 @@ public class CommentDto {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    public static class Response {
+        private Double scope;
+        private String content;
+        private Long classesId;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Request {
         private Double scope;
         private String content;

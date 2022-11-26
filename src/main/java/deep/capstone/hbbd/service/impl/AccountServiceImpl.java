@@ -147,9 +147,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
-    public ProfileDto getUserprofile(Authentication authentication) {
-        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-        Account loginAccount = accountRepository.findById(userPrincipal.getAccount().getId()).get();
+    public ProfileDto getUserprofile(Long accountId) {
+        Account loginAccount = accountRepository.findById(accountId).get();
 
         List<CategoryDto.Request> categoryDtoList = new ArrayList<>();
         Category category;

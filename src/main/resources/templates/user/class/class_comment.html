@@ -4,9 +4,27 @@
 <head th:replace="layout/user_head::userHead"></head>
 
 <style>
+    body {
+        background-color: #86b7fe;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
     .cmt-container {
         border-radius: 10px;
-        background-color: #86b7fe;
+        background-color: #ffffff;
+        box-shadow: 10px 10px grey;
+        width: 95%;
+        height: 45rem;
+        font-weight: bold;
+        font-size: 18px;
+        padding: 30px 60px;
 
         -webkit-touch-callout: none;
         -webkit-user-select: none;
@@ -46,190 +64,206 @@
 <main>
     <div class="container">
 
-        <div>
 
-            <div class="d-flex justify-content-center py-4">
-                <a href="/" class="logo d-flex align-items-center w-auto">
-                    <span class="d-none d-lg-block">HobbyBuddy</span>
-                </a>
-            </div><!-- End Logo -->
+        <div class="d-flex justify-content-center py-4">
+            <a href="/" class="logo d-flex align-items-center w-auto">
+                <span class="d-none d-lg-block">HobbyBuddy</span>
+            </a>
+        </div><!-- End Logo -->
 
-            <div class="cmt-container">
+        <div class="cmt-container">
 
-                <div class="row mb-3">
-                    <label class="col-sm-2 col-form-label d-flex align-items-center">평 점</label>
-                    <div class="col-sm-10">
-                        <div class="star-wrap">
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label d-flex align-items-center">평 점</label>
+                <div class="col-sm-10">
+                    <div class="star-wrap">
                 <span class="star">★★★★★
                     <span>★★★★★</span>
-                    <input type="range" oninput="drawStar(this)" value="1" step="1" min="0" max="10">
+                    <input type="range" name="scope" id="scope" oninput="drawStar(this)" value="1" step="0.5" min="0" max="5">
                 </span>
-                        </div>
-                        <script>
-                            const drawStar = (target) => {
-                                $(`.star span`).css({width: `${target.value * 10}%`});
-                            }
-                        </script>
                     </div>
+                    <script>
+                        const drawStar = (target) => {
+                            $(`.star span`).css({width: `${target.value * 20}%`});
+                        }
+                    </script>
                 </div>
+            </div>
 
-                <div class="row mb-3">
-                    <label class="col-sm-2 col-form-label d-flex align-items-center">준비물</label>
-                    <div class="col-sm-10">
-                        <div class="materialLengthWrap d-flex justify-content-end">
-                            <span class="materialTextCount">0자</span>
-                            <span class="materialTextTotal">/200자</span>
-                        </div>
-                        <textarea class="form-control" placeholder="준비물을 입력해주세요" name="material"
-                                  id="material"
-                                  maxlength="200" style="height: 100px; resize: none;"
-                                  required></textarea>
-
-                        <script>
-                            $('#material').keyup(function (e) {
-                                let content = $(this).val();
-
-                                // 글자수 세기
-                                if (content.length == 0 || content == '') {
-                                    $('.materialTextCount').text('0자');
-                                } else {
-                                    $('.materialTextCount').text(content.length + '자');
-                                }
-
-                                // 글자수 제한
-                                if (content.length > 200) {
-                                    // 200자 부터는 타이핑 되지 않도록
-                                    $(this).val($(this).val().substring(0, 200));
-                                    // 200자 넘으면 알림창 뜨도록
-                                    alert('200자까지 입력 가능합니다.');
-                                }
-                                ;
-                            });
-                        </script>
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label d-flex align-items-center">내용</label>
+                <div class="col-sm-10">
+                    <div class="contentCountWrap d-flex justify-content-end">
+                        <span class="contentCount fs-6">0자</span>
                     </div>
+                    <textarea class="form-control" placeholder="내용을 입력해주세요" name="content"
+                              id="content" style="height: 300px; resize: none;"
+                              required></textarea>
+
+                    <script>
+                        $('#content').keyup(function (e) {
+                            $('.contentCount').text($(this).val().length + '자');
+                        });
+                    </script>
                 </div>
+            </div>
 
-                <div class="row mb-3">
-                    <label class="col-sm-2 col-form-label d-flex align-items-center">활동 사진</label>
-                    <div class="col-sm-10">
-                        <div style="display:inline;">
-                            <label for="activityImg">
-                                <img src="/images/common/add_img.png"
-                                     style="width:100px; height:100px; cursor: pointer;">
-                            </label>
-                            <form id="addForm" method="post" enctype="multipart/form-data">
-                                <input type="file" id="activityImg" name="activityImg[]"
-                                       onchange="atvPreviewImage(this,'atv_img_preview')"
-                                       style="display: none;" multiple="true">
-                            </form>
-                            <span id='atv_img_preview'></span>
-                        </div>
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label d-flex align-items-center">사진</label>
+                <div class="col-sm-10">
+                    <div style="display:inline;">
+                        <label for="commentImg">
+                            <img src="/images/common/add_img.png"
+                                 style="width:100px; height:100px; cursor: pointer;">
+                        </label>
+                        <form id="addForm" method="post" enctype="multipart/form-data">
+                            <input type="file" id="commentImg" name="commentImg[]"
+                                   onchange="atvPreviewImage(this,'cmt_img_preview')"
+                                   style="display: none;" multiple="true">
+                        </form>
+                        <span id='cmt_img_preview'></span>
+                    </div>
 
-                        <script>
-                            var fileArr;
-                            var fileInfoArr = [];
+                    <script>
+                        var fileArr;
+                        var fileInfoArr = [];
 
-                            //썸네일 클릭시 삭제.
-                            function atvFileRemove(index) {
-                                fileInfoArr.splice(index, 1);
-                                $("#img_id_" + index).remove();
-                            }
+                        //썸네일 클릭시 삭제.
+                        function atvFileRemove(index) {
+                            fileInfoArr.splice(index, 1);
+                            $("#img_id_" + index).remove();
+                        }
 
-                            //썸네일 미리보기.
-                            function atvPreviewImage(targetObj, previewId) {
+                        //썸네일 미리보기.
+                        function atvPreviewImage(targetObj, previewId) {
+                            var files = targetObj.files;
+                            fileArr = Array.prototype.slice.call(files);
+
+                            var preview = document.getElementById(previewId); //div id
+                            var ua = window.navigator.userAgent;
+
+                            //ie일때(IE8 이하에서만 작동)
+                            if (ua.indexOf("MSIE") > -1) {
+                                targetObj.select();
+                                try {
+                                    var src = document.selection.createRange().text; // get file full path(IE9, IE10에서 사용 불가)
+                                    var ie_preview_error = document.getElementById("ie_preview_error_" + previewId);
+
+
+                                    if (ie_preview_error) {
+                                        preview.removeChild(ie_preview_error); //error가 있으면 delete
+                                    }
+
+                                    var img = document.getElementById(previewId); //이미지가 뿌려질 곳
+
+                                    //이미지 로딩, sizingMethod는 div에 맞춰서 사이즈를 자동조절 하는 역할
+                                    img.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + src + "', sizingMethod='scale')";
+                                } catch (e) {
+                                    if (!document.getElementById("ie_preview_error_" + previewId)) {
+                                        var info = document.createElement("<p>");
+                                        info.id = "ie_preview_error_" + previewId;
+                                        info.innerHTML = e.name;
+                                        preview.insertBefore(info, null);
+                                    }
+                                }
+                                //ie가 아닐때(크롬, 사파리, FF)
+                            } else {
                                 var files = targetObj.files;
-                                fileArr = Array.prototype.slice.call(files);
 
-                                var preview = document.getElementById(previewId); //div id
-                                var ua = window.navigator.userAgent;
+                                for (var i = 0; i < files.length; i++) {
+                                    var file = files[i];
+                                    fileInfoArr.push(file);
 
-                                //ie일때(IE8 이하에서만 작동)
-                                if (ua.indexOf("MSIE") > -1) {
-                                    targetObj.select();
-                                    try {
-                                        var src = document.selection.createRange().text; // get file full path(IE9, IE10에서 사용 불가)
-                                        var ie_preview_error = document.getElementById("ie_preview_error_" + previewId);
+                                    var imageType = /image.*/; //이미지 파일일경우만.. 뿌려준다.
+                                    if (!file.type.match(imageType))
+                                        continue;
 
+                                    var span = document.createElement('span');
+                                    span.id = "img_id_" + i;
+                                    span.style.width = '100px';
+                                    span.style.height = '100px';
+                                    span.style.display = 'inline-block';
+                                    span.style.backgroundColor = '#cccccc';
+                                    span.style.textAlign = 'center';
+                                    span.style.marginRight = '10px';
+                                    preview.appendChild(span);
 
-                                        if (ie_preview_error) {
-                                            preview.removeChild(ie_preview_error); //error가 있으면 delete
-                                        }
+                                    var img = document.createElement("img");
+                                    img.className = "addImg";
+                                    img.classList.add("obj");
+                                    img.file = file;
+                                    img.style.width = 'inherit';
+                                    img.style.height = 'inherit';
+                                    img.style.cursor = 'pointer';
+                                    const idx = i;
+                                    img.onclick = () => atvFileRemove(idx);//이미지를 클릭했을 때.
+                                    span.appendChild(img);
 
-                                        var img = document.getElementById(previewId); //이미지가 뿌려질 곳
-
-                                        //이미지 로딩, sizingMethod는 div에 맞춰서 사이즈를 자동조절 하는 역할
-                                        img.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + src + "', sizingMethod='scale')";
-                                    } catch (e) {
-                                        if (!document.getElementById("ie_preview_error_" + previewId)) {
-                                            var info = document.createElement("<p>");
-                                            info.id = "ie_preview_error_" + previewId;
-                                            info.innerHTML = e.name;
+                                    if (window.FileReader) { // FireFox, Chrome, Opera 확인.
+                                        var reader = new FileReader();
+                                        reader.onloadend = (function (aImg) {
+                                            return function (e) {
+                                                aImg.src = e.target.result;
+                                            };
+                                        })(img);
+                                        reader.readAsDataURL(file);
+                                    } else { // safari is not supported FileReader
+                                        if (!document.getElementById("sfr_preview_error_" + previewId)) {
+                                            var info = document.createElement("p");
+                                            info.id = "sfr_preview_error_" + previewId;
+                                            info.innerHTML = "not supported FileReader";
                                             preview.insertBefore(info, null);
                                         }
                                     }
-                                    //ie가 아닐때(크롬, 사파리, FF)
-                                } else {
-                                    var files = targetObj.files;
-
-                                    for (var i = 0; i < files.length; i++) {
-                                        var file = files[i];
-                                        fileInfoArr.push(file);
-
-                                        var imageType = /image.*/; //이미지 파일일경우만.. 뿌려준다.
-                                        if (!file.type.match(imageType))
-                                            continue;
-
-                                        var span = document.createElement('span');
-                                        span.id = "img_id_" + i;
-                                        span.style.width = '100px';
-                                        span.style.height = '100px';
-                                        span.style.display = 'inline-block';
-                                        span.style.backgroundColor = '#cccccc';
-                                        span.style.textAlign = 'center';
-                                        span.style.marginRight = '10px';
-                                        preview.appendChild(span);
-
-                                        var img = document.createElement("img");
-                                        img.className = "addImg";
-                                        img.classList.add("obj");
-                                        img.file = file;
-                                        img.style.width = 'inherit';
-                                        img.style.height = 'inherit';
-                                        img.style.cursor = 'pointer';
-                                        const idx = i;
-                                        img.onclick = () => atvFileRemove(idx);//이미지를 클릭했을 때.
-                                        span.appendChild(img);
-
-                                        if (window.FileReader) { // FireFox, Chrome, Opera 확인.
-                                            var reader = new FileReader();
-                                            reader.onloadend = (function (aImg) {
-                                                return function (e) {
-                                                    aImg.src = e.target.result;
-                                                };
-                                            })(img);
-                                            reader.readAsDataURL(file);
-                                        } else { // safari is not supported FileReader
-                                            if (!document.getElementById("sfr_preview_error_" + previewId)) {
-                                                var info = document.createElement("p");
-                                                info.id = "sfr_preview_error_" + previewId;
-                                                info.innerHTML = "not supported FileReader";
-                                                preview.insertBefore(info, null);
-                                            }
-                                        }
-                                    }
                                 }
                             }
-                        </script>
-                    </div>
+                        }
+                    </script>
                 </div>
-
-                <div>
-                    <button type="button" class="btn btn-dark btn-lg px-5 ml-5" onclick="">
-                        등록하기
-                    </button>
-                </div>
-
             </div>
+
+            <div class="align-self-end">
+                <button type="button" class="btn btn-dark btn-lg px-5 ml-5" onclick="dataSubmit()">
+                    등록하기
+                </button>
+            </div>
+
+            <script>
+                function dataSubmit() {
+                    const cId = [[${cId}]];
+
+                    var commentData = {
+                        scope: $('#scope').val(),
+                        content: $('#content').val(),
+                        classesId: cId
+                    };
+
+                    var formData = new FormData();
+
+                    var totalfiles = document.getElementById('commentImg').files.length;
+                    for (var index = 0; index < totalfiles; index++) {
+                        formData.append("commentImg", document.getElementById('commentImg').files[index]);
+                    }
+                    formData.append("comment", new Blob([JSON.stringify(commentData)], {type: "application/json"}));
+
+                    $.ajax({
+                        url: "/user/class/comment/register",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        enctype: 'multipart/form-data',
+                        type: "POST",
+                        success: function () {
+                            window.location = "/common/class/detail/" + cId;
+                            alert("리뷰 등록에 성공했습니다.");
+                        },
+                        error: function () {
+                            window.location = "/user/class/comment/" + cId;
+                            alert("리뷰 등록에 실패했습니다.");
+                        }
+                    });
+                }
+            </script>
 
         </div>
 

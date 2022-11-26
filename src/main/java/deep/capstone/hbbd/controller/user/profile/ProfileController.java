@@ -22,7 +22,7 @@ public class ProfileController {
     {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
-        ProfileDto userprofile = accountService.getUserprofile(authentication);
+        ProfileDto userprofile = accountService.getUserprofile(userPrincipal.getAccount().getId());
         model.addAttribute("profile", userprofile);
         return "user/profile/user_profile";
     }
