@@ -23,9 +23,10 @@ public class Classes extends BaseEntity {
     @Column(length = 30, nullable = false)
     private String className;
 
-    @Column(length = 100)
+    @Column(length = 100, nullable = false)
     private String imgPath;
 
+    @Column(nullable = false)
     private String imgUuid;
 
     @Column(nullable = false)

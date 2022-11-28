@@ -4,7 +4,9 @@ import deep.capstone.hbbd.dto.ClassScheduleDto;
 import deep.capstone.hbbd.dto.ClassesDto;
 import deep.capstone.hbbd.dto.CommentDto;
 import deep.capstone.hbbd.repository.CategoryRepository;
+import deep.capstone.hbbd.security.form.service.UserPrincipal;
 import deep.capstone.hbbd.service.ClassService;
+import deep.capstone.hbbd.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -21,7 +23,7 @@ public class ClassController {
 
     private final ClassService classService;
 
-    private final CategoryRepository categoryRepository;
+    private final CommentService commentService;
 
     @GetMapping("/register")
     public String register() {
@@ -36,7 +38,9 @@ public class ClassController {
                          @RequestPart(value = "activityImg", required = false) MultipartFile[] activityImg,
                          Authentication authentication) {
 
-        classService.registerClass(classDto, classScheduleDto, repImg, activityImg, authentication);
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+
+        classService.registerClass(classDto, classScheduleDto, repImg, activityImg, userPrincipal.getAccount());
     }
 
     @GetMapping("/comment/{cId}")
@@ -51,8 +55,8 @@ public class ClassController {
                                 @RequestPart(value = "commentImg", required = false) MultipartFile[] commentImg,
                                 Authentication authentication) {
 
-        log.info("-------------------------" + commentDto.toString());
-        log.info("-------------------------" + commentImg.length);
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
+        commentService.commentRegister(commentDto, commentImg, userPrincipal.getAccount());
     }
 }

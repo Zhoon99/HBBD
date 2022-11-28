@@ -25,15 +25,13 @@ public class AccountDto {
     private String password;
     private String provider;
     private String providerId;
-
     private Set<Role> roles;
-
     private String introduce;
-    private String profileImg;
+    private String imgPath;
+    private String imgUuid;
+    private String imgName;
     private String nickname;
-
     private List<String> interest;
-
     private LocalDateTime regDate, modDate;
 
     public Account toEntity() {
@@ -45,7 +43,9 @@ public class AccountDto {
                 .providerId(providerId)
                 .userRoles(roles)
                 .nickname(nickname)
-                .profileImg(profileImg)
+                .imgPath(imgPath)
+                .imgUuid(imgUuid)
+                .imgName(imgName)
                 .introduce(introduce)
                 .build();
         return account;
@@ -60,10 +60,18 @@ public class AccountDto {
                 .providerId(account.getProviderId())
                 .roles(account.getUserRoles())
                 .nickname(account.getNickname())
-                .profileImg(account.getProfileImg())
+                .imgPath(account.getImgPath())
+                .imgUuid(account.getImgUuid())
+                .imgName(account.getImgName())
                 .introduce(account.getIntroduce())
                 .build();
         return accountDto;
+    }
+
+    public void setProfileImage(ImageDto imageDto) {
+        this.imgPath = imageDto.getPath();
+        this.imgUuid = imageDto.getUuid();
+        this.imgName = imageDto.getImgName();
     }
 }
 

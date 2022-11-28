@@ -1,5 +1,6 @@
 package deep.capstone.hbbd.entity;
 
+import deep.capstone.hbbd.dto.ImageDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -43,8 +44,14 @@ public class Account extends BaseEntity implements Serializable {
     @Column(length = 10, nullable = false)
     private String nickname;
 
+    @Column(length = 100, nullable = false)
+    private String imgPath;
+
     @Column(nullable = false)
-    private String profileImg;
+    private String imgUuid;
+
+    @Column(nullable = false)
+    private String imgName;
 
     @Column(length = 150, nullable = false)
     private String introduce;
@@ -55,10 +62,12 @@ public class Account extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "account")
     private List<Classes> classesList = new ArrayList<>();
 
-    public void setSocialProfile(String introduce, String nickname, String profileImg) {
+    public void setSocialProfile(String introduce, String nickname, ImageDto imageDto) {
         this.introduce = introduce;
         this.nickname = nickname;
-        this.profileImg = profileImg;
+        this.imgPath = imageDto.getPath();
+        this.imgUuid = imageDto.getUuid();
+        this.imgName = imageDto.getImgName();
     }
 }
 

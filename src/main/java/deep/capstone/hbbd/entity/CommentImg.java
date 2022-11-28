@@ -28,6 +28,6 @@ public class CommentImg {
     private String imgName;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "classes_id")
-    private Classes classes;
+    @JoinColumn(name = "comment_id")
+    private Comment comment;
 }

@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-@ToString(exclude = {})
+@ToString(exclude = {"commentImgList"})
 @NoArgsConstructor
 @AllArgsConstructor
 public class Comment extends BaseEntity {
@@ -32,6 +32,11 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "account_id")
     private Account account;
 
-    @OneToMany(mappedBy = "classes")
+    @OneToMany(mappedBy = "comment")
     private List<CommentImg> commentImgList = new ArrayList<>();
+
+    public void setAccountAndComment(Account account, Classes classes) {
+        this.account = account;
+        this.classes = classes;
+    }
 }

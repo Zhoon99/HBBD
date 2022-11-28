@@ -83,7 +83,7 @@
                             type: "POST",
                             dataType: "json",
                             success: function (data) {
-                                $('img[id=profile_img]').attr('src', "/" + data.profileImg);
+                                $('img[id=profile_img]').attr('src', "/display?img=" + data.imgPath + "/" + data.imgUuid + "_" + data.imgName);
                                 $('span[id=signed_user]').text(data.nickname);
                             },
                             error: function () {

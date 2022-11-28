@@ -16,7 +16,9 @@ public class ProfileDto {
     private Long id;
     private String nickname;
     private String introduce;
-    private String profileImg;
+    private String imgPath;
+    private String imgUuid;
+    private String imgName;
     private List<CategoryDto.Request> interest;
 
 }

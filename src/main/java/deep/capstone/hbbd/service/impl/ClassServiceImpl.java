@@ -39,7 +39,7 @@ public class ClassServiceImpl implements ClassService {
      */
     @Transactional
     @Override
-    public void registerClass(ClassesDto.Request classesDto, ClassScheduleDto.RequestList classScheduleDto, MultipartFile repImg, MultipartFile[] activityImg, Authentication authentication) {
+    public void registerClass(ClassesDto.Request classesDto, ClassScheduleDto.RequestList classScheduleDto, MultipartFile repImg, MultipartFile[] activityImg, Account account) {
 
         if (repImg != null) {
             ImageDto repImgDto = FileUtil.saveFileAndThumbnail(updatePath, repImg, 300, 100);
@@ -53,11 +53,9 @@ public class ClassServiceImpl implements ClassService {
                 }
             }
 
-            UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-
             Classes classes = Classes.builder()
                     .classification("원데이")
-                    .account(userPrincipal.getAccount())
+                    .account(account)
                     .category(categoryRepository.findById(classesDto.getCategoryId()).get())
                     .className(classesDto.getClassName())
                     .imgPath(repImgDto.getPath())

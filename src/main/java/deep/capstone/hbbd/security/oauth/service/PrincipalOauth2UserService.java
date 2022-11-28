@@ -79,7 +79,9 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 				.providerId(oAuth2UserInfo.getProviderId())
 				.nickname("")
 				.introduce("")
-				.profileImg("")
+				.imgPath("")
+				.imgUuid("")
+				.imgName("")
 				.build();
 
 		Role role = roleRepository.findByRoleName("ROLE_USER");
