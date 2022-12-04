@@ -4,27 +4,63 @@
 <head th:replace="layout/user_head::userHead"></head>
 
 <style>
-    .profile-img-wrap {
-        width: 130px;
-        height: 130px;
-        border-radius: 70%;
-        /*border: 2px solid #012970;*/
-        margin: 0 auto;
-    }
-
-    .profile-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .asd {
+    .myPage-wrap {
+        text-align: center;
+        width: 80%;
+        margin-top: 20px;
         display: flex;
         flex-direction: row;
     }
 
-    .asd .btn {
-        display: inline-block;
+    .profile-info {
+        text-align: center;
+    }
+
+    .profile-img {
+        width: 130px;
+        height: 130px;
+        border-radius: 70%;
+    }
+
+    .profile-info {
+        width: 30%;
+    }
+
+    .profile-add {
+        width: 70%;
+    }
+
+    .profile-interest {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .interest-tag {
+        background-color: #9BBFD7;
+        color: #ffffff;
+        font-size: 20px;
+        font-weight: 900;
+        border: 2px solid #012970;
+        border-radius: 1rem;
+        padding: 4px 20px;
+    }
+
+    .profile-introduce {
+        height: 130px;
+        margin-top: 20px;
+        border: 3px solid #012970;
+        /*border-radius: 2em;*/
+        border-top-left-radius: 1em;
+        border-top-right-radius: 1em;
+        border-bottom-left-radius: 1em;
+        border-bottom-right-radius: 1em;
+    }
+
+    .class-btn {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
     }
 </style>
 
@@ -43,60 +79,126 @@
     <div class="card">
         <div class="card-body">
             <div class="container">
-                <p th:text="${profile}"></p>
+
+                <div class="myPage-wrap">
+
+                    <div class="profile-info">
+                        <div class="profile-img-wrap">
+                            <img class="profile-img"
+                                 src="@{/display?img=${profile.imgPath}/${profile.imgUuid}_${profile.imgName}"
+                                 alt="Profile" id="profile_img">
+                        </div>
+                        <p class="fw-bold fs-4 mt-2" th:text="${profile.getNickname()}"></p>
+                        <div>
+                            <a href="/">
+                                <i class="bi bi-pencil text-black"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="profile-add">
+                        <div class="profile-interest">
+                            <div class="mx-2" th:each="el, i: ${profile.getInterest()}">
+                                <a href="/">
+                                    <span class="interest-tag" th:text="${el.categoryName}"></span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="profile-introduce">
+                            <p class="" th:text="${profile.getIntroduce()}"></p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="class-btn">
+                    <a href="/user/class/register">
+                        <button type="button" class="btn btn-secondary"
+                                style="width: 100%; height: 100%;">내 클래스 관리
+                        </button>
+                    </a>
+
+                    <a href="/user/class/register">
+                        <button type="button" class="btn btn-secondary"
+                                style="width: 100%; height: 100%;">참여한 클래스
+                        </button>
+                    </a>
+                </div>
+
             </div>
         </div>
     </div>
 
-
     <div class="card">
         <div class="card-body">
+            <div class="search-result-wrap mt-5 mx-3">
+                <div class="row row-cols-4">
 
-            <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                클래스 등록하기
-            </button>
+                    <div class="col">
+                        <div class="card shadow-sm">
+                            <div class="imgWrap">
+                                <img class="card-img-top"
+                                     src="http://cdn.edujin.co.kr/news/photo/202007/33437_61357_5116.jpg"
+                                     alt=" Card image cap">
+                            </div>
 
-            <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">클래스 분류</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-6">
-                                    <a href="/user/class/register">
-                                        <button type="button" class="btn btn-secondary"
-                                                style="width: 100%; height: 100%;">원데이 클래스
-                                        </button>
-                                    </a>
-                                </div>
-
-                                <div class="col-6">
-                                    <a href="#">
-                                        <button type="button" class="btn btn-primary"
-                                                style="width: 100%; height: 100%;">정규 클래스
-                                        </button>
-                                    </a>
+                            <div class="card-body px-1 fw-bold">
+                                <p class="mb-2">기타(의정부시/경기)</p>
+                                <p class="class-name fs-5">수학의 정석 수능수학 강의</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        <span style="color: #dc3545">★★★☆☆&nbsp;</span>(3)
+                                    </div>
+                                    <small class="fs-5">40,000원</small>
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
+                    </div>
 
+                    <div class="col">
+                        <div class="card shadow-sm">
+                            <div class="imgWrap">
+                                <img class="card-img-top"
+                                     src="http://cdn.edujin.co.kr/news/photo/202007/33437_61357_5116.jpg"
+                                     alt=" Card image cap">
+                            </div>
+
+                            <div class="card-body px-1 fw-bold">
+                                <p class="mb-2">기타(의정부시/경기)</p>
+                                <p class="class-name fs-5">수학의 정석 수능수학 강의</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        <span style="color: #dc3545">★★★☆☆&nbsp;</span>(3)
+                                    </div>
+                                    <small class="fs-5">40,000원</small>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+                    <div class="col">
+                        <div class="card shadow-sm">
+                            <div class="imgWrap">
+                                <img class="card-img-top"
+                                     src="http://cdn.edujin.co.kr/news/photo/202007/33437_61357_5116.jpg"
+                                     alt=" Card image cap">
+                            </div>
+
+                            <div class="card-body px-1 fw-bold">
+                                <p class="mb-2">기타(의정부시/경기)</p>
+                                <p class="class-name fs-5">수학의 정석 수능수학 강의</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        <span style="color: #dc3545">★★★☆☆&nbsp;</span>(3)
+                                    </div>
+                                    <small class="fs-5">40,000원</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-body">
         </div>
     </div>
 

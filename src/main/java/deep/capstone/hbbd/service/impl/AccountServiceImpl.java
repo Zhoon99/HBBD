@@ -127,6 +127,9 @@ public class AccountServiceImpl implements AccountService {
 
         ProfileDto profileDto = ProfileDto.builder()
                 .id(loginAccount.getId())
+                .imgPath(loginAccount.getImgPath())
+                .imgUuid(loginAccount.getImgUuid())
+                .imgName(loginAccount.getImgName())
                 .nickname(loginAccount.getNickname())
                 .introduce(loginAccount.getIntroduce())
                 .interest(categoryDtoList)

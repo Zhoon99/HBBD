@@ -34,12 +34,20 @@ public class CommonClassController {
         return "common/class/class_detail";
     }
 
+    @PostMapping("/detail/classIntro/{cId}")
+    @ResponseBody
+    public String getClassIntroduce(@PathVariable Long cId) {
+        log.info("---------------------------------------");
+        String classIntro = classesRepository.findById(cId).get().getClassIntro();
+        return classIntro;
+    }
+
     @GetMapping("/map")
     public String classMap() {
         return "common/class/class_map";
     }
 
-    @PostMapping("cluster")
+    @PostMapping("/cluster")
     @ResponseBody
     public List<PreviewDto> cluster() {
         List<Classes> classesInCluster = classesRepository.findAll();
@@ -47,7 +55,7 @@ public class CommonClassController {
         return previewList;
     }
 
-    @PostMapping("clusterInside")
+    @PostMapping("/clusterInside")
     @ResponseBody
     public List<PreviewDto> clusterInside(@RequestBody List<Long> cIdArr) {
         List<Classes> classesInCluster = classesRepository.getClassesInCluster(cIdArr);

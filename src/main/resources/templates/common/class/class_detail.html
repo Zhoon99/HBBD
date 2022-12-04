@@ -229,7 +229,8 @@
                             </div>
 
                             <div class="class-button">
-                                <a th:href="${'/user/class/comment/' + class.getId()}"><i class="cmt-write-btn bi bi-pencil text-black"></i></a>
+                                <a th:href="${'/user/class/comment/' + class.getId()}"><i
+                                        class="cmt-write-btn bi bi-pencil text-black"></i></a>
                                 <a><i class="like-btn bi bi-suit-heart text-danger ms-4"></i></a>
                             </div>
                         </div>
@@ -271,8 +272,36 @@
                         <div class="intro-wrap px-3">
                             <p class="fw-bold fs-6">클래스 소개</p>
                             <div>
-                                <div class="intro">
-                                    <p class="fw-bold fs-4">asdfasdfasdgsdf</p>
+                                <div class="cls-introduce">
+                                    <textarea name="introduce" id="introduce" th:value="${class.getClassIntro()}" readOnly style="display: none;"></textarea>
+                                    <script type="text/javascript">
+                                        $(document).ready(function () {
+                                            ClassicEditor
+                                                .create( document.querySelector( '#introduce' ), {
+                                                } )
+                                                .then( editor => {
+                                                    editor.enableReadOnlyMode( 'introduce' );
+                                                    const toolbarElement = editor.ui.view.toolbar.element;
+                                                    toolbarElement.style.display = 'none';
+
+                                                    $.ajax({
+                                                        url: "/common/class/detail/classIntro/" + [[${class.getId()}]],
+                                                        dataType: "text",
+                                                        contentType: "application/json; charset=UTF-8",
+                                                        type: "POST",
+                                                        success: function (data) {
+                                                            editor.setData(data);
+                                                        },
+                                                        error: function (request,status,error) {
+                                                            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                                                        }
+                                                    });
+                                                } )
+                                                .catch( error => {
+                                                    console.log( error );
+                                                } );
+                                        });
+                                    </script>
                                 </div>
                             </div>
                         </div>
@@ -376,8 +405,10 @@
                             <button type="button" class="topButton" onclick="window.scrollTo(0,0);">TOP▲</button>
                         </div>
                         <div>
-                            <button type="button" class="inquiry-btn">문의하기</button>
-                            <button type="button" class="payment-btn"><span th:text="${class.getPrice() + '원'}">err</span><br>결제하기</button>
+                            <button type="button" class="inquiry-btn" onclick="a();">문의하기</button>
+                            <button type="button" class="payment-btn"><span
+                                    th:text="${class.getPrice() + '원'}">err</span><br>결제하기
+                            </button>
                         </div>
                     </div>
 
